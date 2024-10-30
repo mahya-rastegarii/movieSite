@@ -1,0 +1,16 @@
+
+
+    .rc-slider-track{
+        @apply bg-color-hover
+    }
+    .rc-slider-handle{
+        @apply bg-color-hover cursor-pointer active:cursor-pointer border-color-2 hover:border-color-2
+    }
+    
+    .rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging{
+        @apply border-color-2 shadow-none
+    }
+    
+    .rc-slider-handle:focus-visible{
+        @apply border-color-2 shadow-none;
+    }

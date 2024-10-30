@@ -1,0 +1,46 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+    :root{
+      
+      --text-color:rgb(31, 29, 29);
+      --color :rgb(234 179 8);
+      --bg-color-1:rgb(203 213 225);
+      --bg-color-2 :rgb(226 232 240);
+      --bg-color-3 :rgb(241 245 249);
+      --bg-color-4:rgb(255 255 255) ;
+    
+    }
+
+    .theme-dark{
+        --text-color:rgb(255 255 255);
+        --color :rgb(202 138 4);
+        --bg-color-1: rgb(71 85 105);
+        --bg-color-2 :rgb(51 65 85) ;
+        --bg-color-3 :rgb(30 41 59);
+        --bg-color-4:rgb(15 23 42) ;
+    }
+}
+
+
+
+
+.custom-transition{
+    @apply transition-all ease-in-out duration-300 delay-100;
+}
+
+.custom-hover-btn {
+ @apply py-1 px-6 ml-2 rounded-lg hover:text-color-2  custom-transition delay-150
+}
+
+::-webkit-scrollbar{
+    @apply w-1 bg-slate-400
+}
+
+::-webkit-scrollbar-thumb{
+    @apply bg-color-2 custom-transition  hover:bg-color-3
+}
+

@@ -1,0 +1,9 @@
+
+
+    .swiper-3DSlider{
+        @apply after:w-full after:h-full  after:absolute after:top-0 after:right-0 after:left-0 after:bottom-0 after:bg-black after:opacity-50 after:rounded-md
+    }
+    
+    .swiper-slide-active{
+       @apply after:w-0 after:h-0
+    }
