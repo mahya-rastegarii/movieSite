@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react'
+// import React, { useEffect, useState } from 'react'
 
 import { BsHandThumbsUp, BsHandThumbsDown} from 'react-icons/bs'
 
 
 import Button from '../../components/Button/Button';
+import { useState } from 'react';
 
 
 
 
-export default function CommentBox({disLike, like, pic, userName, content, id }) {
+export default function CommentBox({disLike, like, pic, userName, comment }) {
 
 
 
+ const [hide, setHide]= useState(false);
  
 
 
@@ -47,13 +49,13 @@ export default function CommentBox({disLike, like, pic, userName, content, id })
         </div> */}
         
         {/* </div> */}
-        <div className='m-6'>
-        <p>{content} </p>
+        <div className={`m-6 ${hide && "backdrop-blur-md"  }`}>
+        <p>{comment} </p>
         </div>
        </div>
        </div>
        <div className=' flex min-w-fit justify-center items-center'>
-       <Button width="w-full"  bgColor='bg-color-2'>
+       <Button width="w-full"  bgColor='bg-color-2' onClick={() => setHide(true)}>
           گزارش اسپویل
         </Button>
        </div>

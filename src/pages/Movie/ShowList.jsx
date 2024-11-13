@@ -1,18 +1,21 @@
-import  { useEffect } from "react";
+import  { useEffect, useState } from "react";
 
 
 // import { useParams } from "react-router-dom";
 import MoviesBox from "../../components/box/MoviesBox";
 import SideContainer from "../../components/sideBar/SideContainer";
-import { MoviesData } from "../../fetch/movies-data";
+// import { MoviesData } from "../../fetch/movies-data";
+import { useSelector } from "react-redux";
 
 
 export default function ShowList() {
   
  
 
-
-
+  const movieList = useSelector( state => state.movies.movieList)
+  
+  
+  const [movies, setMovies]=useState(null)
 
 
   useEffect(() => {
@@ -21,7 +24,12 @@ export default function ShowList() {
    
   }, []);
 
- 
+  useEffect( () => {
+     setMovies(movieList)
+  }, [movieList])
+
+  
+
   return (
     <>
     
@@ -57,7 +65,7 @@ export default function ShowList() {
             </div>
           ) : ( */}
           {
-            MoviesData?.map((data) => <MoviesBox key={data.id} data={data} />)
+            movies?.length > 0 ? movies.map((data) => <MoviesBox key={data.id} data={data} />) :  <div className=" w-full flex justify-center items-center"><p className=" font-bold text-lg  text-color-1"> داده ای یافت نشد</p></div>
           }
           {/* )} */}
         </div>

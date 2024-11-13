@@ -12,6 +12,10 @@ import {Autoplay, FreeMode} from 'swiper/modules';
 // import './simpleSlider.css'
 // import Button from "./../Button/Button"
 import BgRotate from "../../BackgroundRotate/BgRotate";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMovie } from '../../../redux/slice/MoviesSlice';
+import { useNavigate } from 'react-router-dom';
+import { fetchMovieInfo } from '../../../core/functions';
 
 
 
@@ -20,13 +24,21 @@ import BgRotate from "../../BackgroundRotate/BgRotate";
 
 export default function SimpleSlider({ title, data : allData, delay}) {
  
-  // const [simpleSliderError, setSimpleSliderError]= useState()
+ 
+  
+
+const navigate = useNavigate()
+ const dispatch= useDispatch()
 
 
 
+const movieInfoHandler = async(name) =>{
 
-
-
+const result = await fetchMovieInfo(name);
+// console.log("resultInfo", result);
+dispatch(fetchMovie(result));
+  navigate(`/movie/${name}`)
+}
 
 
 
@@ -95,10 +107,10 @@ export default function SimpleSlider({ title, data : allData, delay}) {
           >
       {allData?.map((slide) => (
         <SwiperSlide className="  bg-center bg-cover w-full h-44 lg:h-64 flex justify-center items-center hover:scale-105 custom-transition my-4 "  key={slide.id}>
-          <div className=' w-full h-full  flex flex-col justify-center items-center'  >
+          <div className=' w-full h-full  flex flex-col justify-center items-center' onClick={() =>movieInfoHandler(slide.name)} >
           <img className="  w-52 h-44 lg:h-64 rounded-lg cursor-pointer  shadow-md " src={slide.pic} alt={slide.name} />
           <div className='  px-2 -mt-3   rounded-lg shadow-md text-black  bg-color-hover '>
-            <span className='text-md font-bold '>{slide.rate}</span>
+            <span className='text-md font-bold '>{slide.imdbRating}</span>
             <span className='text-sm '>/10</span>
             </div>
             <span className=' text-md text-color-1 font-semibold'>{slide.type} {slide.name}</span>

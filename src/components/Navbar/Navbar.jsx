@@ -4,23 +4,42 @@ import { BiMenu } from "react-icons/bi";
 import ChangeThemeButton from "../Button/ChangeThemeButton";
 import Logo from "../Logo/Logo";
 
-import { Link, NavLink } from "react-router-dom";
-
+import {  useNavigate, Link } from "react-router-dom";
+import { logOut } from "../../core/functions";
 import Button from "../Button/Button";
 import NavSearchBar from "../Search/NavSearchBar";
 
+import { RiArrowDownSLine } from "react-icons/ri";
+
+import MenuComponent from "../menu/MenuComponent";
+import MenuItem from "../Button/MenuItem";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { setUserName } from "../../redux/slice/UserSlice";
 
 // import {  RiArrowDownSLine } from "react-icons/ri";
 // import MenuItem from "../Button/MenuItem";
 // import MenuComponent from "../menu/MenuComponent";
 
 export default function Navbar() {
-  
-  
- 
+
+  const userName = useSelector( (state) => state.user.userName);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate()
 
  
+const LogoutUser = async() =>{
+const result = await logOut();
+if(result) {
+  setUserName(null)
+}
+else{
+  console.log("Error")
+}
+} 
 
+
+  
 
   return (
     <div className=" w-full  z-30 bg-color-3 border-b border-color-1 overflow-x-hidden p-6 flex justify-between items-center ">
@@ -37,57 +56,63 @@ export default function Navbar() {
 
         <div className=" hidden lg:flex">
           <ul className=" flex    justify-start items-center space-x-3 text-sm text-md">
-            
-              {/* <div className=" flex flex-col   space-y-11 ">
-                <li className="w-28 ml-4">
-                  {" "}
-                  <Button
-                    bgColor="bg-color-2"
-                    width="w-full"
-                    hover={"hover:bg-color-1"}
+           
+             {
+              userName ? (
+              <div className=" flex flex-col   space-y-11 ">
+               <li className="w-28 ml-4">
+                 {" "}
+                 <Button
+                   bgColor="bg-color-2"
+                   width="w-full"
+                   hover={"hover:bg-color-1"}
+                   clicked ={ () => setIsOpen(!isOpen)}
+                 >
+                   {" "}
+                   <RiArrowDownSLine className={`${isOpen ? "rotate-180 transform" : ""} h-5 w-5 text-color-1 inline ml-6 custom-transition`} />
+                {
+                 userName
+                }
+                 </Button>{" "}
+               </li>{" "}
+               <MenuComponent open={isOpen}>
+                 <Link to="/dashboard">
+                   {" "}
+                   <MenuItem borderType="border-t"
                    
-                  >
-                    {" "}
-                    <RiArrowDownSLine
-                      className={`${isOpen ? "rotate-180 transform" : ""} h-5 w-5 text-color-1 inline ml-6 custom-transition`}
-                    />
-                   userName
-                  </Button>{" "}
-                </li>{" "}
-                <MenuComponent open={isOpen}>
-                  <Link to="/Dashboard">
-                    {" "}
-                    <MenuItem borderType="border-t">پنل کاربری</MenuItem>
-                  </Link>
-                  <Link onClick={() => dispatch(userLogout())}>
-                  <MenuItem
-                    borderType="border-t"
-                    textColor="text-red-600"
-                    rounded=" rounded-b-md"
-                  >
-                    خروج از حساب
-                  </MenuItem>
-                  </Link>
-                </MenuComponent>
-              </div>
-           */}
-              <>
+                   >پنل کاربری</MenuItem>
+                 </Link>
+                 <Link to="/">
+                 <MenuItem
+                   borderType="border-t"
+                   textColor="text-red-600"
+                   rounded=" rounded-b-md"
+                   clicked={LogoutUser}
+                 >
+                   خروج از حساب
+                 </MenuItem>
+                 </Link>
+               </MenuComponent>
+             </div>
+              )
+                :
+             <>
                 {" "}
                 <li className="w-24  lg:ml-3">
-                  <Link to="/Register">
+                  <Link to="/signUp">
                     <Button bgColor="bg-color-2" width="w-full">
                       ثبت نام{" "}
                     </Button>
                   </Link>
                 </li>
                 <li className="w-24 ">
-                  <Link to="/Login">
+                  <Link to="/signIn">
                     <Button bgColor="bg-color-2" width="w-full">
                       ورود{" "}
                     </Button>
                   </Link>
                 </li>
-              </>
+            
             
 
             <li>
@@ -95,41 +120,8 @@ export default function Navbar() {
                 <ChangeThemeButton />
               </div>
             </li>
-            <li>
-              <Button
-                btnType="link"
-                width="w-full"
-                margin="ml-8"
-              
-              >
-                <NavLink
-                  to="/list"
-                  className={({ isActive }) =>
-                    isActive ? "text-color-2" : "text-color-1"
-                  }
-                >
-                  250 فیلم برتر IMDb
-                </NavLink>
-              </Button>
-            </li>
-            <li>
-              <Button
-                btnType="link"
-                width="w-full"
-                ml-8
-                margin="ml-8"
-               
-              >
-                <NavLink
-                  to="/list"
-                  className={({ isActive }) =>
-                    isActive ? "text-color-2" : "text-color-1"
-                  }
-                >
-                  250 سریال برتر IMDb
-                </NavLink>
-              </Button>
-            </li>
+           </>
+            }
           </ul>
         </div>
       </div>

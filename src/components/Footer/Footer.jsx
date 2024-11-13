@@ -5,12 +5,26 @@ import SocialMediaButton from '../Button/SocialMediaButton';
 import Logo from '../Logo/Logo';
 import Button from '../Button/Button';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { fetchAllMovies, fetchTopMovies } from '../../core/functions';
+import { fetchMoviesList } from '../../redux/slice/MoviesSlice';
 
 
 
 export default function Footer() {
 
 
+  const dispatch = useDispatch();
+
+
+  const fetchTop = async(type) => {
+    const result = await fetchTopMovies(type);
+    dispatch(fetchMoviesList(result));
+  }
+  const fetchAll = async(type) => {
+ const result = await fetchAllMovies(type);
+    dispatch(fetchMoviesList(result.data));
+  }
 
 
 
@@ -26,8 +40,8 @@ export default function Footer() {
       <ul className=' text-color-1 space-y-3'>
         <li>
         
-          <Link>
-          <Button btnType='link' width='w-full'>
+          <Link to='/list/movies/all'>
+          <Button btnType='link' width='w-full' clicked={ () =>fetchAll("فیلم")}>
           <PiFilmSlateLight className=' inline text-xl ml-1'/>
           همه فیلم ها
           </Button>
@@ -35,8 +49,8 @@ export default function Footer() {
           
         </li>
         <li>
-          <Link >
-           <Button btnType='link' width='w-full' >
+          <Link to='/list/movies/250_top'>
+           <Button btnType='link' width='w-full' clicked={() => fetchTop("فیلم")}>
           250 فیلم برتر IMDb
           </Button>
           </Link>
@@ -49,8 +63,8 @@ export default function Footer() {
       </ul>
       <ul className='  text-color-1 space-y-3 '>
       <li>
-        <Link>
-        <Button btnType='link' width='w-full'>
+        <Link to='/list/series/all'>
+        <Button btnType='link' width='w-full' clicked={() => fetchAll("سریال")}>
         <PiFilmReelLight className='inline text-xl ml-1' />
         همه سریال ها
         </Button>
@@ -62,8 +76,8 @@ export default function Footer() {
 
       </li>
         <li> 
-          <Link>
-          <Button btnType='link' width='w-full' >
+          <Link to='/list/series/top_250'>
+          <Button btnType='link' width='w-full' clicked={() => fetchTop("سریال")}>
            250 سریال برتر IMDb
           </Button>
           </Link>

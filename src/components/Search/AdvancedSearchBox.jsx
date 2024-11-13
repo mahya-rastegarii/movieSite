@@ -1,15 +1,23 @@
-import  { useState } from 'react';
+import  { useEffect, useState } from 'react';
 
 import RangeInput from '../input/rangeInput/RangeInput';
 
 import Button from '../Button/Button'
 import PostType from "../Button/PostType";
-import {Countries} from "../../fetch/coutries";
-import {GenresData} from "../../fetch/genere-data";
+// import {Countries} from "../../fetch/coutries";
+// import {GenresData} from "../../fetch/genere-data";
+
+
+import { activeTypeGenre, fetchCountries } from '../../core/functions';
 
 export default function AdvancedSearchBox() {
 
+  
+  const [active, setActive]= useState("movies")
+  const [genres, setGenres]= useState([])
+  const [countries, setCountries]= useState([]);
   const [visible, setVisible] =useState(false);
+
 
   const [IMDbSliderValue, setIMDbSliderValue] = useState([1, 10]);
   const [yearSliderValue, setYearSliderValue] = useState([1800, 2023]);
@@ -19,6 +27,7 @@ export default function AdvancedSearchBox() {
   
 
  
+
 
 
  
@@ -37,10 +46,27 @@ export default function AdvancedSearchBox() {
  }
 
 
-  
-
+ useEffect(() => {
+  async function fetchGenres() {
+     const result = await activeTypeGenre(active);
+     setGenres(result)
+     
+     if(active === "series") 
+      setVisible(true)
+   else  setVisible(false)
+    }
+    fetchGenres();
+ }, [active]);
  
 
+ useEffect(() => {
+  async function fetchCountriesHandler() {
+    const result = await fetchCountries();
+    setCountries(result);
+  }
+  
+  fetchCountriesHandler()
+ }, [])
 
   return (
   
@@ -52,7 +78,7 @@ export default function AdvancedSearchBox() {
 
         <div className=' w-4/12 bg-transparent  flex justify-center items-center text-color-1 '>
             <span className=' text-md font-bold ml-8 md:ml-2'> نوع </span>
-            <PostType changeActiveButton={() => {}} />
+            <PostType  active={active} setActive={setActive}/>
         </div>
         <div className=' bg-transparent  flex justify-center items-center text-color-1 font-semibold '>
             <span className=' text-md ml-8 font-bold md:ml-2'> ژانر </span>
@@ -60,8 +86,10 @@ export default function AdvancedSearchBox() {
 
             <option  value={genreValue}> همه </option>
               {
-                GenresData?.map((genre, index) => (
-                  <option key={index} value={genre}>{genre}</option>
+                genres?.map((genre) => (
+                  <option key={genre.id} value={genre}>
+                     {active === "movies" ? genre.moviesGenre : genre.serialsGenre}
+                </option>
                 ))
               }
 
@@ -76,9 +104,9 @@ export default function AdvancedSearchBox() {
             <select className=' bg-color-4 shadow-md outline-none rounded-xl p-2 text-sm' onChange={(e) => setCountryValue(e.target.value)}>
               <option value={countryValue} >---</option>
             {
-              Countries?.map((country,index) =>{
+              countries?.map((c) =>{
                 // console.log(index);
-                return(<option key={index} value={country}>{country}</option>)
+                return(<option key={c.id} value={c.country}>{c.country}</option>)
               })
             }
              

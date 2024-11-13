@@ -1,13 +1,28 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineAddAPhoto } from "react-icons/md";
 
 import ProfilePhoto from '/assets/img/user.png'
 
 import Button from '../../../components/Button/Button'
+import { useForm } from 'react-hook-form';
 import FormInput from '../../../components/input/formInput/FormInput'
+import { useSelector } from 'react-redux';
 export default function Profile() {
  
+  const userName = useSelector( ( state) => state.user.userName);
+  const session = useSelector( ( state) => state.user.sesion);
+  const { register, handleSubmit, formState: { errors },} = useForm();
+  
+  const submitForm = (data) => {
+    console.log("FormData", data)
+  }
+  
+
+  useEffect( () => {
+
+    console.log("sessionUser", session)
+  },[])
   return (
 
     <div className=' flex flex-col justify-center py-4 items-center space-y-14 text-color-1'>
@@ -23,7 +38,7 @@ export default function Profile() {
                 
                </div>
                <div className="flex justify-center items-center hover:text-color-2">
-                <span> name  </span>
+                <span> {userName}  </span>
                 <CiEdit className=' inline'/>
                </div>
 
@@ -40,11 +55,16 @@ export default function Profile() {
 
                <div className=' w-full px-4 md:px-0'>
 
-               <form onSubmit={() => {}} className='w-full flex justify-center items-center px-2 md:px-0'>
+               <form onSubmit={handleSubmit(submitForm)} className='w-full flex justify-center items-center px-2 md:px-0'>
         <div className="flex flex-col w-full lg:w-7/12  justify-center items-center my-16 space-y-4">
 
-                  <div className="w-full flex items-center justify-between"> <label htmlFor="oldPass"> رمز عبور :</label> <FormInput width='w-7/12'  type='password' id="oldPass" /></div>
-                  <div className="w-full flex items-center justify-between"> <label htmlFor="newPass"> رمز عبور جدید :</label> <FormInput width='w-7/12'  type='password' id="newPass" /></div>
+                  <div className="w-full flex items-center justify-between"> <label htmlFor="oldPass"> رمز عبور :</label> <FormInput width='w-7/12'  type='password' id="oldPass"   label="password"
+      register={register}
+      errors={errors.email}
+      required=" رمز عبور الزامی است"/></div>
+                  <div className="w-full flex items-center justify-between"> <label htmlFor="newPass"> رمز عبور جدید :</label> <FormInput width='w-7/12'  type='password' id="newPass" register={register} label="password" 
+                   errors={errors.email}
+      required=" رمز عبور الزامی است"/></div>
                   <div className='w-full p-5'>
 
                     

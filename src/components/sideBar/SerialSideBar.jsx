@@ -1,26 +1,50 @@
 
-import { MoviesData } from "../../fetch/movies-data";
+import { useEffect, useState } from "react";
+// import { MoviesData } from "../../fetch/movies-data";
+import { supabase } from "../../core/supabaseClient";
+import { fetchMovieInfo } from "../../core/functions";
+import { fetchMovie } from "../../redux/slice/MoviesSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 
 export default function SerialSideBar() {
  
- 
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const [serialList, setSerialList]= useState();
   
 
  
+  const fetchUpdateSerialsData = async() =>{
+    const {data} = await supabase.from('movies').select("*").eq("status", "در حال پخش");
+    setSerialList(data)
+}
 
- 
+const showSerial = async(name) => {
+
+  const result = await fetchMovieInfo(name)
+  dispatch(fetchMovie(result));
+
+  navigate(`/movie/${name}`)
+}
+
+useEffect(() => {
+
+ fetchUpdateSerialsData();
+
+}, []) 
 
   return (
     <div className=" w-full flex flex-col justify-center shadow-md items-center bg-color-3 rounded-md p-3 space-y-4 font-semibold text-md h-full  text-color-1 lg:ml-2 ">
     
       <h3> سریال های به روز شده</h3>
 
-      {MoviesData?.map((serial) => (
+      {serialList?.map((serial) => (
         <div
           className="w-full h-16 flex justify-center items-center rounded-md shadow-md p-2 bg-color-2  cursor-pointer hover:opacity-80 custom-transition"
           key={serial.id}
-          // onClick={() => showSerial(serial.name)}
+          onClick={() => showSerial(serial.name)}
         >
           <div className=" w-2/12 h-full ml-2">
             <img
