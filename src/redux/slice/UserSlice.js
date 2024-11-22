@@ -3,18 +3,18 @@ import { createSlice } from "@reduxjs/toolkit";
 const UserSlice = createSlice({
     name: "user",
     initialState: {
-        session: [],
-        userName: null,
+        session: null,
+        // userName: null,
     },
  reducers:{
     setSession: ( state, action) => {
         state.session = action.payload
     },
 
-    setUserName: (state, action) =>{
+    // setUserName: (state, action) =>{
 
-        state.userName = action.payload;
-    }
+    //     state.userName = action.payload;
+    // }
  }
 })
 

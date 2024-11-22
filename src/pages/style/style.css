@@ -37,7 +37,7 @@
 }
 
 ::-webkit-scrollbar{
-    @apply w-1 bg-slate-400
+    @apply w-1.5 bg-slate-400
 }
 
 ::-webkit-scrollbar-thumb{

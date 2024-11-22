@@ -1,13 +1,17 @@
 
 
-import React , {useState} from 'react'
+import React , {useEffect, useState} from 'react'
 import { RiArrowDownDoubleLine } from 'react-icons/ri';
 
 
 const Disclosure = ({title, children, bg, color, border, rounded,  isOpen }) => {
 
-  const [open, setOpen] =useState(isOpen)
+  const [open, setOpen] =useState(false)
 
+  useEffect( () => {
+    setOpen(isOpen)
+  }, [])
+  
   return (
     <div className={`${bg ? bg : "bg-color-3 " } custom-transition ${rounded ? rounded : "" }  ${border ? border : "border-color-4" } ${color ? color : "text-color-1" }`}>
       <div className={`flex w-full justify-between px-4 py-2 text-left text-sm font-medium ${open ? 'border-b-2' : ''} border-color-4 cursor-pointer focus:outline-none focus-visible:ring`} onClick={() => setOpen(!open)}>

@@ -9,6 +9,7 @@ import PostType from "../Button/PostType";
 
 
 import { activeTypeGenre, fetchCountries } from '../../core/functions';
+import { supabase } from '../../core/supabaseClient';
 
 export default function AdvancedSearchBox() {
 
@@ -44,6 +45,39 @@ export default function AdvancedSearchBox() {
   const handleYearSliderChange= (value) =>{
     setYearSliderValue(value)
  }
+
+
+
+ const AdvancedSearchData = async() => {
+      
+  let query = supabase.from('movies').select("*").eq("type", active)
+
+  if(genreValue !== "all") {
+    query = query.contains("genre", genreValue)
+  } 
+  if(countryValue !== 'none') {
+    query = query.contains("country", countryValue)
+  }
+  if(statusValue !== 'none'){
+    query = query.eq("status", statusValue)
+  }
+  if(yearSliderValue){
+    query = query.gte( "year", yearSliderValue[0]).lte("year", yearSliderValue[1])
+  }
+  if(IMDbSliderValue){
+    query = query.gte( "imdbRating", IMDbSliderValue[0]).lte("imdbRating", IMDbSliderValue[1])
+  }
+
+  
+  const {data, error}= await query;
+  if(error){
+    console.log("Error Fetching movie", error)
+    return;
+  }
+  // setDataMovies(data);
+  console.log("Advanced", data);
+
+}
 
 
  useEffect(() => {
@@ -151,7 +185,7 @@ export default function AdvancedSearchBox() {
 
         </div>
         {/* <button className=' bg-slate-700  w-4/12 shadow-sm p-2 font-semibold rounded-xl ml-3 text-slate-200  hover:bg-yellow-500  custom-transition '> جستجو </button> */}
-        <Button width='w-4/12' >
+        <Button width='w-4/12' clicked={AdvancedSearchData}>
          جستجو  
         </Button>
     </div>

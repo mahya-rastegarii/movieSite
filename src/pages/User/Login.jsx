@@ -6,23 +6,28 @@ import Button from '../../components/Button/Button';
 import FormInput from '../../components/input/formInput/FormInput';
 import { supabase } from '../../core/supabaseClient';
 import { useDispatch } from 'react-redux';
-import { setUserName } from '../../redux/slice/UserSlice';
-import { useNavigate } from 'react-router-dom';
-
+import { setSession } from '../../redux/slice/UserSlice';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login() {
 
  const navigate = useNavigate();
 const dispatch =useDispatch()
   
-  const { register, handleSubmit, formState: { errors },} = useForm();
+  const { register, handleSubmit, formState: { errors },} = useForm({
+    defaultValues: {
+      email: localStorage.getItem('email') || "",
+      password: localStorage.getItem('password') || "",
+      checkBox: false,
+    }
+  });
 
   
 
   const submitForm = async(data) =>{
     console.log("data", data)
     
-    const {email, password}= data;
+    const {email, password, checkBox}= data;
 
     const {data:{user}, error} = await supabase.auth.signInWithPassword({
       email,
@@ -35,22 +40,29 @@ const dispatch =useDispatch()
 
     if(profileError){
       console.error('Error fetching profile: ', profileError)} else {
-        dispatch(setUserName(profile.userName))
+        dispatch(setSession(profile))
         console.log(" User Loggerd in: ", user)
         navigate("/")
+      }
+
+      if(checkBox ){
+        localStorage.setItem('email',email);
+        localStorage.setItem('password',password);
+      } else {
+        localStorage.removeItem('email');
+        localStorage.removeItem('password');
       }
   }
   
   return (
-    <div className='w-full flex justify-center items-center  px-4 md:px-0 h-screen'>
+    
+    <div className='w-full flex justify-center items-center px-4 md:px-0 h-screen'>
 
+      
 
-
-
-      <BgRotate padding='p-2' width=' md:w-8/12 w-full lg:w-4/12'>
-
+    <BgRotate padding='p-2' width=' md:w-8/12 w-full lg:w-4/12'>
        <form  className='w-full flex justify-center items-center px-2 md:px-0' onSubmit={handleSubmit(submitForm)}>
-        <div className="flex flex-col w-full lg:w-7/12  justify-center items-center my-16 space-y-4">
+        <div className="flex flex-col w-full lg:w-7/12  justify-center items-center mt-16 mb-6 space-y-4">
 
       {/* <FormInput
      
@@ -103,8 +115,15 @@ const dispatch =useDispatch()
         <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'>{errors.password?.message} </span></div>
        )
       }
+       <div className="w-full flex justify-start items-center text-color-1 font-semibold">
+
+      <Link to="/forgotPassword" className="text-sm text-blue-600">
+        رمز عبور خود را فراموش کرده اید؟
+      </Link>
+       </div>
       <div className="w-full flex justify-start items-center text-color-1 font-semibold">
            <input className=' ml-2' type="checkbox" name="check"
+           {...register("checkBox")}
             // onChange={AuthForm.handleChange}
             //  checked={AuthForm.values.check}
               id="remember-me" />
@@ -120,6 +139,10 @@ const dispatch =useDispatch()
        </div>
          </div>
       </form>
+      <div className="w-full flex justify-center mb-2 items-center text-color-1 text-sm">
+
+      <span > حساب کاربری ندارید ؟</span><Link to="/signUp"  className=' text-color-2 font-semibold mr-2  '> ثبت نام کنید</Link>
+      </div>
        </BgRotate>
 
     </div>

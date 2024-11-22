@@ -47,10 +47,10 @@ const SliderContainer = ({ children }) => {
         <div className="w-5/12 md:w-2/12">
           <Button
             bgColor="bg-color-hover"
+            width="w-full"
             clicked={() =>movieInfoHandler(movieSlideInfo.name)}
            
           >
-            
             دانلود
            
           </Button>

@@ -6,7 +6,7 @@ import BgRotate from '../../components/BackgroundRotate/BgRotate';
 import Button from '../../components/Button/Button';
 import FormInput from '../../components/input/formInput/FormInput';
 import { supabase } from '../../core/supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -31,7 +31,7 @@ export default function Register() {
    console.log("user", user)
     
     const {error:profileError } = await supabase.from("profile")
-    .insert({userId:user.id, userName});
+    .insert({userId:user.id, userName, email});
     if(profileError) {console.log("ErrorProfile", profileError)}
     else{ console.log("profileUser", user)
       navigate("/signIn")
@@ -49,7 +49,7 @@ export default function Register() {
 
        <BgRotate padding='p-2' width=' md:w-8/12 w-full lg:w-4/12'>
        <form  className='w-full flex justify-center items-center px-2 md:px-0'  onSubmit={handleSubmit(submitForm)}>
-        <div className="flex flex-col w-full lg:w-7/12  justify-center items-center my-16 space-y-4">
+        <div className="flex flex-col w-full lg:w-7/12  justify-center items-center mt-16 mb-6 space-y-4">
           
            
         <FormInput
@@ -141,7 +141,10 @@ export default function Register() {
        </div>
             </div>
       </form>
-        {/* <button className=' bg-color-4 p-2 rounded-md w-full text-color-1 text-lg '> ثبت نام </button> */}
+      <div className="w-full flex justify-center mb-2 items-center text-color-1 text-sm">
+
+<span > حساب کاربری دارید ؟</span><Link to="/signIn"  className=' text-color-2 font-semibold mr-2  '> وارد شوید</Link>
+</div>
        </BgRotate>
     </div>
   )

@@ -17,7 +17,7 @@ export const MoviesSlice = createSlice({
             state.movieData = action.payload;
         },
         setFavoritesMovie: (state,action) => {
-            state.favoritesMovie = action.payload
+            state.favoritesMovie = [...state.favoritesMovie, action.payload]
         }
 
     },

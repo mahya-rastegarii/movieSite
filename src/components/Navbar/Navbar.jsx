@@ -4,7 +4,7 @@ import { BiMenu } from "react-icons/bi";
 import ChangeThemeButton from "../Button/ChangeThemeButton";
 import Logo from "../Logo/Logo";
 
-import {  useNavigate, Link } from "react-router-dom";
+import {  Link, useNavigate } from "react-router-dom";
 import { logOut } from "../../core/functions";
 import Button from "../Button/Button";
 import NavSearchBar from "../Search/NavSearchBar";
@@ -13,9 +13,9 @@ import { RiArrowDownSLine } from "react-icons/ri";
 
 import MenuComponent from "../menu/MenuComponent";
 import MenuItem from "../Button/MenuItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { setUserName } from "../../redux/slice/UserSlice";
+import { setSession } from "../../redux/slice/UserSlice";
 
 // import {  RiArrowDownSLine } from "react-icons/ri";
 // import MenuItem from "../Button/MenuItem";
@@ -23,19 +23,28 @@ import { setUserName } from "../../redux/slice/UserSlice";
 
 export default function Navbar() {
 
-  const userName = useSelector( (state) => state.user.userName);
+  const navigate =useNavigate()
+  const dispatch = useDispatch()
+  const session = useSelector( (state) => state.user.session);
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate()
+  
 
  
 const LogoutUser = async() =>{
 const result = await logOut();
 if(result) {
-  setUserName(null)
+  const url = new URL(window.location.href);
+  dispatch(setSession(null))
+   if(url.pathname === "dashboard/profile" || url.pathname === "dashboard/comments" || url.pathname === "dashboard/favoriteList") {
+    navigate("/")
+   } else {
+     navigate(url.pathname);
+   }
 }
 else{
   console.log("Error")
 }
+setIsOpen(false)
 } 
 
 
@@ -58,7 +67,7 @@ else{
           <ul className=" flex    justify-start items-center space-x-3 text-sm text-md">
            
              {
-              userName ? (
+              session ? (
               <div className=" flex flex-col   space-y-11 ">
                <li className="w-28 ml-4">
                  {" "}
@@ -71,18 +80,18 @@ else{
                    {" "}
                    <RiArrowDownSLine className={`${isOpen ? "rotate-180 transform" : ""} h-5 w-5 text-color-1 inline ml-6 custom-transition`} />
                 {
-                 userName
+                 session.userName
                 }
                  </Button>{" "}
                </li>{" "}
                <MenuComponent open={isOpen}>
-                 <Link to="/dashboard">
+                 <Link to="/dashboard/profile">
                    {" "}
                    <MenuItem borderType="border-t"
-                   
+                    clicked ={ () => setIsOpen(false)}
                    >پنل کاربری</MenuItem>
                  </Link>
-                 <Link to="/">
+                
                  <MenuItem
                    borderType="border-t"
                    textColor="text-red-600"
@@ -91,7 +100,7 @@ else{
                  >
                    خروج از حساب
                  </MenuItem>
-                 </Link>
+                
                </MenuComponent>
              </div>
               )

@@ -6,16 +6,26 @@ import MoviesBox from "../../components/box/MoviesBox";
 import SideContainer from "../../components/sideBar/SideContainer";
 // import { MoviesData } from "../../fetch/movies-data";
 import { useSelector } from "react-redux";
+import PaginationBox from "../../components/box/PaginationBox";
+import usePaginatedFetch from "../../usePaginatedFetch";
 
 
 export default function ShowList() {
   
  
 
-  const movieList = useSelector( state => state.movies.movieList)
+  const movieList = useSelector( state => state.movies.movieList);
+ 
+  const [loading, data] = usePaginatedFetch(5, movieList);
   
+  const [page, setPage]= useState(1)
+  const [movies, setMovies]=useState(null);
   
-  const [movies, setMovies]=useState(null)
+  useEffect( () => {
+     if(loading) return;
+     setMovies(data[page - 1])
+  }, [loading, page])
+  
 
 
   useEffect(() => {
@@ -24,11 +34,8 @@ export default function ShowList() {
    
   }, []);
 
-  useEffect( () => {
-     setMovies(movieList)
-  }, [movieList])
-
-  
+ 
+ 
 
   return (
     <>
@@ -57,7 +64,7 @@ export default function ShowList() {
        </div>
        </GenreProvider> */}
       <SideContainer>
-        <div className="w-full px-4 min-h-screen  lg:w-10/12 flex flex-col justify-center items-center space-y-16">
+        <div className="w-full px-4 min-h-screen  lg:w-10/12 flex flex-col justify-center items-center space-y-16 mb-5">
           {/* {isLoading ? (
             <div className=" w-full flex mt-2 justify-center items-start min-h-screen">
              
@@ -69,6 +76,11 @@ export default function ShowList() {
           }
           {/* )} */}
         </div>
+
+        {
+          page > 1 &&   <PaginationBox pages={data.length} setPage={setPage} activePage={page}/>
+        }
+    
       </SideContainer>
     </>
   );

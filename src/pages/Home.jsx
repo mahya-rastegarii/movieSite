@@ -16,6 +16,7 @@ import { supabase } from "../core/supabaseClient";
 
 
 
+
 export default function Home() {
 
   
@@ -84,6 +85,7 @@ export default function Home() {
     
         <div className=" w-full flex flex-col justify-center items-center">
          
+      
         <SliderContainer >
         <Slider3D  />
       </SliderContainer>

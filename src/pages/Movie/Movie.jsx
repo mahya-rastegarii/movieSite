@@ -26,46 +26,68 @@ import { useEffect, useState } from "react";
 // import { LiaKeySolid } from "react-icons/lia";
 import { FiHeart } from "react-icons/fi";
 import { setFavoritesMovie } from "../../redux/slice/MoviesSlice";
+import { redirect } from "react-router-dom";
 
 export default function Movie() {
  
 
 
   const movieData = useSelector( state => state.movies.movieData)
+  const session = useSelector( state => state.user.session)
+  const favoriteMovie = useSelector( state => state.movies.favoritesMovie);
   const [likeMovie, setLikeMovie]= useState(false);
  
-  const [comments, setComments]= useState();
+  const [comments, setComments]= useState([]);
  const [commentText, setCommentText]= useState("");
 
  const dispatch = useDispatch();
+
+
+
   const fetchComments = async() => {
-    const res = await supabase.from('comments').select("*").eq("movieName", movieData.name)
-    // setComments(data)
-    console.log("data", res)
+    const { data} = await supabase.from('comments').select("*").eq("movieName", movieData[0].name)
+    setComments(data)
+    // console.log("data", data)
   }
 
   const addNewComment = async() => {
 
-    const newComment = {
-      useName:"mahya",
+
+    const {error}= await supabase.from('comments').insert({ userName:session.userName,
       pic:null,
-      movieName:movieData.name,
+      movieName:movieData[0].name,
       comment: commentText,
       disLike:0,
-      like:0,
-
-    }
-    const {data }= await supabase.from('comments').insert(newComment).select("*");
-    setComments(data);
+      like:0
+    });
+   
+    if(error) {
+      console.log("error", error)
+      }
+     else {
+      console.log('NewComment Add...')
+      fetchComments();
+     }
+     setCommentText('')
   };
   
 
-  const fechFavoriteMovie = () => {
+  const fechFavoriteMovie = async(name) => {
 
     setLikeMovie(!likeMovie)
     if(likeMovie) {
-      dispatch(setFavoritesMovie(movieData))
+      dispatch(setFavoritesMovie(name))
+      if(session){
+
+        const {error } = await supabase.from("profile").update({movies:favoriteMovie}).eq("userId", session.id)
+              if(error)
+                console.error("Error",error)
+      
+     }else {
+      redirect("/signIn")
     }
+      
+    } 
   }
   useEffect(() => {
     window.scrollTo(top);
@@ -75,17 +97,17 @@ export default function Movie() {
   
  
 
-  useEffect( () => {
-
-    console.log("movieInfo", movieData)
-  }, []);
+ 
 
 
   useEffect(() => {
-    fetchComments()
+    fetchComments();
+   
+
   }, [])
 
- 
+
+
   return (
     <>
      
@@ -95,7 +117,7 @@ export default function Movie() {
             <>
           
 
-          <HeaderBackdrop bg={movie?.cover}>
+          <HeaderBackdrop key={movie?.id} bg={movie?.cover}>
             <div className=" w-full z-10 lg:p-10 flex lg:flex-row  flex-col justify-center items-center p-4 ">
               <div className=" mx-3 w-full lg:w-3/12 flex justify-center lg:justify-end items-center">
                 <img
@@ -121,7 +143,7 @@ export default function Movie() {
 <div className=" flex justify-center items-center flex-col space-y-4">
 
                   <ImdbLabel score={movie?.imdbRating} />
-                  <FiHeart className={`text-2xl text-red-700 cursor-pointer hover:fill-red-700 ${likeMovie ? "fill-red-700" : ""}`}  onClick={fechFavoriteMovie}/>
+                  <FiHeart className={`text-2xl text-red-700 cursor-pointer hover:fill-red-700 ${likeMovie ? "fill-red-700" : ""}`}  onClick={() => fechFavoriteMovie(movie.name)}/>
 </div>
                 </div>
                 <div className="flex w-full flex-col text-white  space-y-4 ">
@@ -198,7 +220,7 @@ export default function Movie() {
             )}
 
             <BgRotate padding="p-1" rotate1="-rotate-1" rotate2="rotate-1">
-              <DisclosureWrapper title="لینک های دانلود" open="true">
+              <DisclosureWrapper title="لینک های دانلود" isOpen={true}>
                 <div className="p-8 flex flex-col space-y-3">
                   <div>
                     <DisclosureWrapper
@@ -233,7 +255,7 @@ export default function Movie() {
             </BgRotate>
 
             <BgRotate padding="p-1" rotate1="-rotate-1" rotate2="rotate-1">
-              <DisclosureWrapper title="نظرات" open="true">
+              <DisclosureWrapper title="نظرات" isOpen={true}>
                 <div className="w-full  flex flex-col justify-center items-center p-4 space-y-2">
                   <textarea
                     rows="6"
@@ -255,19 +277,22 @@ export default function Movie() {
                 </div>
                 <hr className=" border-color-1 opacity-50" />
                 <div className=" w-full flex flex-col justify-center items-center space-y-6 pt-4">
-                  <div className="w-full flex justify-between px-4">
+                  <div className="w-full flex justify-between px-4 ">
                     <FaRegCommentDots className="inline text-color-2 text-2xl" />
 
                     <span className="text-xl text-color-2 ">
-                      {comments?.length}
+                      {comments? comments.length : 0}
                     </span>
                   </div>
+             
 
                 {
-                    comments?.map((comment) => (
-                      <CommentBox key={comment.id} {...comment} />
-                    ))
+                   comments.map((list) => (
+                     <CommentBox key={list.key} list={list} />
+                    
+                   ))
                   }
+                
                 </div>
               </DisclosureWrapper>
             </BgRotate>

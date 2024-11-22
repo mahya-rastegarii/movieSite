@@ -5,12 +5,18 @@ import Login from "./pages/User/Login";
 import Register from "./pages/User/Register";
 import Dashboard from "./pages/User/Dashboard/Dashboard";
 import NotFound from "./pages/NotFound";
+import UnhandledException from "./pages/UnhandledException";
 import MovieSiteContainer from "./pages/MovieSiteContainer";
 import Movie from "./pages/Movie/Movie";
+import Profile from "./pages/User/Dashboard/Profile";
+import Comments from "./pages/User/Dashboard/Comments";
+import FavoritesList from "./pages/User/Dashboard/FavoritesList";
+import ForgotPassword from "./pages/User/ForgotPassword";
 
 const router = createBrowserRouter([
     {
       element: <MovieSiteContainer/>,
+      errorElement: <UnhandledException />,
       children: [
 
     {
@@ -34,10 +40,29 @@ const router = createBrowserRouter([
         path: "signUp",
         element: <Register/>
     },
+    {
+      path:"forgotPassword",
+      element: <ForgotPassword/>
+    },
 
     {
       path: "dashboard",
-      element: <Dashboard/>
+      element: <Dashboard/>,
+      children: [
+           {
+            path:"profile",
+            element: <Profile/>,
+            index: true
+           },
+           {
+            path:"comments",
+            element: <Comments/>
+           },
+           {
+            path:"favoriteList",
+            element: <FavoritesList/>
+           },
+      ]
     },
 
     {
