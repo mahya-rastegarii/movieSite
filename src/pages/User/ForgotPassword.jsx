@@ -11,7 +11,7 @@ const ForgotPassword = () => {
 
   const submitForm = async(data) =>{
      const {email} = data;
-    const {data : dataUpdata, error}= await supabase.auth.resetPasswordForEmail(email, {redirectTo: 'http://localhost:5173/updatePassword'})
+    const {data : dataUpdata, error}= await supabase.auth.resetPasswordForEmail(email, {redirectTo: 'https://movie-site-topaz.vercel.app/updatePassword'})
 
     if(error) {
       console.log("forgotPasswordError", error)
