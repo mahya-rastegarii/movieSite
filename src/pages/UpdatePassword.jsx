@@ -3,11 +3,13 @@ import BgRotate from "../components/BackgroundRotate/BgRotate";
 import FormInput from "../components/input/formInput/FormInput";
 import Button from "../components/Button/Button";
 import { supabase } from "../core/supabaseClient";
+import { useNavigate, redirect } from "react-router-dom";
 
 
 
 const UpdatePassword = () => {
 
+  // const navigate = useNavigate();
   const { register, handleSubmit, watch, formState: { errors }} = useForm();
 
 
@@ -20,6 +22,7 @@ const UpdatePassword = () => {
     console.log("Error", error)
   } else {
     console.log("Passsword Updated Successfully!!", updateData)
+    redirect("/signIn")
   }
   }
 

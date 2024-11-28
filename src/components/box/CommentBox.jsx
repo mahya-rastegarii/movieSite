@@ -4,12 +4,15 @@ import { BsHandThumbsUp, BsHandThumbsDown} from 'react-icons/bs'
 
 
 import Button from '../../components/Button/Button'
+import { useSelector } from 'react-redux';
 
 
 
 
 export default function CommentBox({list}) {
 
+
+  const session = useSelector( state => state.user.session);
 
 
  const [hide, setHide]= useState(false);
@@ -41,7 +44,7 @@ export default function CommentBox({list}) {
         
         {/* <img className=' rounded-full  ml-4' src={pic} width={51} alt={userName} /> */}
          
-        <span className=' text-sm text-color-2'> {list.userName} </span>
+        <span className=' text-sm text-color-2'> {list.userName === session?.userName ? "شما" : list.userName} </span>
         </div>
         {/* <div className="flex w-full  justify-end  items-center  ">
        
@@ -54,9 +57,14 @@ export default function CommentBox({list}) {
        </div>
        </div>
        <div className=' flex min-w-fit justify-center items-center'>
-       <Button width="w-full"  bgColor='bg-color-2' onClick={() => setHide(true)}>
+        
+        {
+          !list.userName === session?.userName ? <Button width="w-full"  bgColor='bg-color-2' onClick={() => setHide(true)}>
           گزارش اسپویل
-        </Button>
+        </Button> 
+        : null
+        }
+      
        </div>
       
     </div>

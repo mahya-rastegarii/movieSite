@@ -1,16 +1,49 @@
 import { BsHandThumbsDown, BsHandThumbsUp } from 'react-icons/bs'
 import CommentList from "../../../fetch/comments"
 import PaginationBox from '../../../components/box/PaginationBox'
+import usePaginatedFetch from '../../../usePaginatedFetch';
+import { useEffect, useState } from 'react';
+import LoadingPage from '../../../components/Loading/LoadingPage';
+import { supabase } from '../../../core/supabaseClient';
+import { useSelector } from 'react-redux';
 
 
 
 export default function Comments() {
+
+  const session = useSelector( state => state.user.session)
+  
+
+  const [commentLIst, setCommentList]= useState([]);
+  const getAllUserComment = async() => {
+    const {data, error}= await supabase.from("profile").select("comments").eq("userId", session.id);
+    if(error) console.log("Eror", error)
+    else setCommentList(data);
+  }
+
+  const [loading, data] = usePaginatedFetch(2, commentLIst);
+  
+  const [page, setPage]= useState(1)
+const [comment, setComment]= useState();
+
+useEffect( () => {
+  getAllUserComment();
+}, [])
+
+  useEffect( () => {
+    if(loading) return;
+    setComment(data[page - 1])
+ }, [loading, page])
+ 
   return (
     <>
    {
-
-CommentList ?  CommentList.map((data) => (
-        <>
+     loading && <LoadingPage/> 
+   }
+   {
+    !loading && comment?.length > 0 ?  comment.map((data) => (
+      
+    <>
      <div className=' flex flex-col justify-center  space-y-3 p-2 border border-color-4 text-color-1 mb-3 my-1'>
         
         <div className="flex justify-around  items-center">
@@ -30,10 +63,12 @@ CommentList ?  CommentList.map((data) => (
          <p>{data.comment}</p>
       
       </div>
-      {/* <PaginationBox/> */}
+      {
+          page > 1 &&   <PaginationBox pages={data.length} setPage={setPage} activePage={page}/>
+        }
       </>
     )) 
-    : <p> کامنتی موجود نیست.</p>
+    : <div className=" w-full flex justify-center items-center my-16 text-color-1"><span> لیست شما خالی است </span></div>
    }
     </>
   )

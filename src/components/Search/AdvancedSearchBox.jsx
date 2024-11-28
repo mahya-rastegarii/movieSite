@@ -10,13 +10,22 @@ import PostType from "../Button/PostType";
 
 import { activeTypeGenre, fetchCountries } from '../../core/functions';
 import { supabase } from '../../core/supabaseClient';
+import LoadingPage from '../Loading/LoadingPage';
 
 export default function AdvancedSearchBox() {
 
   
   const [active, setActive]= useState("movies")
-  const [genres, setGenres]= useState([])
-  const [countries, setCountries]= useState([]);
+  const [genres, setGenres]= useState( {
+    loading: false,
+    allGenre: []
+  })
+  const [countries, setCountries]= useState(
+    {
+      loading: false,
+      country: []
+    }
+  );
   const [visible, setVisible] =useState(false);
 
 
@@ -26,6 +35,7 @@ export default function AdvancedSearchBox() {
   const [countryValue, setCountryValue] = useState('none');
   const [statusValue, setStatusValue] = useState('none')
   
+
 
  
 
@@ -82,8 +92,15 @@ export default function AdvancedSearchBox() {
 
  useEffect(() => {
   async function fetchGenres() {
+    setGenres({
+    ...genres,
+      loading:true
+    })
      const result = await activeTypeGenre(active);
-     setGenres(result)
+     setGenres({
+      loading:false,
+      allGenre: result
+     })
      
      if(active === "series") 
       setVisible(true)
@@ -94,9 +111,16 @@ export default function AdvancedSearchBox() {
  
 
  useEffect(() => {
-  async function fetchCountriesHandler() {
+   async function fetchCountriesHandler() {
+    setCountries ({
+      ...countries,
+      loading:true
+    })
     const result = await fetchCountries();
-    setCountries(result);
+    setCountries({
+      loading:false,
+      country: result
+    });
   }
   
   fetchCountriesHandler()
@@ -120,7 +144,8 @@ export default function AdvancedSearchBox() {
 
             <option  value={genreValue}> همه </option>
               {
-                genres?.map((genre) => (
+                genres.loading ? <LoadingPage/> 
+                : genres.allGenre?.map((genre) => (
                   <option key={genre.id} value={genre}>
                      {active === "movies" ? genre.moviesGenre : genre.serialsGenre}
                 </option>
@@ -138,7 +163,8 @@ export default function AdvancedSearchBox() {
             <select className=' bg-color-4 shadow-md outline-none rounded-xl p-2 text-sm' onChange={(e) => setCountryValue(e.target.value)}>
               <option value={countryValue} >---</option>
             {
-              countries?.map((c) =>{
+              countries.loading ? <LoadingPage/> 
+             : countries.country?.map((c) =>{
                 // console.log(index);
                 return(<option key={c.id} value={c.country}>{c.country}</option>)
               })

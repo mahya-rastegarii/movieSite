@@ -16,6 +16,7 @@ import { activeTypeGenre, fetchAllMovies, fetchTopMovies, genreMovieList } from 
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {  fetchMoviesList } from "../../redux/slice/MoviesSlice";
+import LoadingPage from "../Loading/LoadingPage";
 
 
 export default function GenreSideBar() {
@@ -29,6 +30,7 @@ export default function GenreSideBar() {
  const [activeGenre, setActiveGenre] =useState([]);
  const [genres, setGenres]= useState([])
 
+const [loading, setLoading]= useState(false)
 
  const typeHandler = () => {
   if(active === "movies")
@@ -40,7 +42,9 @@ export default function GenreSideBar() {
  const fetchDataAll = async() => {
 
   const type = typeHandler();
+  setLoading(true);
   const result = await fetchAllMovies(type)
+  setLoading(false);
    
    setCount(result.count);
  }
@@ -72,13 +76,14 @@ const fetchTopGenre= async(e) => {
 const fetchSpecialGenre = async(e) => {
  
   const value = e.target.innerText;
+  
   setActiveGenre(value);
 
   const typeMovies = typeHandler();
 
-  const result = await genreMovieList(typeMovies, activeGenre);
+  const result = await genreMovieList(typeMovies, value);
       // dispatch(fetchMoviesList(result));
-      console.log("OthersGenreActive", activeGenre );
+      console.log("OthersGenreActive", value );
       console.log("Others", result);
 
 }
@@ -88,19 +93,22 @@ const fetchSpecialGenre = async(e) => {
 
 
   useEffect(() => {
+   
     fetchDataAll()
   }, [active])
   
+  
    useEffect(() => {
+
    async function fetchGenres() {
-      const result = await activeTypeGenre(active);
+   
+      const result = await activeTypeGenre();
       setGenres(result);
-    
-      
+  
     }
     fetchGenres();
    
-  },[active] )
+  },[] )
   
   
  
@@ -120,7 +128,8 @@ const fetchSpecialGenre = async(e) => {
         <PostType  active={active} setActive={setActive}/>
       </div>
       <span className=" font-semibold text-sm  text-color-1"> ژانر ها </span>
-
+     {
+      loading ? <div className=" mt-2"><LoadingPage/></div>: (
      
         <>
               <Button
@@ -134,7 +143,7 @@ const fetchSpecialGenre = async(e) => {
                   <Link to={`/list/${active}/all`}>
             <div className=" w-full  flex justify-between px-3 ">
                   <span>همه {active === "movies" ? "فیلم ها" : "سریال ها"}</span>
-                  <span>{count}</span>
+                  <span>{count || 0}</span>
             </div>
                   </Link>
           
@@ -162,25 +171,25 @@ const fetchSpecialGenre = async(e) => {
           <div className="w-full grid gap-3 justify-items-center grid-cols-1 md:grid-cols-2">
             {genres?.map((genre) => (
               // <div className=" w-full shadow-md  flex justify-center items-center p-2 bg-color-2 rounded-xl  hover:bg-color-hover cursor-pointer custom-transition delay-150" onClick={getDataGenre} key={index}>
-              <Button
+         <Button
                 width="w-full"
-                active={ active === "movies" ? activeGenre.includes(genre.moviesGenre) : activeGenre.includes(genre.serialsGenre)}
+                active={  activeGenre.includes(genre.moviesGenre)}
                 bgColor=" bg-color-2"
                 clicked= {fetchSpecialGenre}
                 key={genre.id}
               >
-                <Link to={`/list/${active}/${active === "movies" ? genre.moviesGenre : genre.serialsGenre}`}>
+                <Link to={`/list/${active}/${genre.moviesGenre}`}>
                 <span>
 
-                { active === "movies" ? genre.moviesGenre : genre.serialsGenre }
+                { genre.moviesGenre }
                 </span>
                 </Link>
               </Button>
-
               // </div>
             ))}
           </div>
         </>
+     )  }
     </div>
   );
 }

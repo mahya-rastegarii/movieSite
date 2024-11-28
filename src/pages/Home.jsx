@@ -12,6 +12,7 @@ import SliderContainer from "../components/sliders/slider3D/SliderContainer";
 // import { Images } from "../fetch/slider3D-data";
 import { useEffect, useState } from "react";
 import { supabase } from "../core/supabaseClient";
+import SliderLoading from "../components/Loading/SliderLoading";
 
 
 
@@ -20,7 +21,7 @@ import { supabase } from "../core/supabaseClient";
 export default function Home() {
 
   
-
+ const [loading, setLoading]= useState( false);
  
   const [popularMovies, setPopularMovies] = useState();
   const [popularSerials, setPopularSerials] = useState();
@@ -56,48 +57,56 @@ export default function Home() {
 
   
   const  popularMOviesData = async() => {
-
+    setLoading( true);
     const {data} = await supabase.from("movies").select("*").eq("type", "فیلم").gte('imdbRating', 7.5).limit(10)
    
    
-  
     setPopularMovies(data);
+    setLoading(false);
   }
 
   const  popularSerialsData = async() => {
-  
+    setLoading( true);
     const {data} = await supabase.from("movies").select().eq("type", "سریال").gte('imdbRating', 7.5).limit(10)
     
-  
     setPopularSerials(data);
+    setLoading(false);
   }
   
 
   useEffect(() => {
+   
     popularMOviesData();
     popularSerialsData();
+   
   }, [])
  
  
 
   return (
-    <>
     
-        <div className=" w-full flex flex-col justify-center items-center">
+       <div className=" w-full flex flex-col justify-center items-center min-h-screen">
+     {
+          loading ?  (
+           <div className='w-full flex justify-center items-center '><SliderLoading/></div>
+          ) : (
          
-      
+      <>
         <SliderContainer >
         <Slider3D  />
       </SliderContainer>
       
 
           <SideContainer>
-            {slider.map((slider, index) => (
+           {
+        slider.map((slider, index) => (
               <SimpleSlider {...slider} key={index} />
             ))}
           </SideContainer>
+          </>
+            )
+            }
         </div>
-      
-    </>
+    
   );
 }

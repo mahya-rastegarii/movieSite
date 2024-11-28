@@ -4,7 +4,7 @@ import { BiMenu } from "react-icons/bi";
 import ChangeThemeButton from "../Button/ChangeThemeButton";
 import Logo from "../Logo/Logo";
 
-import {  Link, useNavigate } from "react-router-dom";
+import {  Link, redirect, useNavigate } from "react-router-dom";
 import { logOut } from "../../core/functions";
 import Button from "../Button/Button";
 import NavSearchBar from "../Search/NavSearchBar";
@@ -14,7 +14,7 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import MenuComponent from "../menu/MenuComponent";
 import MenuItem from "../Button/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { setSession } from "../../redux/slice/UserSlice";
 
 // import {  RiArrowDownSLine } from "react-icons/ri";
@@ -28,18 +28,22 @@ export default function Navbar() {
   const session = useSelector( (state) => state.user.session);
   const [isOpen, setIsOpen] = useState(false);
   
+  const menuRef = useRef(null);
 
  
 const LogoutUser = async() =>{
 const result = await logOut();
 if(result) {
   const url = new URL(window.location.href);
+  
   dispatch(setSession(null))
-   if(url.pathname === "dashboard/profile" || url.pathname === "dashboard/comments" || url.pathname === "dashboard/favoriteList") {
+   if(url.pathname === "/dashboard/profile" ||  url.pathname === " /dashboard/comments" || url.pathname === " /dashboard/favoriteList")
     navigate("/")
-   } else {
+    else {
      navigate(url.pathname);
    }
+
+
 }
 else{
   console.log("Error")
@@ -47,8 +51,17 @@ else{
 setIsOpen(false)
 } 
 
-
-  
+const handleClickOutside = (e) =>{
+  if(menuRef.current && !menuRef.current.contains(e.target)) {
+    setIsOpen(false);
+  }
+}
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [])
 
   return (
     <div className=" w-full  z-30 bg-color-3 border-b border-color-1 overflow-x-hidden p-6 flex justify-between items-center ">
@@ -68,7 +81,7 @@ setIsOpen(false)
            
              {
               session ? (
-              <div className=" flex flex-col   space-y-11 ">
+              <div className=" flex flex-col   space-y-11" ref={menuRef}>
                <li className="w-28 ml-4">
                  {" "}
                  <Button

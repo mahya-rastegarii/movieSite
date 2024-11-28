@@ -27,7 +27,7 @@ const MovieSiteContainer = () => {
   
 
   return (
-          <div className="w-full relative bg-color-4 dark:theme-dark custom-transition">
+          <div className="w-full relative bg-color-4 dark:theme-dark custom-transition min-h-screen">
  <Navbar />
  
  <Outlet/>

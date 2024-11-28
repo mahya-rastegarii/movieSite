@@ -22,7 +22,8 @@ import { fetchMovieInfo } from '../../../core/functions';
 
 
 
-export default function SimpleSlider({ title, data : allData, delay}) {
+
+export default function SimpleSlider({ title, data : allData, delay }) {
  
  
   
@@ -62,6 +63,10 @@ dispatch(fetchMovie(result));
           
  
        </div>
+      
+      
+
+       
   <div className='w-full h-full'>
 
         <Swiper
@@ -120,6 +125,7 @@ dispatch(fetchMovie(result));
     </Swiper>
 
       </div>
+       
       </div>
   )
 }

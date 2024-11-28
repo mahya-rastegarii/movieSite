@@ -6,7 +6,7 @@ export const MoviesSlice = createSlice({
     initialState: {
         movieList: [],
         movieData: [],
-       favoritesMovie: [],
+       favoritesMovie:[],
         
     },
     reducers: {

@@ -26,33 +26,57 @@ import { useEffect, useState } from "react";
 // import { LiaKeySolid } from "react-icons/lia";
 import { FiHeart } from "react-icons/fi";
 import { setFavoritesMovie } from "../../redux/slice/MoviesSlice";
-import { redirect } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
+import LoadingPage from "../../components/Loading/LoadingPage";
+import MovieLoading from "../../components/Loading/MovieLoading";
+
 
 export default function Movie() {
  
 
 
-  const movieData = useSelector( state => state.movies.movieData)
+  const movieData = useSelector( state => state.movies.movieData);
+  const favoritesMovie = useSelector ( (state) => state.movies.favoritesMovie)
   const session = useSelector( state => state.user.session)
-  const favoriteMovie = useSelector( state => state.movies.favoritesMovie);
-  const [likeMovie, setLikeMovie]= useState(false);
  
-  const [comments, setComments]= useState([]);
+
+  
+  const [likeMovie, setLikeMovie]= useState(false);
+ const [movie, setMovie] =useState({
+  loading:false,
+  data: [],
+ })
+  const [comments, setComments]= useState({
+    loading:false,
+    commentData:[],
+  });
  const [commentText, setCommentText]= useState("");
 
- const dispatch = useDispatch();
+ const [userComments, setUserComments]= useState([]);
+ 
+ const navigate = useNavigate();
+ const dispatch = useDispatch()
 
 
 
   const fetchComments = async() => {
+    setComments({
+      ...comments,
+      loading:true,
+    })
     const { data} = await supabase.from('comments').select("*").eq("movieName", movieData[0].name)
-    setComments(data)
+    setComments({
+      loading:false,
+      commentData: data,
+    })
     // console.log("data", data)
   }
 
   const addNewComment = async() => {
 
+ if(session) {
 
+ 
     const {error}= await supabase.from('comments').insert({ userName:session.userName,
       pic:null,
       movieName:movieData[0].name,
@@ -67,27 +91,51 @@ export default function Movie() {
      else {
       console.log('NewComment Add...')
       fetchComments();
+     setUserComments([
+      ...userComments,
+      commentText
+     ])
+     if(userComments){
+
+       const { error} = await supabase.from("profile").update({comments: userComments}).eq("userId", session.userId)
+       if(error) console.error("Error",error)
+ 
+       }
      }
+    } else  redirect("/signIn")
      setCommentText('')
   };
   
 
   const fechFavoriteMovie = async(name) => {
+  
 
-    setLikeMovie(!likeMovie)
-    if(likeMovie) {
-      dispatch(setFavoritesMovie(name))
-      if(session){
+    if(session){
+        setLikeMovie(!likeMovie)
 
-        const {error } = await supabase.from("profile").update({movies:favoriteMovie}).eq("userId", session.id)
+        if(likeMovie) {
+
+          
+        dispatch(setFavoritesMovie(name))
+
+         
+        console.log("favoriteMovie2", favoritesMovie)
+        const {error } = await supabase.from("profile").update({movies:favoritesMovie}).eq("userId", session.userId)
               if(error)
                 console.error("Error",error)
       
-     }else {
-      redirect("/signIn")
-    }
+     } else {
+      const newData = favoritesMovie.filter( movieName => movieName !== name );
+      const {error } = await supabase.from("profile").update({movies: newData}).eq("userId", session.userId)
+      if(error) {
+        console.log("Eror", error)
+      } 
+     }
       
-    } 
+    }  else {
+      
+      navigate("/signIn")
+    }
   }
   useEffect(() => {
     window.scrollTo(top);
@@ -95,25 +143,68 @@ export default function Movie() {
    
   }, []);
   
- 
+  const LoadData = () => {
+    setMovie({
+      ...movie,
+      loading:true
+    })
+    if(movieData){
+      setMovie({
+        data: movieData,
+        loading:false,
+      })
+    }
+  }
 
+  useEffect(() => {
+  LoadData();
+  },[])
  
 
 
   useEffect(() => {
     fetchComments();
-   
+    
 
   }, [])
 
 
+useEffect( () => {
+   
+  const getLikeMovie = async() =>{
 
+ const name = movieData.name;
+    if(session){
+    const {data: movieFaverite, error} = await supabase.from("profile").select("movies").contains("movies", [name]);
+    if(error) {
+      console.log("Eror", error)
+    }
+   else if(movieFaverite) {
+      setLikeMovie(true)
+    }
+     else {
+      setLikeMovie(false)
+     }
+  } else return;
+}
+      
+  getLikeMovie()
+  
+}, [])
   return (
     <>
-     
-        <div className=" flex flex-col justify-center items-center mb-16 space-y-20">
+        <div className=" flex flex-col justify-center items-center mb-16 space-y-20 min-h-screen">
+     {
+      movie.loading && (
+        <div className=" w-full flex mt-2 justify-center items-start min-h-screen">
+         
+          <MovieLoading />
+        </div>
+      )
+     }
           {
-          movieData?.map((movie) => (
+
+     !movie.loading && movie.data?.map((movie) => (
             <>
           
 
@@ -281,13 +372,15 @@ export default function Movie() {
                     <FaRegCommentDots className="inline text-color-2 text-2xl" />
 
                     <span className="text-xl text-color-2 ">
-                      {comments? comments.length : 0}
+                      {comments.commentData? comments.commentData.length : 0}
                     </span>
                   </div>
              
-
+                 
                 {
-                   comments.map((list) => (
+
+                  comments.loading ? <LoadingPage/> 
+                   :comments.commentData.map((list) => (
                      <CommentBox key={list.key} list={list} />
                     
                    ))

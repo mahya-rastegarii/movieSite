@@ -5,34 +5,37 @@ import  { useEffect, useState } from "react";
 import MoviesBox from "../../components/box/MoviesBox";
 import SideContainer from "../../components/sideBar/SideContainer";
 // import { MoviesData } from "../../fetch/movies-data";
-import { useSelector } from "react-redux";
 import PaginationBox from "../../components/box/PaginationBox";
 import usePaginatedFetch from "../../usePaginatedFetch";
+import LoadingPage from "../../components/Loading/LoadingPage";
 
 
 export default function ShowList() {
   
  
 
-  const movieList = useSelector( state => state.movies.movieList);
+  
  
-  const [loading, data] = usePaginatedFetch(5, movieList);
+ 
   
+  const [loading, data] = usePaginatedFetch(5);
+
   const [page, setPage]= useState(1)
-  const [movies, setMovies]=useState(null);
+  const [movies, setMovies]=useState([]);
   
-  useEffect( () => {
-     if(loading) return;
-     setMovies(data[page - 1])
-  }, [loading, page])
-  
+ 
+
+useEffect( () => {
+  if(loading) return;
+ setMovies(data[page - 1])
+}, [loading, page])
 
 
   useEffect(() => {
     window.scrollTo(top);
 
    
-  }, []);
+  }, [page]);
 
  
  
@@ -65,21 +68,31 @@ export default function ShowList() {
        </GenreProvider> */}
       <SideContainer>
         <div className="w-full px-4 min-h-screen  lg:w-10/12 flex flex-col justify-center items-center space-y-16 mb-5">
-          {/* {isLoading ? (
+          {loading && (
             <div className=" w-full flex mt-2 justify-center items-start min-h-screen">
              
               <LoadingPage />
             </div>
-          ) : ( */}
+          )
+           }
+          
           {
-            movies?.length > 0 ? movies.map((data) => <MoviesBox key={data.id} data={data} />) :  <div className=" w-full flex justify-center items-center"><p className=" font-bold text-lg  text-color-1"> داده ای یافت نشد</p></div>
-          }
-          {/* )} */}
-        </div>
+            !loading && movies.length < 1 ?  <div className=" w-full flex justify-center items-center"><p className=" font-bold text-lg  text-color-1"> داده ای یافت نشد</p></div>
+            
+            :movies.map((data) => <MoviesBox key={data.id} data={data} />)
 
+           } 
+         
+          
+            
+
+           
+        
+        </div>
         {
-          page > 1 &&   <PaginationBox pages={data.length} setPage={setPage} activePage={page}/>
+          data.length > 5 &&   <PaginationBox pages={data.length} setPage={setPage} activePage={page}/>
         }
+
     
       </SideContainer>
     </>

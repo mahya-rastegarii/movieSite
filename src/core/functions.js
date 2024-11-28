@@ -1,19 +1,15 @@
-import { setUserName } from "../redux/slice/UserSlice";
+
+
 import { supabase } from "./supabaseClient";
 
 
 //? Movies
-export  const activeTypeGenre = async(active) => {
+export  const activeTypeGenre = async() => {
 
-    if(active === "movies") {
-      const {data} = await supabase.from("genres").select('moviesGenre');
+   
+      const {data} = await supabase.from("genres").select("*");
       return data;
-    }
-    else {
-      const {data} = await supabase.from("genres").select('serialsGenre');
-      return data;
-
-    }
+  
   }
 
  export const fetchAllMovies = async(type) => {
@@ -30,7 +26,7 @@ export  const activeTypeGenre = async(active) => {
 
   export const genreMovieList = async(type, activeGenre) => {
     
-    const {data} = await supabase.from("movies").select("*").eq("type", type).contains("genre", [activeGenre]);
+    const {data} = await supabase.from("movies").select("*").containedBy("genre", activeGenre).eq("type", type);
     return data;
 
   }
