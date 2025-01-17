@@ -39,7 +39,8 @@ const dispatch =useDispatch()
     const {data: profile,error:profileError} = await supabase.from('profile').select("userName").eq("userId", user.id).single();
 
     if(profileError){
-      console.error('Error fetching profile: ', profileError)} else {
+      console.error('Error fetching profile: ', profileError)
+    } else {
         dispatch(setSession(profile))
         console.log(" User Loggerd in: ", user)
         navigate("/")

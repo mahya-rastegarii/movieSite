@@ -7,7 +7,7 @@ import MenuItem from '../../../components/Button/MenuItem';
 import Profile from './Profile';
 
 import ProfilePhoto from '/assets/img/user.png';
-import { NavLink, Outlet, redirect, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FavoritesList from './FavoritesList';
 import { logOut } from '../../../core/functions';

@@ -1,5 +1,5 @@
 import  {  useState } from 'react'
-import { CiEdit } from "react-icons/ci";
+// import { CiEdit } from "react-icons/ci";
 // import { MdOutlineAddAPhoto } from "react-icons/md";
 
 
@@ -9,19 +9,55 @@ import FormInput from '../../../components/input/formInput/FormInput'
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from '../../../core/functions';
 import { setSession } from '../../../redux/slice/UserSlice';
+import { supabase } from '../../../core/supabaseClient';
+import LoadingPage from '../../../components/Loading/LoadingPage';
 // import { redirect } from 'react-router-dom';
+
+
+
+
 export default function Profile() {
  
   const session = useSelector( ( state) => state.user.session);
   const dispatch = useDispatch()
   // const [visible, setVisible]= useState(false)
+const [isChecked, setIsChecked] =useState(false)
+  const { register, handleSubmit, formState: { errors }, reset} = useForm({
+    defaultValues:{
+      userName:  session?.userName,
+      email:  session?.email,
+      oldPass: '',
+      newPass: ''
+    }
+  });
+  
+  const submitForm = async(data) => {
+   const {userName, email, newPass, oldPass} = data;
+   if(isChecked && oldPass !== session.password){
+    alert("پسورد فعلی نادرست است");
+   } else if(!isChecked || oldPass === session.password) {
 
-  const { register, handleSubmit, formState: { errors }} = useForm();
-  
-  const submitForm = (data) => {
-    console.log("FormData", data)
+     const {data: {user}, error: userError} = await supabase.auth.updateUser({
+      email,
+      password: newPass ? newPass : session.password
+     })
+     if(!userError){
+      const {data: dataProfile, error:profileError} = await supabase.from('profile').update({userName, email, password:user.password}).eq("userId", user.id).select("*");
+      if(profileError){
+        console.error('Error fetching profile: ', profileError)
+      } else {
+        console.log('fetching profile: ', dataProfile)
+        dispatch(setSession(dataProfile));
+        console.log("session", session)
+        }
+     } else {
+       console.log("Error", userError);
+     }
+   reset();
+   }
+
+
   }
-  
   
   
   return (
@@ -45,36 +81,66 @@ export default function Profile() {
                 <CiEdit className='inline hover:text-color-2'/>
                </div> */}
 
-<div className="w-full flex items-center justify-between"> <label htmlFor="oldPass">   نام کاربری :</label> <FormInput value={session?.userName} width='w-7/12'  type='text' id="oldPass"   label=" userName"
+<div className="w-full flex items-center justify-between"> <label htmlFor="userName">   نام کاربری :</label>  <div className='w-7/12 flex flex-col justify-center items-center'><FormInput  width='w-full' dir='ltr' type='text' id="userName"   label="userName"
 register={register}
 errors={errors.userName}
-required=" نام کاربری الزامی است"/></div>
-  <div className="w-full flex items-center justify-between"> <label htmlFor="oldPass"> ایمیل :</label> <FormInput value={session?.email} width='w-7/12'  type='email' id="oldPass"   label=" email"
+required=" نام کاربری الزامی است"/>
+ {
+       errors.userName && errors.userName.type === "required" &&(
+        <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'> {errors.userName?.message}</span></div>
+      )
+      }
+</div></div>
+
+  <div className="w-full flex items-center justify-between"> <label htmlFor="email"> ایمیل :</label>  <div className='w-7/12 flex flex-col justify-center items-center'><FormInput  width='w-full' dir='ltr'  type='email' id="email"   label="email"
 register={register}
 errors={errors.email}
-required=" ایمیل الزامی است "/></div>
-
+required=" ایمیل الزامی است "/>
+ {
+       errors.email && errors.email.type === "required" &&(
+        <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'> {errors.email?.message}</span></div>
+      )
+      }
+</div></div>
 
 </div>
 
 
              
-
+<hr className='w-full border-color-4'/>
 
    
 {/* <div className="flex flex-col w-full lg:w-7/12  justify-center items-center my-16 space-y-4"> */}
 <div  className="w-full  flex flex-col space-y-2">
-       <div className="w-full flex items-center justify-between"> <label htmlFor="oldPass">  رمز عبور فعلی :</label> <FormInput  width='w-7/12'  type='password' id="oldPass"   label="password"
+  <div className="flex justify-start items-center"> <input type="checkbox" name="checkBoxPass" id="checkBoxPass" checked={isChecked} className='accent-color-1' onChange={() => setIsChecked(!isChecked)}/><label htmlFor='checkBoxPass' className='mr-2 font-semibold text-color-1'> تغییر رمزعبور</label></div>
+       <div className={`w-full flex items-center justify-between  ${isChecked ? '' : "opacity-40"}`} > <label htmlFor="oldPass" >  رمز عبور فعلی :</label> <div className='w-7/12 flex flex-col justify-center items-center '><FormInput disable={!isChecked}  width='w-full' dir='ltr'  type='password' id="oldPass"   label="oldPass"
+       name="oldPass"
 register={register}
-errors={errors.password}
-required=" رمز عبور الزامی است"/></div>
-       <div className="w-full flex items-center justify-between"> <label htmlFor="newPass"> رمز عبور جدید :</label> <FormInput width='w-7/12'  type='password' id="newPass" register={register} label="password" 
-        errors={errors.password}
-required=" رمز عبور الزامی است"/></div>
+errors={errors.oldPass}
+required={isChecked ? " لطفا رمزعبور فعلی خود را وارد کنید" : false}/>
+ {
+       errors.oldPass && errors.oldPass.type === "required" &&(
+        <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'> {errors.oldPass?.message}</span></div>
+      )
+      }
+</div>
+</div>
+ 
+       <div className={`w-full flex items-center justify-between  ${isChecked ? '' : "opacity-40"}`}> <label htmlFor="newPass"> رمز عبور جدید :</label> <div className='w-7/12 flex flex-col justify-center items-center '><FormInput disable={!isChecked} width='w-full' name="newPass" type='password' dir='ltr' id="newPass"
+        register={register}
+         label="newPass"
+         errors={errors.newPass}
+         required={isChecked ? " لطفا روزعبور جدید را وارد کنید" : false}/>
+       {
+       errors.newPass && errors.newPass.type === "required" &&(
+        <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'> {errors.newPass?.message}</span></div>
+      )
+      }
+       </div></div>
        <div className='w-full p-5'>
 
        </div>  
-         <Button width='w-full' >
+         <Button width='w-full' type="submit">
 
          ذخیره
          

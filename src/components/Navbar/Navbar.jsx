@@ -93,7 +93,7 @@ const handleClickOutside = (e) =>{
                    {" "}
                    <RiArrowDownSLine className={`${isOpen ? "rotate-180 transform" : ""} h-5 w-5 text-color-1 inline ml-6 custom-transition`} />
                 {
-                 session.userName
+                 session?.userName
                 }
                  </Button>{" "}
                </li>{" "}

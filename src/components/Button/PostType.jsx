@@ -1,5 +1,6 @@
 
 
+import { useEffect } from 'react';
 import Button from './Button'
 
 
@@ -37,11 +38,16 @@ export default function PostType({active, setActive}) {
 
 
 const changeTypeGenre = (e) =>{
- setActive(e.target.name)
-  
+  const value = e.target.name;
+ setActive(value)
+  localStorage.setItem("activeType", value )
+  localStorage.removeItem("activeLink");
 
  
 }
+
+
+
 
   return (
     <div className='w-full flex justify-between shadow-md items-center bg-color-4 rounded-xl p-2 text-color-1 font-semibold text-sm '>

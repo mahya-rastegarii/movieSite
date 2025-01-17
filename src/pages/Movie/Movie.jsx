@@ -25,8 +25,8 @@ import { supabase } from "../../core/supabaseClient";
 import { useEffect, useState } from "react";
 // import { LiaKeySolid } from "react-icons/lia";
 import { FiHeart } from "react-icons/fi";
-import { setFavoritesMovie } from "../../redux/slice/MoviesSlice";
-import { redirect, useNavigate } from "react-router-dom";
+import { setFavoritesMovie, setComments } from "../../redux/slice/MoviesSlice";
+import {  useNavigate } from "react-router-dom";
 import LoadingPage from "../../components/Loading/LoadingPage";
 import MovieLoading from "../../components/Loading/MovieLoading";
 
@@ -36,40 +36,33 @@ export default function Movie() {
 
 
   const movieData = useSelector( state => state.movies.movieData);
-  const favoritesMovie = useSelector ( (state) => state.movies.favoritesMovie)
-  const session = useSelector( state => state.user.session)
+  // const favoritesMovie = useSelector ( (state) => state.movies.favoritesMovie)
+  const session = useSelector( state => state.user.session);
  
+  const comments = useSelector ( (state) => state.movies.comments);
+
 
   
   const [likeMovie, setLikeMovie]= useState(false);
+  const [favoriteMovies, setFavoriteMovies]= useState([])
  const [movie, setMovie] =useState({
   loading:false,
   data: [],
  })
-  const [comments, setComments]= useState({
-    loading:false,
-    commentData:[],
-  });
+  const [newComments, setNewComments]= useState([]);
  const [commentText, setCommentText]= useState("");
 
- const [userComments, setUserComments]= useState([]);
+//  const [userComments, setUserComments]= useState([]);
  
  const navigate = useNavigate();
  const dispatch = useDispatch()
-
-
-
+ const url = new URL(window.location.href)
+console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
   const fetchComments = async() => {
-    setComments({
-      ...comments,
-      loading:true,
-    })
+
     const { data} = await supabase.from('comments').select("*").eq("movieName", movieData[0].name)
-    setComments({
-      loading:false,
-      commentData: data,
-    })
-    // console.log("data", data)
+    setNewComments(data)
+    console.log("data", data)
   }
 
   const addNewComment = async() => {
@@ -91,46 +84,63 @@ export default function Movie() {
      else {
       console.log('NewComment Add...')
       fetchComments();
-     setUserComments([
-      ...userComments,
-      commentText
-     ])
-     if(userComments){
+    //  setUserComments([
+    //   ...userComments,
+    //   commentText
+    //  ])
+    dispatch(setComments(commentText))
+    if(comments){
+      const { error} = await supabase.from("profile").update({comments}).eq("userId", session.userId)
+     if(error) console.error("Error",error)
+    }
 
-       const { error} = await supabase.from("profile").update({comments: userComments}).eq("userId", session.userId)
-       if(error) console.error("Error",error)
- 
-       }
+
+      //  const { error} = await supabase.from("profile").update({comments: userComments}).eq("userId", session.userId)
+      //  if(error) console.error("Error",error)
+      
      }
-    } else  redirect("/signIn")
+    } else  navigate("/signIn")
      setCommentText('')
   };
   
 
-  const fechFavoriteMovie = async(name) => {
+  const fechFavoriteMovie = async(name, pic) => {
   
 
     if(session){
-        setLikeMovie(!likeMovie)
-
-        if(likeMovie) {
-
+        setLikeMovie(true)
+         dispatch(setFavoritesMovie({name, pic}))
+        // const {data: moviesData, error: errorMoviesData} = await supabase.from("profile").select("movies").eq("userId", session.userId)
+        // if(moviesData) {
+        //  setFavoriteMovies(moviesData)
+        //  console.log("moviesDatares",moviesData)
+        // } else {
+        //   console.error("errorMoviesData", errorMoviesData)
+        // }
+        
+        // if(likeMovie) {
           
-        dispatch(setFavoritesMovie(name))
-
+          
+        // setFavoriteMovies( movie => [...movie, {pic , name}])
+     
          
-        console.log("favoriteMovie2", favoritesMovie)
-        const {error } = await supabase.from("profile").update({movies:favoritesMovie}).eq("userId", session.userId)
-              if(error)
-                console.error("Error",error)
+        // console.log("favoriteMovie2", favoriteMovies)
+    //     const {error } = await supabase.from("profile").update({movies:favoriteMovies}).eq("userId", session.userId)
+    //           if(!error)
+    //             console.log("success  Update Data",favoriteMovies)
+    //             else console.error("Error",error)
+           
       
-     } else {
-      const newData = favoritesMovie.filter( movieName => movieName !== name );
-      const {error } = await supabase.from("profile").update({movies: newData}).eq("userId", session.userId)
-      if(error) {
-        console.log("Eror", error)
-      } 
-     }
+    //  } else{
+    //   const newData = moviesData.filter( movieName => movieName !== name );
+    //   const {error } = await supabase.from("profile").update({movies: newData}).eq("userId", session.userId)
+    //   if(!error) {
+    //    console.log("newData", newData)
+     
+    //   } else {
+    //     console.log("Eror", error)
+    //   }
+    //  } 
       
     }  else {
       
@@ -169,28 +179,28 @@ export default function Movie() {
   }, [])
 
 
-useEffect( () => {
+// useEffect( () => {
    
-  const getLikeMovie = async() =>{
+//   const getLikeMovie = async() =>{
 
- const name = movieData.name;
-    if(session){
-    const {data: movieFaverite, error} = await supabase.from("profile").select("movies").contains("movies", [name]);
-    if(error) {
-      console.log("Eror", error)
-    }
-   else if(movieFaverite) {
-      setLikeMovie(true)
-    }
-     else {
-      setLikeMovie(false)
-     }
-  } else return;
-}
+//  const name = movieData.name;
+//     if(session){
+//     const {data: movieFaverite, error} = await supabase.from("profile").select("movies").contains("movies", [name]);
+//     if(error) {
+//       console.log("Eror", error)
+//     }
+//    else if(movieFaverite) {
+//       setLikeMovie(true)
+//     }
+//      else {
+//       setLikeMovie(false)
+//      }
+//   } else return;
+// }
       
-  getLikeMovie()
+//   getLikeMovie()
   
-}, [])
+// }, [])
   return (
     <>
         <div className=" flex flex-col justify-center items-center mb-16 space-y-20 min-h-screen">
@@ -234,7 +244,7 @@ useEffect( () => {
 <div className=" flex justify-center items-center flex-col space-y-4">
 
                   <ImdbLabel score={movie?.imdbRating} />
-                  <FiHeart className={`text-2xl text-red-700 cursor-pointer hover:fill-red-700 ${likeMovie ? "fill-red-700" : ""}`}  onClick={() => fechFavoriteMovie(movie.name)}/>
+                  <FiHeart className={`text-2xl text-red-700 cursor-pointer hover:fill-red-700 ${likeMovie ? "fill-red-700" : ""}`}  onClick={() =>fechFavoriteMovie(movie.name, movie.pic)}/>
 </div>
                 </div>
                 <div className="flex w-full flex-col text-white  space-y-4 ">
@@ -372,15 +382,15 @@ useEffect( () => {
                     <FaRegCommentDots className="inline text-color-2 text-2xl" />
 
                     <span className="text-xl text-color-2 ">
-                      {comments.commentData? comments.commentData.length : 0}
+                      {newComments? newComments.length : 0}
                     </span>
                   </div>
              
                  
                 {
 
-                  comments.loading ? <LoadingPage/> 
-                   :comments.commentData.map((list) => (
+                  // comments.loading ? <LoadingPage/> :
+                  newComments.map((list) => (
                      <CommentBox key={list.key} list={list} />
                     
                    ))

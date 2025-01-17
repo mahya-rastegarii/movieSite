@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchAllMovies, fetchTopMovies } from '../../core/functions';
 import { fetchMoviesList } from '../../redux/slice/MoviesSlice';
+import { useEffect, useState } from 'react';
+import { useActiveLinkContext } from '../../context/ActiveLinkContext';
 
 
 
@@ -16,17 +18,47 @@ export default function Footer() {
 
   const dispatch = useDispatch();
 
+  const [activeGenre, setActiveGenre]= useState([])
 
-  const fetchTop = async(type) => {
+  //  const {activeGenre, setActiveGenre} = useActiveLinkContext();
+  
+
+  const fetchTop = async(e, type) => {
+    const value= e.target.innerText;
+    setActiveGenre(value)
+     const typeMovie = type === "فیلم" ? "movies" : "series"
+    localStorage.setItem("activeType", typeMovie);
+    localStorage.setItem("activeLink", value);
     const result = await fetchTopMovies(type);
-    dispatch(fetchMoviesList(result));
+    const transformedData = result.map(item => ({
+      ...item,
+      genre: item.genre.split(",").map(genre => genre.trim()),
+    }));
+    dispatch(fetchMoviesList(transformedData));
   }
-  const fetchAll = async(type) => {
+  const fetchAll = async(e, type) => {
+    const value= e.target.innerText;
+    setActiveGenre(value);
+
+    localStorage.setItem("activeType", type === "فیلم" ? "movies" : "series");
+    localStorage.setItem("activeLink", value);
+    // console.log("setActiveGenre", value 
  const result = await fetchAllMovies(type);
-    dispatch(fetchMoviesList(result.data));
+ const res = result.data;
+  const transformedData = res.map(item => ({
+    ...item,
+    genre: item.genre.split(",").map(genre => genre.trim()),
+  }));
+    dispatch(fetchMoviesList(transformedData));
   }
 
 
+  // useEffect(() => {
+  //   setActiveGenre(localStorage.getItem("activeLink") || []);
+
+  //   }, [ activeGenre ]);
+  
+  
 
   return (
     <>
@@ -40,8 +72,13 @@ export default function Footer() {
       <ul className=' text-color-1 space-y-3'>
         <li>
         
-          <Link to='/list/movies/all'>
-          <Button btnType='link' width='w-full' clicked={ () =>fetchAll("فیلم")}>
+          <Link to='/list/movies/all?page=1'>
+          <Button
+          btnType='link'
+           width='w-full'
+            clicked={ (e) =>fetchAll(e,"فیلم")}
+            active={activeGenre.includes("همه فیلم ها")}
+            >
           <PiFilmSlateLight className=' inline text-xl ml-1'/>
           همه فیلم ها
           </Button>
@@ -49,9 +86,15 @@ export default function Footer() {
           
         </li>
         <li>
-          <Link to='/list/movies/250_top'>
-           <Button btnType='link' width='w-full' clicked={() => fetchTop("فیلم")}>
-          250 فیلم برتر IMDb
+          <Link to='/list/movies/250_top?page=1'>
+           <Button
+            btnType='link'
+             width='w-full'
+              clicked={(e) => fetchTop(e,"فیلم")}
+              active={activeGenre.includes("250 فیلم برتر IMDB")}
+              
+              >
+          250 فیلم برتر IMDB
           </Button>
           </Link>
         {/* <button className=' hover:text-color-2 custom-transition'>
@@ -63,8 +106,13 @@ export default function Footer() {
       </ul>
       <ul className='  text-color-1 space-y-3 '>
       <li>
-        <Link to='/list/series/all'>
-        <Button btnType='link' width='w-full' clicked={() => fetchAll("سریال")}>
+        <Link to='/list/series/all?page=1'>
+        <Button
+         btnType='link'
+          width='w-full'
+           clicked={(e) => fetchAll(e,"سریال")}
+           active={activeGenre.includes("همه سریال ها")}
+           >
         <PiFilmReelLight className='inline text-xl ml-1' />
         همه سریال ها
         </Button>
@@ -76,9 +124,15 @@ export default function Footer() {
 
       </li>
         <li> 
-          <Link to='/list/series/top_250'>
-          <Button btnType='link' width='w-full' clicked={() => fetchTop("سریال")}>
-           250 سریال برتر IMDb
+          <Link to='/list/series/top_250?page=1'>
+          <Button
+           btnType='link'
+            width='w-full'
+             clicked={(e) => fetchTop(e, "سریال")}
+             active={activeGenre.includes("250 سریال برتر IMDB")}
+
+             >
+           250 سریال برتر IMDB
           </Button>
           </Link>
         {/* <button className=' hover:text-color-2 custom-transition'>

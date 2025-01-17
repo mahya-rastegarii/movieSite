@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 import { Outlet } from 'react-router-dom';
+import { ActiveLinkPovider } from '../context/ActiveLinkContext';
 
 
 
@@ -27,11 +28,14 @@ const MovieSiteContainer = () => {
   
 
   return (
-          <div className="w-full relative bg-color-4 dark:theme-dark custom-transition min-h-screen">
+    <div className="w-full relative bg-color-4 dark:theme-dark custom-transition min-h-screen">
  <Navbar />
  
+      {/* <ActiveLinkPovider> */}
  <Outlet/>
    <Footer />
+
+            {/* </ActiveLinkPovider> */}
             {backToTop && <ScrollToTop />}
                </div>
   )

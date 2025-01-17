@@ -35,8 +35,12 @@ export default {
           hover: 'var(--color)',
         }
        
+      },
+     accentColor: {
+      color: {
+      1:'var(--color)'
       }
-     
+     }
     },
   },
   plugins: []

@@ -19,19 +19,39 @@ export default function FavoritesList() {
 
   const dispatch = useDispatch()
 
-  const favoriteMovie = useSelector( state => state.movies.favoriteMovie)
+  const favoritesMovie = useSelector( state => state.movies.favoritesMovie)
+  const session = useSelector( state => state.user.session);
 
 const [favorite, setFavorite] = useState([]);
  
   
 const getFavoriteMoves = async() =>{
-  const {data, error } = await supabase.from('movies').select("name", "pic").eq('name', favoriteMovie);
-  if(error) { console.log('Error', error)}
-  else {
-    setFavorite(data);
-  }
+
+  setFavorite(favoritesMovie)
+  // const {data: profileData, error: errorData} = await supabase.from("profile"). select("movies").eq("userId", session.userId);
+
+  // if(profileData){
+
+  //   const favoriteMovies = profileData[0].movies
+      
+  //   setFavorite(favoriteMovies);
     
+  //     console.log("favoritesMovie", profileData)
+
+  // const {data: moviesData, error: errorData} = await supabase.from('movies').select("name", "pic").eq('name', profileData[0].movies);
+  // if(errorData) { console.log('Error', errorData)}
+  // else {
+  //   console.log("favoritesMovie", moviesData)
+  //   setFavorite(moviesData);
+  // }
+// } else {
+//   console.log("Error", errorData)
+// }
 }
+
+useEffect(() => {
+  getFavoriteMoves();
+ }, [])
 
 const [loading, data] = usePaginatedFetch(4, favorite);
 
@@ -39,9 +59,6 @@ const [loading, data] = usePaginatedFetch(4, favorite);
   const [list, setList]= useState();
 
 
- useEffect(() => {
-   getFavoriteMoves();
-  }, [])
 
   useEffect( () => {
     if(loading) return;
@@ -65,27 +82,31 @@ const [loading, data] = usePaginatedFetch(4, favorite);
   return (
     <>
      {
-      loading && <LoadingPage/>
+      loading && <div className=" w-full flex justify-center items-center "><LoadingPage/></div>
      }
+  
+    <div className={`w-full ${list?.length > 0 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 place-items-center" : "" }  mx-4 my-12  gap-8 md:gap-4   `}>
      {
-      !loading && list?.length > 0 ? list.map(item => (
-      <>
-    <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-4 my-12  gap-8 md:gap-4 place-items-center  '>
+      !loading && list?.length > 0  ? list.map(item => (
+     <>
         
         <div className="  md:w-5/12   lg:w-9/12 flex flex-col justify-center items-center cursor-pointer space-y-3" onClick={ () => fetchMovieInfoHandler(item.name)}>
         <img className='w-52 h-44 object-cover rounded-md' src={item.pic}   alt="" />
         <span className='text-color-1 font-semibold'>{ item.name}</span>
        </div>
 
-       {
-          page > 1 &&   <PaginationBox pages={data.length} setPage={setPage} activePage={page}/>
-        }
-      
        
-    </div>
-       </>
+   
+   
+      </>
   ))  : <div className=" w-full flex justify-center items-center my-16 text-color-1"><span> لیست شما خالی است </span></div>
 } 
+
+  </div>
+{
+       data.length > 1 &&   <PaginationBox pages={data.length} setPage={setPage} activePage={page}/>
+     }
+
     </>
   )
 }

@@ -63,10 +63,10 @@ export default function AdvancedSearchBox() {
   let query = supabase.from('movies').select("*").eq("type", active)
 
   if(genreValue !== "all") {
-    query = query.contains("genre", genreValue)
+    query = query.contains("genre", [genreValue])
   } 
   if(countryValue !== 'none') {
-    query = query.contains("country", countryValue)
+    query = query.contains("country", [countryValue])
   }
   if(statusValue !== 'none'){
     query = query.eq("status", statusValue)
@@ -144,10 +144,10 @@ export default function AdvancedSearchBox() {
 
             <option  value={genreValue}> همه </option>
               {
-                genres.loading ? <LoadingPage/> 
+                genres.loading ?  <LoadingPage/>
                 : genres.allGenre?.map((genre) => (
                   <option key={genre.id} value={genre}>
-                     {active === "movies" ? genre.moviesGenre : genre.serialsGenre}
+                    {genre.moviesGenre}
                 </option>
                 ))
               }

@@ -25,8 +25,8 @@ export default function Home() {
  
   const [popularMovies, setPopularMovies] = useState();
   const [popularSerials, setPopularSerials] = useState();
+  const [isError, setIsError] = useState(false);
   
-
 
   const slider = [
    // {
@@ -55,32 +55,43 @@ export default function Home() {
     },
   ];
 
+    
   
   const  popularMOviesData = async() => {
     setLoading( true);
-    const {data} = await supabase.from("movies").select("*").eq("type", "فیلم").gte('imdbRating', 7.5).limit(10)
+    const {data, error} = await supabase.from("movies").select("*").eq("type", "فیلم").gte('imdbRating', 7.5).limit(10)
    
-   
-    setPopularMovies(data);
+   if(!error){
+     setPopularMovies(data);
+     setIsError(false)
+    } else {
+      setIsError(true)
+    }
     setLoading(false);
   }
 
   const  popularSerialsData = async() => {
     setLoading( true);
-    const {data} = await supabase.from("movies").select().eq("type", "سریال").gte('imdbRating', 7.5).limit(10)
-    
-    setPopularSerials(data);
+    const {data, error} = await supabase.from("movies").select().eq("type", "سریال").gte('imdbRating', 7.5).limit(10)
+    if(!error){
+      setPopularSerials(data);
+      setIsError(false)
+     } else {
+      setIsError(true)
+     }
     setLoading(false);
   }
   
 
   useEffect(() => {
    
-    popularMOviesData();
+      popularMOviesData();
     popularSerialsData();
-   
+
+    localStorage.removeItem("activeLink");
+    localStorage.removeItem("activeType")
+    
   }, [])
- 
  
 
   return (
@@ -89,12 +100,14 @@ export default function Home() {
      {
           loading ?  (
            <div className='w-full flex justify-center items-center '><SliderLoading/></div>
-          ) : (
+          ) : isError ?  <div className='w-full flex justify-center items-center '><p className='font-semibold text-center text-color-1'> سرور پاسخگو نیست لطفا بعدا تلاش کنید </p></div> : (
          
       <>
-        <SliderContainer >
+       
+        <SliderContainer  >
         <Slider3D  />
       </SliderContainer>
+      
       
 
           <SideContainer>

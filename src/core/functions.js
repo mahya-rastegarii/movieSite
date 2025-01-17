@@ -26,7 +26,13 @@ export  const activeTypeGenre = async() => {
 
   export const genreMovieList = async(type, activeGenre) => {
     
-    const {data} = await supabase.from("movies").select("*").containedBy("genre", activeGenre).eq("type", type);
+    // const {data , error} = await supabase.from("movies").select("*").contains("genre", [activeGenre]).eq("type", type); 
+      
+      const {data , error} = await supabase.from("movies").select("*").ilike("genre", `%${activeGenre}%`).eq("type", type); 
+      // const {data , error} = await supabase.from("movies").select("*").in("genre", `%${activeGenre}%`).eq("type", type); 
+    if(error) {
+      console.error("respo.error", error)
+    }
     return data;
 
   }
@@ -46,8 +52,13 @@ export  const activeTypeGenre = async() => {
 
 
   export const fetchMovieInfo = async(name) =>{
-    const {data}= await supabase.from("movies").select('*').eq("name",name)
-    return data;
+    const {data}= await supabase.from("movies").select('*').eq("name",name);
+    
+    const transformedData = data.map(item => ({
+      ...item,
+      genre: item.genre.split(",").map(genre => genre.trim()),
+    }));
+    return transformedData;
   }
 
 export const logOut = async() => {

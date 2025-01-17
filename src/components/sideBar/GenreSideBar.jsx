@@ -13,22 +13,25 @@ import Button from "../Button/Button";
 // import { GenresData } from "../../fetch/genere-data";
 import { activeTypeGenre, fetchAllMovies, fetchTopMovies, genreMovieList } from "../../core/functions";
 // import { supabase } from "../../core/supabaseClient";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {  fetchMoviesList } from "../../redux/slice/MoviesSlice";
 import LoadingPage from "../Loading/LoadingPage";
+import { useActiveLinkContext } from "../../context/ActiveLinkContext";
 
 
 export default function GenreSideBar() {
 
- 
-  
+
   const dispatch = useDispatch()
+  const navigate = useNavigate();
   
  const [active, setActive]= useState("movies")
  const [count, setCount]= useState(0)
  const [activeGenre, setActiveGenre] =useState([]);
  const [genres, setGenres]= useState([])
+
+//  const {activeGenre, setActiveGenre} = useActiveLinkContext();
 
 const [loading, setLoading]= useState(false)
 
@@ -40,10 +43,11 @@ const [loading, setLoading]= useState(false)
  
  }
  const fetchDataAll = async() => {
-
-  const type = typeHandler();
-  setLoading(true);
+   const type = typeHandler();
+   setLoading(true)
+ 
   const result = await fetchAllMovies(type)
+  
   setLoading(false);
    
    setCount(result.count);
@@ -53,37 +57,58 @@ const [loading, setLoading]= useState(false)
   
   const value = e.target.innerText;
   setActiveGenre(value);
-
+  localStorage.setItem("activeLink", value)
   const typeMovies = typeHandler();
   const result =await fetchAllMovies(typeMovies)
-      dispatch(fetchMoviesList(result.data));
+  const res = result.data;
+  const transformedData = res.map(item => ({
+    ...item,
+    genre: item.genre.split(",").map(genre => genre.trim()),
+  }));
+      dispatch(fetchMoviesList(transformedData));
+
+      navigate(`/list/${active}/all?page=1`)
       console.log("All", result);
-}
-
-const fetchTopGenre= async(e) => {
-
-
-  const value = e.target.innerText;
-  setActiveGenre(value);
-  
-  const typeMovies = typeHandler();
-
-  const result =await fetchTopMovies(typeMovies)
-        dispatch(fetchMoviesList(result))
+    }
+    
+    const fetchTopGenre= async(e) => {
+      
+      
+      const value = e.target.innerText;
+      setActiveGenre(value);
+  localStorage.setItem("activeLink", value)
+      const typeMovies = typeHandler();
+      
+      const result =await fetchTopMovies(typeMovies)
+      
+      const transformedData = result.map(item => ({
+        ...item,
+    genre: item.genre.split(",").map(genre => genre.trim()),
+  }));
+        dispatch(fetchMoviesList(transformedData))
+        navigate(`/list/${active}/250_top?page=1`)
         console.log("250Imdb", result);
 }
 
-const fetchSpecialGenre = async(e) => {
+const fetchSpecialGenre = async(genreMovie) => {
  
-  const value = e.target.innerText;
+  // const value = e.target.innerText;
   
-  setActiveGenre(value);
-
+  setActiveGenre(genreMovie);
+  localStorage.setItem("activeLink", genreMovie)
+  
   const typeMovies = typeHandler();
 
-  const result = await genreMovieList(typeMovies, value);
-      // dispatch(fetchMoviesList(result));
-      console.log("OthersGenreActive", value );
+  const result = await genreMovieList(typeMovies, genreMovie);
+     
+  const transformedData = result.map(item => ({
+    ...item,
+    genre: item.genre.split(",").map(genre => genre.trim()),
+  }));
+  
+      dispatch(fetchMoviesList(transformedData));
+      navigate(`/list/${active}/${genreMovie}?page=1`)
+      // console.log("OthersGenre", genre);
       console.log("Others", result);
 
 }
@@ -98,6 +123,13 @@ const fetchSpecialGenre = async(e) => {
   }, [active])
   
   
+  useEffect(() => {
+   
+  setActiveGenre(localStorage.getItem("activeLink") || []);
+  setActive(localStorage.getItem("activeType") || "movies");
+  }, []);
+
+
    useEffect(() => {
 
    async function fetchGenres() {
@@ -132,6 +164,7 @@ const fetchSpecialGenre = async(e) => {
       loading ? <div className=" mt-2"><LoadingPage/></div>: (
      
         <>
+         {/* <Link to={`/list/${active}/all?page=1`}> */}
               <Button
                     width="w-full"
                     
@@ -140,18 +173,19 @@ const fetchSpecialGenre = async(e) => {
                     clicked={fetchAllGenre}
                    
                   >
-                  <Link to={`/list/${active}/all`}>
+                 
             <div className=" w-full  flex justify-between px-3 ">
                   <span>همه {active === "movies" ? "فیلم ها" : "سریال ها"}</span>
-                  <span>{count || 0}</span>
+                  <span>{count}</span>
             </div>
-                  </Link>
+                
           
             
         
                   </Button>
-
+                  {/* </Link> */}
         
+                  {/* <Link to={`/list/${active}/250_top?page=1`}> */}
           <Button
                     width="w-full"
                     
@@ -160,13 +194,12 @@ const fetchSpecialGenre = async(e) => {
                     clicked={fetchTopGenre}
                    
                   >
-                      <Link to={`/list/${active}/250_top`}>
                       <span>
 
                     250 {active === "movies" ? "فیلم" : "سریال"} برتر IMDB
                       </span>
-                      </Link>
                   </Button>
+                      {/* </Link> */}
 
           <div className="w-full grid gap-3 justify-items-center grid-cols-1 md:grid-cols-2">
             {genres?.map((genre) => (
@@ -175,15 +208,15 @@ const fetchSpecialGenre = async(e) => {
                 width="w-full"
                 active={  activeGenre.includes(genre.moviesGenre)}
                 bgColor=" bg-color-2"
-                clicked= {fetchSpecialGenre}
+                clicked= {() => fetchSpecialGenre(genre.moviesGenre)}
                 key={genre.id}
               >
-                <Link to={`/list/${active}/${genre.moviesGenre}`}>
+                {/* <Link to={`/list/${active}/${genre.moviesGenre}?page=1`}> */}
                 <span>
 
                 { genre.moviesGenre }
                 </span>
-                </Link>
+                {/* </Link> */}
               </Button>
               // </div>
             ))}

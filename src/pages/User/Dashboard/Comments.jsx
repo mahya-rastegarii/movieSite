@@ -1,5 +1,5 @@
 import { BsHandThumbsDown, BsHandThumbsUp } from 'react-icons/bs'
-import CommentList from "../../../fetch/comments"
+// import CommentList from "../../../fetch/comments";
 import PaginationBox from '../../../components/box/PaginationBox'
 import usePaginatedFetch from '../../../usePaginatedFetch';
 import { useEffect, useState } from 'react';
@@ -11,24 +11,34 @@ import { useSelector } from 'react-redux';
 
 export default function Comments() {
 
-  const session = useSelector( state => state.user.session)
-  
+  const session = useSelector( state => state.user.session);
+
+  const comments = useSelector ( (state) => state.movies.comments);
+
 
   const [commentLIst, setCommentList]= useState([]);
+
+
   const getAllUserComment = async() => {
-    const {data, error}= await supabase.from("profile").select("comments").eq("userId", session.id);
-    if(error) console.log("Eror", error)
-    else setCommentList(data);
+    setCommentList(comments)
+    const res= await supabase.from("profile").select("comments").eq("userId", session.id);
+    // if(error) console.log("Eror", error)
+    //   else console.log("Data", dataComments);
+     console.log("Data", res);
+    // else setCommentList(dataComments);
   }
+
+  
+  useEffect( () => {
+    getAllUserComment();
+  }, [])
 
   const [loading, data] = usePaginatedFetch(2, commentLIst);
   
   const [page, setPage]= useState(1)
 const [comment, setComment]= useState();
 
-useEffect( () => {
-  getAllUserComment();
-}, [])
+
 
   useEffect( () => {
     if(loading) return;
@@ -38,7 +48,7 @@ useEffect( () => {
   return (
     <>
    {
-     loading && <LoadingPage/> 
+     loading && <div className=" w-full flex justify-center items-center "><LoadingPage/></div>
    }
    {
     !loading && comment?.length > 0 ?  comment.map((data) => (
@@ -64,7 +74,7 @@ useEffect( () => {
       
       </div>
       {
-          page > 1 &&   <PaginationBox pages={data.length} setPage={setPage} activePage={page}/>
+          data.length > 1 &&   <PaginationBox pages={data.length} setPage={setPage} activePage={page}/>
         }
       </>
     )) 

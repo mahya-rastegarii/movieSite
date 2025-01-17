@@ -31,7 +31,7 @@ export default function Register() {
    console.log("user", user)
     
     const {error:profileError } = await supabase.from("profile")
-    .insert({userId:user.id, userName, email});
+    .insert({userId:user.id, userName, email, password});
     if(profileError) {console.log("ErrorProfile", profileError)}
     else{ console.log("profileUser", user)
       navigate("/signIn")

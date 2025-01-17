@@ -1,29 +1,28 @@
 import { useEffect, useState } from "react"
 
 import _ from "lodash";
-import { useSelector } from "react-redux";
 
-const usePaginatedFetch = (pageSize) => {
+const usePaginatedFetch = (pageSize, movieData) => {
 
-    const movieList = useSelector( state => state.movies.movieList);
+    
 
-    const [loading, setLoading]= useState(true);
+    const [loading, setLoading]= useState(false);
     const [data, setData] =useState([]);
 
     const getData = () => {
-      
-        const paginatedData = _.chunk(movieList, pageSize);
+        // setLoading(true)
+        const paginatedData = _.chunk(movieData, pageSize);
          console.log("paginatedData", paginatedData)
         setData(paginatedData);
-        setLoading(false)
+        // setLoading(false)
     }
 
 useEffect( () => {
  getData();
-}, [])
+}, [movieData])
 
 
-return [loading, data]
+return [loading, setLoading, data]
 };
 
 export default usePaginatedFetch;
