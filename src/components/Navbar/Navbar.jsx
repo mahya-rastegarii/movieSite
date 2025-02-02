@@ -137,13 +137,13 @@ const handleClickOutside = (e) =>{
             
             
 
+           </>
+            }
             <li>
               <div className=" lg:flex hidden">
                 <ChangeThemeButton />
               </div>
             </li>
-           </>
-            }
           </ul>
         </div>
       </div>

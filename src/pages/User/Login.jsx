@@ -8,12 +8,16 @@ import { supabase } from '../../core/supabaseClient';
 import { useDispatch } from 'react-redux';
 import { setSession } from '../../redux/slice/UserSlice';
 import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import ButtonLoading from '../../components/Loading/ButtonLoading';
 
 export default function Login() {
 
  const navigate = useNavigate();
 const dispatch =useDispatch()
   
+ const [loading, setLoading]= useState(false)
+
   const { register, handleSubmit, formState: { errors },} = useForm({
     defaultValues: {
       email: localStorage.getItem('email') || "",
@@ -25,19 +29,20 @@ const dispatch =useDispatch()
   
 
   const submitForm = async(data) =>{
-    console.log("data", data)
+    setLoading(true);
     
+    console.log("data", data)
     const {email, password, checkBox}= data;
 
     const {data:{user}, error} = await supabase.auth.signInWithPassword({
       email,
       password
     })
+    setLoading(false);
     if(error) {console.log("Error", error)}
-  console.log("user", user)
+  console.log("user", user);
 
     const {data: profile,error:profileError} = await supabase.from('profile').select("userName").eq("userId", user.id).single();
-
     if(profileError){
       console.error('Error fetching profile: ', profileError)
     } else {
@@ -53,6 +58,7 @@ const dispatch =useDispatch()
         localStorage.removeItem('email');
         localStorage.removeItem('password');
       }
+     
   }
   
   return (
@@ -132,9 +138,13 @@ const dispatch =useDispatch()
             <label htmlFor="remember-me" className=' text-color-1 text-sm'>مرا به خاطر بسپار</label>
             </div>
             <div className="flex justify-center items-center w-full ">
-        <Button width="w-full mt-6" type="submit"  >
-
-         ورود   
+        <Button width="w-full mt-6" type="submit" 
+        disable={loading}
+        >
+         {
+          loading ? <ButtonLoading/> : "ورود"
+         }
+            
         </Button>
 
        </div>

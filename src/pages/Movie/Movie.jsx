@@ -25,7 +25,7 @@ import { supabase } from "../../core/supabaseClient";
 import { useEffect, useState } from "react";
 // import { LiaKeySolid } from "react-icons/lia";
 import { FiHeart } from "react-icons/fi";
-import { setFavoritesMovie, setComments } from "../../redux/slice/MoviesSlice";
+import {  setComments, setFavoritesMovie } from "../../redux/slice/MoviesSlice";
 import {  useNavigate } from "react-router-dom";
 import LoadingPage from "../../components/Loading/LoadingPage";
 import MovieLoading from "../../components/Loading/MovieLoading";
@@ -36,7 +36,7 @@ export default function Movie() {
 
 
   const movieData = useSelector( state => state.movies.movieData);
-  // const favoritesMovie = useSelector ( (state) => state.movies.favoritesMovie)
+  const favoritesMovie = useSelector ( (state) => state.movies.favoritesMovie);
   const session = useSelector( state => state.user.session);
  
   const comments = useSelector ( (state) => state.movies.comments);
@@ -44,12 +44,16 @@ export default function Movie() {
 
   
   const [likeMovie, setLikeMovie]= useState(false);
-  const [favoriteMovies, setFavoriteMovies]= useState([])
+  // const [favoriteMovies, setFavoriteMovies]= useState([])
  const [movie, setMovie] =useState({
   loading:false,
   data: [],
  })
-  const [newComments, setNewComments]= useState([]);
+  const [newComments, setNewComments]= useState({
+    loading:false,
+    comments:[],
+  });
+ 
  const [commentText, setCommentText]= useState("");
 
 //  const [userComments, setUserComments]= useState([]);
@@ -57,46 +61,89 @@ export default function Movie() {
  const navigate = useNavigate();
  const dispatch = useDispatch()
  const url = new URL(window.location.href)
-console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
+// console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
+
   const fetchComments = async() => {
 
     const { data} = await supabase.from('comments').select("*").eq("movieName", movieData[0].name)
-    setNewComments(data)
+    setNewComments({
+      ...newComments,
+      comments: data
+    })
     console.log("data", data)
   }
+
+  const getUserComments = async() => {
+    const { data: comment, error: fetchError } = await supabase
+    .from('profile')
+    .select('comments')
+    .eq('userId', session.userId)
+    .single()
+   
+ 
+  if (fetchError) {
+    console.error("Error fetching user:", fetchError.message);
+    return null;
+  }
+  return comment;
+
+  }
+
+  const addUserComments = async(id) => {
+   
+    const newComment = {
+      id,
+      movieName:movieData[0].name,
+      comment: commentText
+      
+    }
+
+    const comment =await getUserComments();
+ 
+    if(comment){
+
+
+      const updatedComments= Array.isArray(comment.comments) ? [...comment.comments, newComment] : [newComment];
+  
+      
+           
+            
+    
+       const {error } = await supabase.from("profile").update({comments: updatedComments }).eq("userId", session.userId)
+                if(!error)
+                  console.log("success  Update Data")
+                  else console.error("Error",error)
+  }
+
+}
 
   const addNewComment = async() => {
 
  if(session) {
 
- 
-    const {error}= await supabase.from('comments').insert({ userName:session.userName,
+    setNewComments({
+      ...newComments,
+      loading: true
+    })
+    const {error, data}= await supabase.from('comments').insert({ userName:session.userName,
       pic:null,
       movieName:movieData[0].name,
       comment: commentText,
       disLike:0,
       like:0
-    });
-   
+    }).select("id");
+    setNewComments({
+      ...newComments,
+      loading:false
+    })
     if(error) {
       console.log("error", error)
       }
      else {
-      console.log('NewComment Add...')
-      fetchComments();
-    //  setUserComments([
-    //   ...userComments,
-    //   commentText
-    //  ])
-    dispatch(setComments(commentText))
-    if(comments){
-      const { error} = await supabase.from("profile").update({comments}).eq("userId", session.userId)
-     if(error) console.error("Error",error)
-    }
-
-
-      //  const { error} = await supabase.from("profile").update({comments: userComments}).eq("userId", session.userId)
-      //  if(error) console.error("Error",error)
+     
+      const commentId =data[0].id
+       fetchComments();
+       addUserComments(commentId);
       
      }
     } else  navigate("/signIn")
@@ -104,43 +151,51 @@ console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
   };
   
 
+  const getFavoriteMoves = async() => {
+    const { data: user, error: fetchError } = await supabase
+    .from('profile')
+    .select('movies')
+    .eq('userId', session.userId)
+    .single()
+   
+ 
+  if (fetchError) {
+    console.error("Error fetching user:", fetchError.message);
+    return null;
+  }
+  return user
+
+  }
+
   const fechFavoriteMovie = async(name, pic) => {
   
 
     if(session){
         setLikeMovie(true)
-         dispatch(setFavoritesMovie({name, pic}))
-        // const {data: moviesData, error: errorMoviesData} = await supabase.from("profile").select("movies").eq("userId", session.userId)
-        // if(moviesData) {
-        //  setFavoriteMovies(moviesData)
-        //  console.log("moviesDatares",moviesData)
-        // } else {
-        //   console.error("errorMoviesData", errorMoviesData)
-        // }
-        
-        // if(likeMovie) {
-          
-          
-        // setFavoriteMovies( movie => [...movie, {pic , name}])
-     
-         
-        // console.log("favoriteMovie2", favoriteMovies)
-    //     const {error } = await supabase.from("profile").update({movies:favoriteMovies}).eq("userId", session.userId)
-    //           if(!error)
-    //             console.log("success  Update Data",favoriteMovies)
-    //             else console.error("Error",error)
-           
+        const newMovie = {name, pic};
+      //  dispatch(setFavoritesMovie({name, pic})) 
+    const user =await getFavoriteMoves();
+
+    if(user){
+
+
+      const updatedMovies = Array.isArray(user.movies) ? [...user.movies, newMovie] : [newMovie];
+  
       
-    //  } else{
-    //   const newData = moviesData.filter( movieName => movieName !== name );
-    //   const {error } = await supabase.from("profile").update({movies: newData}).eq("userId", session.userId)
-    //   if(!error) {
-    //    console.log("newData", newData)
-     
-    //   } else {
-    //     console.log("Eror", error)
-    //   }
-    //  } 
+           
+            
+    
+       const {error } = await supabase.from("profile").update({movies: updatedMovies }).eq("userId", session.userId)
+                if(!error)
+                  console.log("success  Update Data")
+                  else console.error("Error",error)
+             
+        
+    } else {
+      console.error("Error ")
+    } 
+      
+   
       
     }  else {
       
@@ -152,7 +207,9 @@ console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
 
    
   }, []);
-  
+
+ 
+
   const LoadData = () => {
     setMovie({
       ...movie,
@@ -178,6 +235,23 @@ console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
 
   }, [])
 
+  // useEffect(() => {
+  //   const checkMovie = async() => {
+  //       if(session){
+
+  //         const movieList = await getFavoriteMoves();
+  //         if(movieList) {
+  //              const filterMovie = movieList.movies.filter( m =>  m.name === movie.data[0].name);
+  //         if(filterMovie) {
+  //           setLikeMovie(true)
+  //         } else setLikeMovie(false)
+  //       }
+  //       }
+  //     }
+     
+  //  checkMovie();
+    
+  // }, [movie, likeMovie, getFavoriteMoves, session])
 
 // useEffect( () => {
    
@@ -218,7 +292,7 @@ console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
             <>
           
 
-          <HeaderBackdrop key={movie?.id} bg={movie?.cover}>
+          <HeaderBackdrop key={movie.id} bg={movie?.cover}>
             <div className=" w-full z-10 lg:p-10 flex lg:flex-row  flex-col justify-center items-center p-4 ">
               <div className=" mx-3 w-full lg:w-3/12 flex justify-center lg:justify-end items-center">
                 <img
@@ -370,6 +444,7 @@ console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
                       width="w-3/12"
                       bgColor="bg-color-hover"
                       clicked={addNewComment}
+                      disable={newComments.loading}
                     >
                       {" "}
                       ارسال دیدگاه{" "}
@@ -382,7 +457,7 @@ console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
                     <FaRegCommentDots className="inline text-color-2 text-2xl" />
 
                     <span className="text-xl text-color-2 ">
-                      {newComments? newComments.length : 0}
+                      {newComments.comments? newComments.comments.length : 0}
                     </span>
                   </div>
              
@@ -390,8 +465,8 @@ console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
                 {
 
                   // comments.loading ? <LoadingPage/> :
-                  newComments.map((list) => (
-                     <CommentBox key={list.key} list={list} />
+                  newComments.comments?.map((list) => (
+                     <CommentBox key={list.key}  list={list} />
                     
                    ))
                   }

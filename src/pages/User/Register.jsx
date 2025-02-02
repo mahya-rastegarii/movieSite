@@ -6,7 +6,9 @@ import BgRotate from '../../components/BackgroundRotate/BgRotate';
 import Button from '../../components/Button/Button';
 import FormInput from '../../components/input/formInput/FormInput';
 import { supabase } from '../../core/supabaseClient';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSubmit } from 'react-router-dom';
+import { useState } from 'react';
+import ButtonLoading from '../../components/Loading/ButtonLoading';
 
 
 
@@ -18,15 +20,18 @@ export default function Register() {
   const { register, handleSubmit, watch, formState: { errors }} = useForm();
  const navigate = useNavigate();
 
+ const [loading, setLoading]= useState(false)
 
   const submitForm = async(data) =>{
+    setLoading(true);
+    
     console.log("data", data)
     const {userName, email, password}= data;
-
     const {data: {user}, error } = await supabase.auth.signUp({
       email,
       password,
     })
+    setLoading(false);
     if(error) {console.log("Error", error)}
    console.log("user", user)
     
@@ -35,7 +40,9 @@ export default function Register() {
     if(profileError) {console.log("ErrorProfile", profileError)}
     else{ console.log("profileUser", user)
       navigate("/signIn")
+      
     }
+    
   }
 
 
@@ -133,9 +140,12 @@ export default function Register() {
       }
        
        <div className="flex justify-center items-center w-full ">
-        <Button width="w-full mt-6" type="submit" >
+        <Button width="w-full mt-6" type="submit"
+        disable={loading} >
 
-          ثبت نام
+          {
+            loading ? <ButtonLoading/> : " ثبت نام"
+          }
         </Button>
 
        </div>

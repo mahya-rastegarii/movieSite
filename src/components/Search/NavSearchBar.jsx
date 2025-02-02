@@ -27,7 +27,12 @@ const NavSearchBar =() => {
       .select("*")
       .ilike("name", `%${lowerTitle}%`);
       console.log("data", data)
-      setDataMovie(data)
+      
+      const transformedData = data.map(item => ({
+        ...item,
+        genre: item.genre.split(",").map(genre => genre.trim()),
+      }));
+      setDataMovie(transformedData)
    
   };
 

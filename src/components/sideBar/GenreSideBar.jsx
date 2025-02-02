@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import {  fetchMoviesList } from "../../redux/slice/MoviesSlice";
 import LoadingPage from "../Loading/LoadingPage";
 import { useActiveLinkContext } from "../../context/ActiveLinkContext";
+import ButtonLoading from "../Loading/ButtonLoading";
 
 
 export default function GenreSideBar() {
@@ -30,10 +31,15 @@ export default function GenreSideBar() {
  const [count, setCount]= useState(0)
  const [activeGenre, setActiveGenre] =useState([]);
  const [genres, setGenres]= useState([])
-
+ 
 //  const {activeGenre, setActiveGenre} = useActiveLinkContext();
 
-const [loading, setLoading]= useState(false)
+const [loading, setLoading]= useState({
+  dataAll: false,
+  AllMovieBtn: false,
+  topMovieBtn: false,
+  genreMovieBtn:false,
+})
 
  const typeHandler = () => {
   if(active === "movies")
@@ -44,11 +50,17 @@ const [loading, setLoading]= useState(false)
  }
  const fetchDataAll = async() => {
    const type = typeHandler();
-   setLoading(true)
+   setLoading({
+   ...loading,
+   dataAll:true
+ })
  
   const result = await fetchAllMovies(type)
   
-  setLoading(false);
+  setLoading({
+    ...loading,
+    dataAll:false
+  });
    
    setCount(result.count);
  }
@@ -59,26 +71,37 @@ const [loading, setLoading]= useState(false)
   setActiveGenre(value);
   localStorage.setItem("activeLink", value)
   const typeMovies = typeHandler();
+  setLoading({
+    ...loading,
+    AllMovieBtn: true
+  })
   const result =await fetchAllMovies(typeMovies)
   const res = result.data;
   const transformedData = res.map(item => ({
     ...item,
     genre: item.genre.split(",").map(genre => genre.trim()),
   }));
-      dispatch(fetchMoviesList(transformedData));
-
-      navigate(`/list/${active}/all?page=1`)
+  dispatch(fetchMoviesList(transformedData));
+  navigate(`/list/${active}/all?page=1`);
+  setLoading({
+    ...loading,
+    AllMovieBtn:false,
+  })
+     
       console.log("All", result);
     }
     
     const fetchTopGenre= async(e) => {
       
-      
       const value = e.target.innerText;
       setActiveGenre(value);
   localStorage.setItem("activeLink", value)
-      const typeMovies = typeHandler();
-      
+  const typeMovies = typeHandler();
+  
+  setLoading({
+    ...loading,
+    topMovieBtn:true
+  })
       const result =await fetchTopMovies(typeMovies)
       
       const transformedData = result.map(item => ({
@@ -87,6 +110,11 @@ const [loading, setLoading]= useState(false)
   }));
         dispatch(fetchMoviesList(transformedData))
         navigate(`/list/${active}/250_top?page=1`)
+
+        setLoading({
+          ...loading,
+          topMovieBtn:false,
+        })
         console.log("250Imdb", result);
 }
 
@@ -98,7 +126,10 @@ const fetchSpecialGenre = async(genreMovie) => {
   localStorage.setItem("activeLink", genreMovie)
   
   const typeMovies = typeHandler();
-
+  setLoading({
+    ...loading,
+    genreMovieBtn:true,
+  })
   const result = await genreMovieList(typeMovies, genreMovie);
      
   const transformedData = result.map(item => ({
@@ -107,7 +138,11 @@ const fetchSpecialGenre = async(genreMovie) => {
   }));
   
       dispatch(fetchMoviesList(transformedData));
-      navigate(`/list/${active}/${genreMovie}?page=1`)
+      navigate(`/list/${active}/${genreMovie}?page=1`);
+      setLoading({
+        ...loading,
+        genreMovieBtn: false
+      })
       // console.log("OthersGenre", genre);
       console.log("Others", result);
 
@@ -161,21 +196,27 @@ const fetchSpecialGenre = async(genreMovie) => {
       </div>
       <span className=" font-semibold text-sm  text-color-1"> ژانر ها </span>
      {
-      loading ? <div className=" mt-2"><LoadingPage/></div>: (
+      loading.dataAll ? <div className=" mt-2"><LoadingPage/></div>: (
      
         <>
-         {/* <Link to={`/list/${active}/all?page=1`}> */}
+        
               <Button
                     width="w-full"
-                    
                     active={ active === "movies" ? activeGenre.includes("همه فیلم ها") : activeGenre.includes("همه سریال ها")}
                     bgColor=" bg-color-2"
                     clicked={fetchAllGenre}
+                    disable={(active === "movies" ? activeGenre.includes("همه فیلم ها") : activeGenre.includes("همه سریال ها")) && loading.AllMovieBtn}
                    
                   >
                  
             <div className=" w-full  flex justify-between px-3 ">
-                  <span>همه {active === "movies" ? "فیلم ها" : "سریال ها"}</span>
+                  <span className=' flex justify-center items-center'>
+                  {(active === "movies" ? activeGenre.includes("همه فیلم ها") : activeGenre.includes("همه سریال ها")) && loading.AllMovieBtn && 
+          <ButtonLoading margin="ml-1"/>
+          }
+                    همه {active === "movies" ? "فیلم ها" : "سریال ها"}
+
+                  </span>
                   <span>{count}</span>
             </div>
                 
@@ -183,42 +224,53 @@ const fetchSpecialGenre = async(genreMovie) => {
             
         
                   </Button>
-                  {/* </Link> */}
+
         
-                  {/* <Link to={`/list/${active}/250_top?page=1`}> */}
+                 
           <Button
                     width="w-full"
                     
                     active={active === "movies" ? activeGenre.includes("250 فیلم برتر IMDB") : activeGenre.includes("250 سریال برتر IMDB")}
                     bgColor=" bg-color-2"
                     clicked={fetchTopGenre}
+                    disable={(active === "movies" ? activeGenre.includes("250 فیلم برتر IMDB") : activeGenre.includes("250 سریال برتر IMDB")) && loading.topMovieBtn}
                    
                   >
-                      <span>
-
+                      <span className=' flex justify-center items-center'>
+                      {
+                      (active === "movies" ? activeGenre.includes("250 فیلم برتر IMDB") : activeGenre.includes("250 سریال برتر IMDB")) && loading.topMovieBtn && 
+          <ButtonLoading margin="ml-1"/>
+          }
                     250 {active === "movies" ? "فیلم" : "سریال"} برتر IMDB
                       </span>
                   </Button>
-                      {/* </Link> */}
+                     
 
-          <div className="w-full grid gap-3 justify-items-center grid-cols-1 md:grid-cols-2">
+          <div className="w-full grid gap-3 justify-items-center grid-cols-1 md:grid-cols-2 ">
             {genres?.map((genre) => (
-              // <div className=" w-full shadow-md  flex justify-center items-center p-2 bg-color-2 rounded-xl  hover:bg-color-hover cursor-pointer custom-transition delay-150" onClick={getDataGenre} key={index}>
+             
          <Button
                 width="w-full"
                 active={  activeGenre.includes(genre.moviesGenre)}
                 bgColor=" bg-color-2"
                 clicked= {() => fetchSpecialGenre(genre.moviesGenre)}
+                disable={activeGenre.includes(genre.moviesGenre) && loading.genreMovieBtn}
+               
                 key={genre.id}
               >
-                {/* <Link to={`/list/${active}/${genre.moviesGenre}?page=1`}> */}
-                <span>
+              
+          <span className=' flex justify-center items-center'>
+          {
+           activeGenre.includes(genre.moviesGenre) && loading.genreMovieBtn  && 
+          <ButtonLoading margin="ml-1"/>
+          }
 
                 { genre.moviesGenre }
-                </span>
-                {/* </Link> */}
+            </span> 
+              
+                
               </Button>
-              // </div>
+              
             ))}
           </div>
         </>

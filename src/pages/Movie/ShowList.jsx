@@ -45,7 +45,7 @@ useEffect( () => {
 
 
 useEffect(() => {
-  setPage(1);-
+  setPage(1);
   console.log('data', data)
   }, [type, genre])
   

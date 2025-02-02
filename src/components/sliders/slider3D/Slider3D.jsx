@@ -57,20 +57,26 @@ export default function Slider3D() {
     // dispatch(fetchMovieSlideInfo(slideData[0]))
   },[])
 
-
+  useEffect(() => {
+    if (slideData.length > 0) {
+      dispatch(fetchMovieSlideInfo(slideData[0])); 
+    }
+  }, [slideData]);
    
   return (
   <div className='w-full h-full'>
 
         <Swiper
-
+     key={slideData.length}  
      onSlideChange={(event) => {
       
        const filterImage = [...slideData.filter((item)=>  item.id === (event.realIndex) + 1)]
         const CurrentImg = filterImage[0];
-      //  console.log("CurrentSlider", event.realIndex, "     CurrentSliderFetch" )
-      //  console.log("CurrentSliderFetch", filterImage );
+        if(CurrentImg){
           dispatch(fetchMovieSlideInfo(CurrentImg));
+        }
+        //  console.log("CurrentSlider", event.realIndex, "     CurrentSliderFetch" )
+        //  console.log("CurrentSliderFetch", filterImage );
          
      }}
         
@@ -80,18 +86,17 @@ export default function Slider3D() {
         loop={true}
          grabCursor={true}
         centeredSlides={true}
-        // slidesPerView={3}
-          slidesPerView={"auto"}
-        // loopAdditionalSlides={3}
+        slidesPerView={3}
+       
         coverflowEffect={{
-          rotate: 7,
-          stretch: 0,
-          depth: 100,
-          modifier: 4,
+          rotate: 0,
+          stretch: 50,
+          depth: 300,
+          modifier: 1,
           // modifier: 1,
-          slideShadows: true
+          slideShadows: false
         }}
-        
+        spaceBetween={-70}
         autoplay={{
           delay: 5500,
           disableOnInteraction: false,
