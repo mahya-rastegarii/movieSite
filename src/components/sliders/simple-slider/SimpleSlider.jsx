@@ -35,10 +35,10 @@ const navigate = useNavigate()
 
 const movieInfoHandler = async(name) =>{
 
+navigate(`/movie/${name}`)
 const result = await fetchMovieInfo(name);
 // console.log("resultInfo", result);
 dispatch(fetchMovie(result));
-  navigate(`/movie/${name}`)
 }
 
 
@@ -49,7 +49,7 @@ dispatch(fetchMovie(result));
     <div className="w-full flex justify-center items-start flex-col lg:my-12">
 
 
-    <div className=" w-full flex justify-between items-center">
+    <div className=" w-full flex  md:justify-between justify-center items-center">
         <BgRotate width=' w-6/12  md:w-3/12 lg:w-2/12' padding='p-1 lg:p-2'>
 
      <div className="flex justify-center items-center">
@@ -74,7 +74,7 @@ dispatch(fetchMovie(result));
         
         className=" w-full h-full m-8 p-20"
         
-        slidesPerView={5}
+        // slidesPerView={5}
         spaceBetween={2}
         loop={true}
         freeMode={true}

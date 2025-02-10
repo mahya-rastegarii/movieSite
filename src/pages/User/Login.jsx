@@ -8,59 +8,105 @@ import { supabase } from '../../core/supabaseClient';
 import { useDispatch } from 'react-redux';
 import { setSession } from '../../redux/slice/UserSlice';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonLoading from '../../components/Loading/ButtonLoading';
+import { toast } from 'react-toastify';
+import { FaEye } from 'react-icons/fa';
 
 export default function Login() {
 
- const navigate = useNavigate();
-const dispatch =useDispatch()
+
   
- const [loading, setLoading]= useState(false)
+  
+  const navigate = useNavigate();
+  const dispatch =useDispatch()
+  
+  const [loading, setLoading]= useState(false)
+  const [hide, setHide] =useState(true);
 
-  const { register, handleSubmit, formState: { errors },} = useForm({
-    defaultValues: {
-      email: localStorage.getItem('email') || "",
-      password: localStorage.getItem('password') || "",
-      checkBox: false,
-    }
-  });
+  const { register, handleSubmit, formState: { errors }, setValue, watch} = useForm();
 
+    const rememberMe = watch("rememberMe");
   
 
   const submitForm = async(data) =>{
     setLoading(true);
     
     console.log("data", data)
-    const {email, password, checkBox}= data;
+    const {email, password, rememberMe}= data;
 
+      const toastId = toast.loading("در حال ورود...")
+      
+      try {
     const {data:{user}, error} = await supabase.auth.signInWithPassword({
       email,
       password
     })
-    setLoading(false);
-    if(error) {console.log("Error", error)}
+  
+    if(error) {
+      toast.error(error)
+    }
+
   console.log("user", user);
 
-    const {data: profile,error:profileError} = await supabase.from('profile').select("userName").eq("userId", user.id).single();
-    if(profileError){
-      console.error('Error fetching profile: ', profileError)
-    } else {
-        dispatch(setSession(profile))
-        console.log(" User Loggerd in: ", user)
-        navigate("/")
-      }
+  const {data: profile} = await supabase.from('profile').select("userName").eq("userId", user.id).single();
+     
+        
 
-      if(checkBox ){
-        localStorage.setItem('email',email);
-        localStorage.setItem('password',password);
+          dispatch(setSession(profile))
+  console.log(" User Loggerd in: ", user)
+  navigate("/")
+
+
+  toast.update(toastId, {
+    render: `${profile.userName  || "کاربر عزیز"}  خوش آمدید !`,
+    type: "success",
+    isLoading: false,
+    autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+  });
+              
+          
+
+      if(rememberMe){
+        localStorage.setItem('email', email);
+        localStorage.setItem('password', password);
+        localStorage.setItem("rememberMe", "true");
       } else {
         localStorage.removeItem('email');
         localStorage.removeItem('password');
+        localStorage.removeItem('rememberMe');
       }
+
+    } catch (err) {
+      console.error("Error:", err);
+  
      
+      toast.update(toastId, {
+        render: "ایمیل یا رمزعبور اشتباه است",
+        type: "error",
+        isLoading: false,
+        autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+      });
+  
+    } finally {
+      setLoading(false);
+    }
   }
   
+  
+  // ✅ هنگام بارگذاری صفحه، مقدار ذخیره‌شده را دریافت کن
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("email");
+    const savedPassword = localStorage.getItem("password");
+    const savedRememberMe = localStorage.getItem("rememberMe") === "true";
+
+    if (savedRememberMe) {
+      setValue("email", savedEmail || "");
+      setValue("password", savedPassword || "");
+      setValue("rememberMe", true);
+    }
+  }, [setValue]);
+
   return (
     
     <div className='w-full flex justify-center items-center px-4 md:px-0 h-screen'>
@@ -107,6 +153,9 @@ const dispatch =useDispatch()
         <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'> {errors.email?.message}</span></div>
       )
       }
+
+      <div className=" w-full flex justify-center items-center">
+     
       <FormInput 
       
         label="password"
@@ -117,25 +166,38 @@ const dispatch =useDispatch()
 
       errors={errors.password}
 
-         type="password"  name="password" placeholder="رمز عبور"/>
+         type={hide ? "password" : "text"}  name="password" placeholder="رمز عبور"/>
+          
+      <div className="w-fit flex  mr-1 jistify-center items-center cursor-pointer text-color-1 relative opacity-80" onClick={()=> setHide(!hide)}>
+     
+       
+        <FaEye />
+        
+        
+      {
+        hide && <span className="w-full border border-color-3 -rotate-45 absolute"></span> 
+       
+      }
+       </div>
+    
+          </div>
       {errors.password && errors.password.type === "required" &&(
         <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'>{errors.password?.message} </span></div>
        )
       }
        <div className="w-full flex justify-start items-center text-color-1 font-semibold">
 
-      <Link to="/forgotPassword" className="text-sm text-blue-600">
+      <Link to="/forgotPassword" className="text-sm text-color-2 underline">
         رمز عبور خود را فراموش کرده اید؟
       </Link>
        </div>
       <div className="w-full flex justify-start items-center text-color-1 font-semibold">
-           <input className=' ml-2' type="checkbox" name="check"
-           {...register("checkBox")}
-            // onChange={AuthForm.handleChange}
-            //  checked={AuthForm.values.check}
+           <input className='accent-color-1 ml-1' type="checkbox" name="rememberMe" 
+                 {...register("rememberMe")}
+          checked={rememberMe || false} 
               id="remember-me" />
     
-            <label htmlFor="remember-me" className=' text-color-1 text-sm'>مرا به خاطر بسپار</label>
+            <label htmlFor="remember-me" className=' text-color-1 text-sm '>مرا به خاطر بسپار</label>
             </div>
             <div className="flex justify-center items-center w-full ">
         <Button width="w-full mt-6" type="submit" 

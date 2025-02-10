@@ -4,7 +4,7 @@ import { BiMenu } from "react-icons/bi";
 import ChangeThemeButton from "../Button/ChangeThemeButton";
 import Logo from "../Logo/Logo";
 
-import {  Link, redirect, useNavigate } from "react-router-dom";
+import {  Link, NavLink, redirect, useNavigate } from "react-router-dom";
 import { logOut } from "../../core/functions";
 import Button from "../Button/Button";
 import NavSearchBar from "../Search/NavSearchBar";
@@ -16,10 +16,10 @@ import MenuItem from "../Button/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { setSession } from "../../redux/slice/UserSlice";
+import { toast } from "react-toastify";
+import { setShowMenu } from "../../redux/slice/MenuSlice";
 
-// import {  RiArrowDownSLine } from "react-icons/ri";
-// import MenuItem from "../Button/MenuItem";
-// import MenuComponent from "../menu/MenuComponent";
+
 
 export default function Navbar() {
 
@@ -29,24 +29,23 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   
   const menuRef = useRef(null);
-
- 
 const LogoutUser = async() =>{
 const result = await logOut();
 if(result) {
-  const url = new URL(window.location.href);
+  // const url = new URL(window.location.href);
   
   dispatch(setSession(null))
-   if(url.pathname === "/dashboard/profile" ||  url.pathname === " /dashboard/comments" || url.pathname === " /dashboard/favoriteList")
-    navigate("/")
-    else {
-     navigate(url.pathname);
-   }
+  //  if(url.pathname === "/dashboard/profile" ||  url.pathname === " /dashboard/comments" || url.pathname === " /dashboard/favoriteList")
+  //   return redirect("/")
+  //   else {
+  //   return redirect(url.pathname);
+  //  }
 
 
 }
 else{
-  console.log("Error")
+ toast.error("لطفا مجددا تلاش کنید")
+ 
 }
 setIsOpen(false)
 } 
@@ -68,8 +67,8 @@ const handleClickOutside = (e) =>{
       <div className=" w-full px-2">
         <div className="lg:hidden flex justify-start items-center w-full">
           <button
-        
-           >
+          onClick={() => dispatch(setShowMenu(true))}
+          >
             <BiMenu className=" text-color-2 text-2xl" />
           </button>
           <NavSearchBar />
@@ -82,7 +81,7 @@ const handleClickOutside = (e) =>{
              {
               session ? (
               <div className=" flex flex-col   space-y-11" ref={menuRef}>
-               <li className="w-28 ml-4">
+               <li className="w-fit ml-4">
                  {" "}
                  <Button
                    bgColor="bg-color-2"
@@ -98,12 +97,12 @@ const handleClickOutside = (e) =>{
                  </Button>{" "}
                </li>{" "}
                <MenuComponent open={isOpen}>
-                 <Link to="/dashboard/profile">
-                   {" "}
+                
                    <MenuItem borderType="border-t"
                     clicked ={ () => setIsOpen(false)}
+                    link="/dashboard/profile"
                    >پنل کاربری</MenuItem>
-                 </Link>
+                
                 
                  <MenuItem
                    borderType="border-t"
@@ -121,18 +120,23 @@ const handleClickOutside = (e) =>{
              <>
                 {" "}
                 <li className="w-24  lg:ml-3">
-                  <Link to="/signUp">
-                    <Button bgColor="bg-color-2" width="w-full">
+                  <NavLink to="/signUp" >
+                  {({isActive}) => (
+
+                    <Button bgColor="bg-color-2" width="w-full" active={isActive}>
                       ثبت نام{" "}
                     </Button>
-                  </Link>
+                  )}
+                  </NavLink>
                 </li>
                 <li className="w-24 ">
-                  <Link to="/signIn">
-                    <Button bgColor="bg-color-2" width="w-full">
+                  <NavLink to="/signIn">
+                  {({isActive}) => (
+                    <Button bgColor="bg-color-2" width="w-full" active={isActive}>
                       ورود{" "}
                     </Button>
-                  </Link>
+                  )}
+                  </NavLink>
                 </li>
             
             

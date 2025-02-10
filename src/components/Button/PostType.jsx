@@ -39,9 +39,9 @@ export default function PostType({active, setActive}) {
 
 const changeTypeGenre = (e) =>{
   const value = e.target.name;
+  localStorage.removeItem("activeLink");
  setActive(value)
   localStorage.setItem("activeType", value )
-  localStorage.removeItem("activeLink");
 
  
 }

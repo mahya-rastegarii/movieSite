@@ -29,6 +29,7 @@ import {  setComments, setFavoritesMovie } from "../../redux/slice/MoviesSlice";
 import {  useNavigate } from "react-router-dom";
 import LoadingPage from "../../components/Loading/LoadingPage";
 import MovieLoading from "../../components/Loading/MovieLoading";
+import { toast } from "react-toastify";
 
 
 export default function Movie() {
@@ -36,7 +37,7 @@ export default function Movie() {
 
 
   const movieData = useSelector( state => state.movies.movieData);
-  const favoritesMovie = useSelector ( (state) => state.movies.favoritesMovie);
+  // const favoritesMovie = useSelector ( (state) => state.movies.favoritesMovie);
   const session = useSelector( state => state.user.session);
  
   const comments = useSelector ( (state) => state.movies.comments);
@@ -60,7 +61,7 @@ export default function Movie() {
  
  const navigate = useNavigate();
  const dispatch = useDispatch()
- const url = new URL(window.location.href)
+//  const url = new URL(window.location.href)
 // console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
 
   const fetchComments = async() => {
@@ -117,37 +118,68 @@ export default function Movie() {
 
 }
 
+
   const addNewComment = async() => {
 
- if(session) {
-
-    setNewComments({
+    
+    if(session) {
+      
+      
+      setNewComments({
       ...newComments,
       loading: true
     })
-    const {error, data}= await supabase.from('comments').insert({ userName:session.userName,
-      pic:null,
-      movieName:movieData[0].name,
-      comment: commentText,
-      disLike:0,
-      like:0
-    }).select("id");
-    setNewComments({
-      ...newComments,
-      loading:false
-    })
-    if(error) {
-      console.log("error", error)
+    
+    const toastId = toast.loading("در حال ثبت نظر...")
+    
+    try{
+
+      const {data} = await supabase.from('comments').insert({ userName:session.userName,
+        pic:null,
+        movieName:movieData[0].name,
+        comment: commentText,
+        disLike:0,
+        like:0
+      }).select("id");
+
+      if(data) {
+        const commentId = data[0].id
+        fetchComments();
+        addUserComments(commentId)
+
+        toast.update(toastId, {
+          render: "نظر شما ثبت شد",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+        });
+      } else {
+        toast.error("مشکلی به وجود آمده است لطفا بعدا تلاش کنید")
       }
-     else {
+    } catch (err) {
+      console.error("Error:", err);
+    
      
-      const commentId =data[0].id
-       fetchComments();
-       addUserComments(commentId);
+      toast.update(toastId, {
+        render:  "نظر ثبت نشد. لطفا مجددا تلاش کنید",
+        type: "error",
+        isLoading: false,
+        autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+      });
+    } finally {
+
+      setCommentText('')
+      setNewComments({
+       ...newComments,
+       loading:false
+     })
+    }
+    
       
-     }
+        
+    
     } else  navigate("/signIn")
-     setCommentText('')
+
   };
   
 
@@ -160,7 +192,7 @@ export default function Movie() {
    
  
   if (fetchError) {
-    console.error("Error fetching user:", fetchError.message);
+   toast.error(fetchError.message);
     return null;
   }
   return user
@@ -171,34 +203,52 @@ export default function Movie() {
   
 
     if(session){
-        setLikeMovie(true)
+
+      if(likeMovie) return;
+          
+      
         const newMovie = {name, pic};
       //  dispatch(setFavoritesMovie({name, pic})) 
-    const user =await getFavoriteMoves();
+    const favoriteMoves =await getFavoriteMoves();
+      const toastId = toast.loading( " در حال افرودن به لیست مورد علاقه ها")
+        
+    if(favoriteMoves){
 
-    if(user){
-
-
-      const updatedMovies = Array.isArray(user.movies) ? [...user.movies, newMovie] : [newMovie];
+      const updatedMovies = Array.isArray(favoriteMoves.movies) ? [...favoriteMoves.movies, newMovie] : [newMovie];
   
       
-           
-            
-    
-       const {error } = await supabase.from("profile").update({movies: updatedMovies }).eq("userId", session.userId)
-                if(!error)
-                  console.log("success  Update Data")
-                  else console.error("Error",error)
-             
-        
-    } else {
-      console.error("Error ")
-    } 
       
+      
+      try {
+    
+       const {error} =await  supabase.from("profile").update({movies: updatedMovies }).eq("userId", session.userId)
+             
+       if(!error) {
+
+        setLikeMovie(true)
+
+        toast.update(toastId, {
+          render: "به لیست مورد علاقه هااضافه شد",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+        });
+       }
+      } catch (err) {
+        console.error("Error:", err);
+    
+       
+        toast.update(toastId, {
+          render: "فیلم به لیست موردعلاقه هااضافه نشد. مجددا تلاش کنید",
+          type: "error",
+          isLoading: false,
+          autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+        });   
+      }
+    } 
    
       
     }  else {
-      
       navigate("/signIn")
     }
   }
@@ -235,46 +285,34 @@ export default function Movie() {
 
   }, [])
 
-  // useEffect(() => {
-  //   const checkMovie = async() => {
-  //       if(session){
 
-  //         const movieList = await getFavoriteMoves();
-  //         if(movieList) {
-  //              const filterMovie = movieList.movies.filter( m =>  m.name === movie.data[0].name);
-  //         if(filterMovie) {
-  //           setLikeMovie(true)
-  //         } else setLikeMovie(false)
-  //       }
-  //       }
-  //     }
-     
-  //  checkMovie();
-    
-  // }, [movie, likeMovie, getFavoriteMoves, session])
-
-// useEffect( () => {
-   
-//   const getLikeMovie = async() =>{
-
-//  const name = movieData.name;
-//     if(session){
-//     const {data: movieFaverite, error} = await supabase.from("profile").select("movies").contains("movies", [name]);
-//     if(error) {
-//       console.log("Eror", error)
-//     }
-//    else if(movieFaverite) {
-//       setLikeMovie(true)
-//     }
-//      else {
-//       setLikeMovie(false)
-//      }
-//   } else return;
-// }
-      
-//   getLikeMovie()
+  useEffect(() => {
+    const checkIfMovieIsFavorite = async () => {
+      if (!session) return;
   
-// }, [])
+      const { data: user, error } = await supabase
+        .from("profile")
+        .select("movies")
+        .eq("userId", session.userId)
+        .single();
+  
+      if (error) {
+        console.error("خطا در دریافت لیست علاقه‌مندی‌ها:", error);
+        return;
+      }
+  
+      if (user?.movies) {
+
+        const isFavorite = user.movies.some((favoriteMovie) => favoriteMovie.name === movie.data[0].name);
+        console.log("isFavorite", isFavorite)
+        console.log("users", user.movies)
+        setLikeMovie(isFavorite);
+      }
+    };
+  
+    checkIfMovieIsFavorite();
+  }, [session, movie]);
+
   return (
     <>
         <div className=" flex flex-col justify-center items-center mb-16 space-y-20 min-h-screen">
@@ -294,16 +332,16 @@ export default function Movie() {
 
           <HeaderBackdrop key={movie.id} bg={movie?.cover}>
             <div className=" w-full z-10 lg:p-10 flex lg:flex-row  flex-col justify-center items-center p-4 ">
-              <div className=" mx-3 w-full lg:w-3/12 flex justify-center lg:justify-end items-center">
+              <div className=" mx-3 w-full lg:w-3/12 flex mt-16 md:mt-0 justify-center lg:justify-end items-center">
                 <img
-                  className="rounded-2xl shadow-gray-900 shadow-2xl w-80 "
+                  className="rounded-2xl shadow-gray-900 shadow-2xl w-44 md:w-80 "
                   src={movie?.pic}
                   alt={movie?.name}
                 />
               </div>
-              <div className=" mx-3 flex w-7/12 flex-col lg:justify-start justify-center items-start text-white font-semibold space-y-4 ">
+              <div className=" mx-3 flex md:w-7/12 flex-col lg:justify-start justify-center items-start text-white font-semibold space-y-4 ">
                 <div className="flex flex-col space-y-2 lg:space-y-0 lg:flex-row w-full justify-center lg:justify-between items-center">
-                  <h4 className=" font-bold text-white text-2xl">
+                  <h4 className=" font-bold text-white text-xl md:text-2xl">
                    {movie?.type}   {movie?.name}
                   </h4>
 
@@ -315,14 +353,14 @@ export default function Movie() {
                 <span className=' bg-color-hover shadow-md px-2 rounded-md font-bold text-white text-md'> IMDb </span>
              
               </div> */}
-<div className=" flex justify-center items-center flex-col space-y-4">
+<div className=" flex justify-center items-center flex-row md:flex-col space-y-4">
 
                   <ImdbLabel score={movie?.imdbRating} />
                   <FiHeart className={`text-2xl text-red-700 cursor-pointer hover:fill-red-700 ${likeMovie ? "fill-red-700" : ""}`}  onClick={() =>fechFavoriteMovie(movie.name, movie.pic)}/>
 </div>
                 </div>
-                <div className="flex w-full flex-col text-white  space-y-4 ">
-                  <div className=" flex lg:justify-start items-center justify-center text-slate-300">
+                <div className="flex  w-full flex-col text-white justify-center items-center space-y-4 ">
+                  <div className="w-fit   gap-y-3 flex justify-around items-center flex-wrap lg:justify-center text-slate-300">
                     {movie?.genre?.map((genre, index) => (
                       <GenreLabel borderColor="border-slate-300" key={index}>
                         {genre}
@@ -330,14 +368,14 @@ export default function Movie() {
                     ))}
                   </div>
                   <div className="w-full flex lg:flex-col lg:justify-start justify-center lg:space-y-5 items-center">
-                    <div className="w-full flex  lg:justify-start justify-center items-center">
-                      <MdOutlineTimer className=" inline ml-2 text-xl text-color-2 mr-7 lg:mr-0" />
+                    <div className="w-full flex   md:justify-start justify-center items-center">
+                      <MdOutlineTimer className=" inline ml-2 text-xl text-color-2 " />
                       <span className=" ">زمان : {movie?.time} دقیقه</span>
                     </div>
                   </div>
-                  <div className="w-full flex lg:justify-start lg:flex-col justify-center lg:space-y-5 items-center">
+                  <div className="w-full flex justify-start flex-col  space-y-5 items-center">
                     {movie?.year ? (
-                      <div className="w-full flex  lg:justify-start justify-center items-center">
+                      <div className="w-full flex  md:justify-start justify-center items-center">
                         <MdOutlineDateRange className=" inline ml-2 text-xl text-color-2" />
                         <span className=" ">
                           {" "}
@@ -345,7 +383,7 @@ export default function Movie() {
                         </span>
                       </div>
                     ) : movie?.status ? (
-                      <div className="w-full flex  lg:justify-start justify-center items-center">
+                      <div className="w-full flex  md:justify-start justify-center  items-center">
                         <GrStatusUnknown className=" inline ml-2 text-xl text-color-2" />
                         <span className=" ">
                           {" "}
@@ -354,29 +392,32 @@ export default function Movie() {
                       </div>
                     ) : null}
                     {movie?.director ? (
-                      <div className="w-full flex  lg:justify-start justify-center items-center">
-                        <RiUserLine className=" inline ml-2 text-xl text-color-2 mr-7 lg:mr-0" />
+                      <div className="w-full flex  md:justify-start justify-center items-center">
+                        <RiUserLine className=" inline ml-2 text-xl text-color-2  lg:mr-0" />
                         <span className=" ">
                           کارگردان : {movie?.director}
                         </span>
                       </div>
                     ) : movie?.tv ? (
-                      <div className="w-full flex  lg:justify-start justify-center items-center">
+                      <div className="w-full flex  md:justify-start justify-center  items-center">
                         <PiTelevisionLight className=" inline ml-2 text-xl text-color-2 mr-7 lg:mr-0" />
                         <span className=" "> شبکه : {movie?.tv}</span>
                       </div>
                     ) : null}
                   </div>
                   {/* <div className='w-full flex justify-start items-center'><PiFilmReelBold className=' inline ml-2 text-xl text-color-2'/><span className=' '>ژانر : </span></div> */}
-                  <div className="w-full flex  lg:justify-start justify-center items-center">
+                  <div className="w-full flex  md:justify-start justify-center items-center">
                     <BsGlobe className=" inline ml-2 text-xl text-color-2" />
                     <span className=" ">محصول کشور : {movie?.country}</span>
                   </div>
 
-                  <div className="w-full flex lg:justify-start justify-center items-center">
+                  <div className="w-full flex justify-start mt-14 md:mt-0 items-center">
                     <p>{movie?.summary}</p>
                   </div>
-                  <div className="flex flex-col lg:flex-row justify-between items-center">
+                {
+                  movie.topMovie && <div className='flex justify-start items-cente bg-color-4 py-1 rounded-lg px-2  w-fit text-lg font-thin'><span className="ml-2 text-color-1"> جزء 250 {movie?.type} برتر با رتبه </span><span className="text-color-2">{movie.topMovie}</span></div>
+                }  
+                  <div className="flex flex-col  lg:flex-row justify-between items-center">
                     <span className="  bg-green-600 p-2 rounded-lg text-sm">
                       زیرنویس چسبیده
                     </span>
@@ -441,7 +482,7 @@ export default function Movie() {
                   />
                   <div className=" w-full flex flex-col justify-center items-center">
                     <Button
-                      width="w-3/12"
+                      width="w-full sm:w-8/12 md:w-3/12"
                       bgColor="bg-color-hover"
                       clicked={addNewComment}
                       disable={newComments.loading}

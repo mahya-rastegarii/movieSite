@@ -41,9 +41,9 @@ const showSerial = async(name) => {
     ...loading,
     serialBtn: name,
   })
+  navigate(`/movie/${name}`)
   const result = await fetchMovieInfo(name)
   dispatch(fetchMovie(result));
-  navigate(`/movie/${name}`)
   setLoading({
     ...loading,
     serialBtn: '',

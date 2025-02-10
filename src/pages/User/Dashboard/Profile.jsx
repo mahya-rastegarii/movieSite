@@ -12,6 +12,7 @@ import { setSession } from '../../../redux/slice/UserSlice';
 import { supabase } from '../../../core/supabaseClient';
 import LoadingPage from '../../../components/Loading/LoadingPage';
 import { MdAccessTime, MdDateRange } from 'react-icons/md';
+import { redirect, useNavigate } from 'react-router-dom';
 // import { redirect } from 'react-router-dom';
 
 
@@ -19,6 +20,7 @@ import { MdAccessTime, MdDateRange } from 'react-icons/md';
 
 export default function Profile() {
  
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] =useState({});
   const session = useSelector( ( state) => state.user.session);
   const [isLoading, setIsLoading]= useState(false);
@@ -57,9 +59,6 @@ export default function Profile() {
   
 
 
-
- 
- 
     
   
  

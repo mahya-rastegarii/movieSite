@@ -165,7 +165,7 @@ export default function AdvancedSearchBox() {
         <div className=' w-full flex-col flex lg:flex-row space-y-8 lg:space-y-0 justify-around items-center'>
           <div className=" w-full lg:w-6/12 md:justify-between  lg:justify-around md:px-20 lg:px-0 justify-center items-center flex flex-col space-y-5 md:space-y-0 md:flex-row ">
 
-        <div className=' w-4/12 bg-transparent  flex justify-center items-center text-color-1 '>
+        <div className='w-7/12 sm:w-4/12 bg-transparent  flex justify-center items-center text-color-1 '>
             <span className=' text-md font-bold ml-8 md:ml-2'> نوع </span>
             <PostType  active={active} setActive={setActive}/>
         </div>

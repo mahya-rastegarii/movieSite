@@ -1,4 +1,4 @@
-import { BsHandThumbsDown, BsHandThumbsUp } from 'react-icons/bs'
+// import { BsHandThumbsDown, BsHandThumbsUp } from 'react-icons/bs'
 // import CommentList from "../../../fetch/comments";
 import PaginationBox from '../../../components/box/PaginationBox'
 import usePaginatedFetch from '../../../usePaginatedFetch';
@@ -10,6 +10,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { fetchMovieInfo } from '../../../core/functions';
 import { fetchMovie } from '../../../redux/slice/MoviesSlice';
 import { MdDelete } from 'react-icons/md';
+import { toast } from 'react-toastify';
 
 
 
@@ -36,8 +37,8 @@ export default function Comments() {
     const {data: commentData, error: commentError}= await supabase.from("profile").select("comments").eq("userId", session.userId);
     if(commentError){ console.log("Eror", commentError)}
       else {
-        setCommentList(commentData[0].comments)
-        console.log("userdata", commentData[0].comments)
+        setCommentList(commentData[0]?.comments)
+        console.log("userdata", commentData[0]?.comments)
       }
    setIsLoading(false);
   }
@@ -56,25 +57,52 @@ dispatch(fetchMovie(result));
 
 const deleteCommentHandler= async(id) => {
  
+  const toastId = toast.loading("در حال حذف...")
   const updatedComments = commentList.filter(comment => comment.id !== id);
+  try{
 
-  const { error: updateError } = await supabase
-  .from("profile")
-  .update({ comments: updatedComments })
-  .eq("userId", session.userId);
-  if(updateError) {
+    const {error} = await supabase
+    .from("profile")
+    .update({ comments: updatedComments })
+    .eq("userId", session.userId);
 
-    console.log("Delete error", updateError);
+    if(!error) {
+     const {error} = await supabase.from("comments").delete().eq("id", id)
+     
+     if(!error){
+      getAllUserComment();
+      toast.update(toastId, {
+        render: "کامنت موردنظر حذف شد",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+      });
+     }
   }
-  else {
-  const {error} = await supabase.from("comments").delete().eq("id", id)
-   getAllUserComment();
-  if(error){
-    console.log("error Delete Comments", error)
-  }
+
+ 
+        
+} catch (err) {
+  console.error("Error:", err);
+
+ 
+  toast.update(toastId, {
+    render:  "حذف انجام نشد. لطفا مجددا تلاش کنید",
+    type: "error",
+    isLoading: false,
+    autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+  });
+
+} 
+     
+      
+  
+  
+ 
+ 
     
   }
-}
+
   
 useEffect( () => {
   getAllUserComment();

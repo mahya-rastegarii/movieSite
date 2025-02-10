@@ -7,6 +7,7 @@ import SliderDataReducer from './slice/SliderDataSlice';
 import MoviesReducer from './slice/MoviesSlice'
 import ThemeReducer from './slice/ThemeSlice';
 import UserReducer from './slice/UserSlice';
+import MenuReducer from './slice/MenuSlice';
 
 
 
@@ -24,6 +25,7 @@ export const store = configureStore({
     movies: persistedReducer,
     theme: ThemeReducer,
     user: UserReducer,
+    menu: MenuReducer,
   }
  
 })

@@ -30,9 +30,10 @@ const [error, setError]= useState(false);
 const [data, setData] = useState([]);
 
   const movieInfoHandler = async(name) => {
+    
+    navigate(`/movie/${name}`);
     const result = await fetchMovieInfo(name);
      dispatch(fetchMovie(result))
-    navigate(`/movie/${name}`);
   }
 
 
@@ -64,12 +65,12 @@ const [data, setData] = useState([]);
 
         
     <HeaderBackdrop bg={data?.cover}>
-      <div className="w-full md:w-8/12 lg:w-5/12 flex flex-col justify-center items-center lg:items-start z-10 space-y-4 lg:space-y-14 ">
+      <div className="w-full md:w-8/12 lg:w-5/12 flex flex-col justify-center items-center mt-2 md:mt-0 lg:items-start z-10 space-y-4 lg:space-y-14 ">
         <h2 className="font-bold text-2xl text-white ">{data?.name}</h2>
         <div className="w-9/12 flex-col flex lg:flex-row justify-center lg:justify-start items-center  space-y-3 lg:space-y-0 lg:items-end ">
           <ImdbLabel score={data?.imdbRating} />
 
-          <div className=" flex justify-between items-center  text-slate-300  ">
+          <div className="hidden md:flex justify-between items-center  text-slate-300  ">
             {data?.genre?.map((genre, index) => (
               <GenreLabel borderColor="border-slate-300" key={index}>
                 {genre}
@@ -77,14 +78,14 @@ const [data, setData] = useState([]);
             ))}
           </div>
         </div>
-        <p className=" hidden lg:block  w-9/12  text-md  text-white ">
+        <p className=" hidden lg:block  w-9/12  text-white ">
           {data?.summary}
         </p>
         <div className="w-5/12 md:w-2/12">
           <Button
             bgColor="bg-color-hover"
             width="w-full"
-            clicked={() =>movieInfoHandler(data?.name)}
+            clicked={() => movieInfoHandler(data.name)}
            
           >
             دانلود

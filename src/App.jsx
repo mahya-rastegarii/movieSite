@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { setSession } from "./redux/slice/UserSlice";
 import { useDispatch } from "react-redux";
 import { ActiveLinkPovider } from "./context/ActiveLinkContext";
+import { ToastContainer } from "react-toastify";
 
 
 
@@ -57,6 +58,11 @@ const dispatch = useDispatch();
       <>
                  
               <RouterProvider router={router} />
+              <ToastContainer
+        rtl={true}
+        
+        position="top-right"
+      />
               
 </>
          

@@ -13,7 +13,7 @@ import Button from "../Button/Button";
 // import { GenresData } from "../../fetch/genere-data";
 import { activeTypeGenre, fetchAllMovies, fetchTopMovies, genreMovieList } from "../../core/functions";
 // import { supabase } from "../../core/supabaseClient";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {  fetchMoviesList } from "../../redux/slice/MoviesSlice";
 import LoadingPage from "../Loading/LoadingPage";
@@ -68,6 +68,8 @@ const [loading, setLoading]= useState({
  const fetchAllGenre = async(e) => {
   
   const value = e.target.innerText;
+  navigate(`/list/${active}/all?page=1`);
+
   setActiveGenre(value);
   localStorage.setItem("activeLink", value)
   const typeMovies = typeHandler();
@@ -82,7 +84,6 @@ const [loading, setLoading]= useState({
     genre: item.genre.split(",").map(genre => genre.trim()),
   }));
   dispatch(fetchMoviesList(transformedData));
-  navigate(`/list/${active}/all?page=1`);
   setLoading({
     ...loading,
     AllMovieBtn:false,
@@ -94,8 +95,9 @@ const [loading, setLoading]= useState({
     const fetchTopGenre= async(e) => {
       
       const value = e.target.innerText;
+      navigate(`/list/${active}/250_top?page=1`)
+      localStorage.setItem("activeLink", value)
       setActiveGenre(value);
-  localStorage.setItem("activeLink", value)
   const typeMovies = typeHandler();
   
   setLoading({
@@ -109,7 +111,7 @@ const [loading, setLoading]= useState({
     genre: item.genre.split(",").map(genre => genre.trim()),
   }));
         dispatch(fetchMoviesList(transformedData))
-        navigate(`/list/${active}/250_top?page=1`)
+      
 
         setLoading({
           ...loading,
@@ -121,9 +123,10 @@ const [loading, setLoading]= useState({
 const fetchSpecialGenre = async(genreMovie) => {
  
   // const value = e.target.innerText;
-  
-  setActiveGenre(genreMovie);
+  navigate(`/list/${active}/${genreMovie}?page=1`);
+
   localStorage.setItem("activeLink", genreMovie)
+  setActiveGenre(genreMovie);
   
   const typeMovies = typeHandler();
   setLoading({
@@ -138,7 +141,7 @@ const fetchSpecialGenre = async(genreMovie) => {
   }));
   
       dispatch(fetchMoviesList(transformedData));
-      navigate(`/list/${active}/${genreMovie}?page=1`);
+      
       setLoading({
         ...loading,
         genreMovieBtn: false
@@ -199,10 +202,11 @@ const fetchSpecialGenre = async(genreMovie) => {
       loading.dataAll ? <div className=" mt-2"><LoadingPage/></div>: (
      
         <>
-        
+         
               <Button
                     width="w-full"
                     active={ active === "movies" ? activeGenre.includes("همه فیلم ها") : activeGenre.includes("همه سریال ها")}
+                   
                     bgColor=" bg-color-2"
                     clicked={fetchAllGenre}
                     disable={(active === "movies" ? activeGenre.includes("همه فیلم ها") : activeGenre.includes("همه سریال ها")) && loading.AllMovieBtn}
@@ -224,9 +228,7 @@ const fetchSpecialGenre = async(genreMovie) => {
             
         
                   </Button>
-
-        
-                 
+            
           <Button
                     width="w-full"
                     
@@ -251,7 +253,7 @@ const fetchSpecialGenre = async(genreMovie) => {
              
          <Button
                 width="w-full"
-                active={  activeGenre.includes(genre.moviesGenre)}
+                active={ activeGenre.includes(genre.moviesGenre)}
                 bgColor=" bg-color-2"
                 clicked= {() => fetchSpecialGenre(genre.moviesGenre)}
                 disable={activeGenre.includes(genre.moviesGenre) && loading.genreMovieBtn}

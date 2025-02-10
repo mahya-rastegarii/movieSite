@@ -6,9 +6,10 @@ import BgRotate from '../../components/BackgroundRotate/BgRotate';
 import Button from '../../components/Button/Button';
 import FormInput from '../../components/input/formInput/FormInput';
 import { supabase } from '../../core/supabaseClient';
-import { Link, useNavigate, useSubmit } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import ButtonLoading from '../../components/Loading/ButtonLoading';
+// import ButtonLoading from '../../components/Loading/ButtonLoading';
+import { toast } from 'react-toastify';
 
 
 
@@ -22,30 +23,58 @@ export default function Register() {
 
  const [loading, setLoading]= useState(false)
 
-  const submitForm = async(data) =>{
-    setLoading(true);
-    
-    console.log("data", data)
-    const {userName, email, password}= data;
-    const {data: {user}, error } = await supabase.auth.signUp({
-      email,
-      password,
-    })
-    setLoading(false);
-    if(error) {console.log("Error", error)}
-   console.log("user", user)
-    
+//  const checkEmail = async() => {
+
+//   const {}
+//  }
+
+ const submitForm = async(data) =>{
+  setLoading(true);
+  
+  console.log("data", data)
+  const {userName, email, password}= data;
+
+  const toastId = toast.loading("درحال ثبت نام ...")
+
+  try{
+
+  
+  const {data: {user} } = await supabase.auth.signUp({
+    email,
+    password,
+  })
+
+
     const {error:profileError } = await supabase.from("profile")
     .insert({userId:user.id, userName, email, password});
-    if(profileError) {console.log("ErrorProfile", profileError)}
-    else{ console.log("profileUser", user)
+
+    if(!profileError){
+
       navigate("/signIn")
+      toast.update(toastId, {
+        render: `ثبت نام با موفقیت انجام شد`,
+        type: "success",
+        isLoading: false,
+        autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+      });
       
     }
-    
-  }
+   
 
+  
+}   catch (err) {
+  console.log("error :", err)
+  toast.update(toastId, {
+    render: "این ایمیل قبلاً ثبت شده است",
+    type: "error",
+    isLoading: false,
+    autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+  });
 
+} finally {
+  setLoading(false);
+}
+}
   
  
   return (
@@ -143,9 +172,9 @@ export default function Register() {
         <Button width="w-full mt-6" type="submit"
         disable={loading} >
 
-          {
-            loading ? <ButtonLoading/> : " ثبت نام"
-          }
+
+            ثبت نام
+
         </Button>
 
        </div>

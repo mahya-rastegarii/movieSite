@@ -3,15 +3,17 @@ import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 import { Outlet } from 'react-router-dom';
-import { ActiveLinkPovider } from '../context/ActiveLinkContext';
+import { useSelector } from 'react-redux';
+import SidebarMenu from '../components/sideBar/SidebarMenu';
+
 
 
 
 const MovieSiteContainer = () => {
   
-    const [backToTop, setBackToTop] = useState(false);
+  const menu = useSelector( (state) => state.menu.showMenu);
 
-
+  const [backToTop, setBackToTop] = useState(false);
 
     useEffect(() => {
       window.addEventListener("scroll", () => {
@@ -31,12 +33,15 @@ const MovieSiteContainer = () => {
     <div className="w-full relative bg-color-4 dark:theme-dark custom-transition min-h-screen">
  <Navbar />
  
-      {/* <ActiveLinkPovider> */}
+    
  <Outlet/>
    <Footer />
 
-            {/* </ActiveLinkPovider> */}
+          
             {backToTop && <ScrollToTop />}
+                 {
+                  menu && <SidebarMenu/>
+                 }
                </div>
   )
 }

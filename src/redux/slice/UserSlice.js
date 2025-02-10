@@ -13,5 +13,5 @@ const UserSlice = createSlice({
 }
 })
 
-export const {setSession, setUserComment} = UserSlice.actions;
+export const {setSession} = UserSlice.actions;
 export default UserSlice.reducer; 

@@ -7,12 +7,13 @@ import MenuItem from '../../../components/Button/MenuItem';
 import Profile from './Profile';
 
 import ProfilePhoto from '/assets/img/user.png';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, redirect, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FavoritesList from './FavoritesList';
 import { logOut } from '../../../core/functions';
 import { setSession } from '../../../redux/slice/UserSlice';
 import Comments from './Comments';
+import { toast } from 'react-toastify';
 
 
 
@@ -23,21 +24,29 @@ export default function Dashboard() {
 
   const session = useSelector( ( state) => state.user.session);
 
-const navigate = useNavigate();
- 
+
+ const navigate = useNavigate();
  
 
   const LogoutUser = async() =>{
     const result = await logOut();
     if(result) {
       dispatch(setSession(null))
-      navigate("/")
+      return navigate("/")
     }
     else{
-      console.log("Error")
+     toast.error("لطفا مجددا تلاش کنید")
     }
   
     } 
+
+
+    useEffect( ()=> {
+      if(!session) {
+        return navigate("/")
+      }
+    }, [session])
+
   return (
     <div className='  flex md:flex-row flex-col space-y-8 md:space-y-0  justify-center md:justify-center   items-center my-16 px-7 md:px-0 py-2 lg:h-screen'>
 
@@ -53,33 +62,26 @@ const navigate = useNavigate();
             <ul className=' rounded-xl'>
 
           
-          <NavLink to="/dashboard/profile">
-    {({isActive}) => (
+        
 
-           <MenuItem borderType="border-t" active={isActive}>
+           <MenuItem borderType="border-t" active link="/dashboard/profile">
             <AiOutlineProfile className=' inline ml-2 text-xl'/>
            داشبورد
            </MenuItem>
-    )}
-          </NavLink>
-          <NavLink to="/dashboard/favoriteList">
-    {({isActive}) => (
-
-           <MenuItem borderType="border-t" active={isActive}>
+   
+        
+   
+           <MenuItem borderType="border-t" active link="/dashboard/favoriteList">
             <MdOutlineFavoriteBorder className=' inline ml-2 text-xl'/>
           لیست مورد علاقه ها 
            </MenuItem>
-    )}
-           </NavLink>
-           <NavLink to="/dashboard/comments">
-           
-    {({isActive}) => (
-           <MenuItem borderType="border-t" active={isActive} >
+ 
+          
+           <MenuItem borderType="border-t" active link="/dashboard/comments">
             <AiOutlineComment className=' inline ml-2 text-xl'/>
             کامنت ها
            </MenuItem>
-    )}
-           </NavLink>
+  
            <MenuItem borderType="border-t" textColor="text-red-500" rounded=" rounded-b-xl" clicked={LogoutUser}>
             <MdOutlineLogout className=' inline ml-2 text-xl'/>
              خروج از حساب

@@ -59,7 +59,7 @@ const navigate  = useNavigate()
               <ImdbLabel textColor='text-color-1' score={data?.imdbRating}/>
         </div>
         <div className="flex w-full flex-col text-color-1 text-bold space-y-3 ">
-        <div className=' flex justify-center md:justify-start opacity-60 items-center my-4 text-color-1 text-sm'>
+        <div className=' flex justify-center md:justify-start opacity-60  items-center my-4 text-color-1 text-sm'>
           {/* <span className='border  border-color-3 bg-transparent  rounded-xl px-3 py-1 mx-2 '> اکشن</span>
           <span className='border  border-color-3 bg-transparent  rounded-xl px-3 py-1 mx-2 '> فانتزی</span>
           <span className='border  border-color-3 bg-transparent  rounded-xl px-3 py-1 mx-2 '> کلاسیک</span> */}

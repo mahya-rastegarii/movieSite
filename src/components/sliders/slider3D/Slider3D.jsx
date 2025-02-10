@@ -108,21 +108,21 @@ export default function Slider3D() {
           //    clickable: true,
           //  }}
 
-          breakpoints={{
-            640: {
-              slidesPerView: 1,
+          // breakpoints={{
+          //   640: {
+          //     slidesPerView: 1,
             
               
-            },
-            768: {
-              slidesPerView: 3,
+          //   },
+          //   768: {
+          //     slidesPerView: 3,
               
-            },
-            1024: {
-              slidesPerView: 3,
+          //   },
+          //   1024: {
+          //     slidesPerView: 3,
              
-            },
-          }}
+          //   },
+          // }}
           
           modules={[Autoplay, EffectCoverflow]}
           

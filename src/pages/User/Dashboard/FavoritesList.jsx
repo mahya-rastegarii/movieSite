@@ -10,6 +10,7 @@ import LoadingPage from '../../../components/Loading/LoadingPage'
 import { supabase } from '../../../core/supabaseClient'
 import { MdDelete } from 'react-icons/md'
 import Button from '../../../components/Button/Button'
+import { toast } from 'react-toastify'
 
 
 
@@ -34,6 +35,8 @@ const pageFromURL = parseInt(searchParams.get("page")) || 1;
 const [page, setPage] = useState(pageFromURL);
 const [list, setList]= useState();
 const [isLoading, setIsLoading]= useState(false);
+
+
 const getFavoriteMoves = async() =>{
    setIsLoading(true);
   // setFavorite(favoritesMovie)
@@ -42,7 +45,7 @@ const getFavoriteMoves = async() =>{
   if(profileData){
 
 
-    setFavorite(profileData[0].movies);
+    setFavorite(profileData[0]?.movies);
   //   const favoriteMovies = profileData[0].movies
       
   //   setFavorite(favoriteMovies);
@@ -62,23 +65,53 @@ setIsLoading(false);
 }
 
 const deleteMovieHandler= async(movieName) => {
+
+
+  const toastId = toast.loading("در حال حذف...")
   const updatedMovies = favorite.filter(movie => movie.name !== movieName);
 
-  const { error: updateError } = await supabase
-  .from("profile")
-  .update({ movies: updatedMovies })
-  .eq("userId", session.userId);
-  if(updateError) {
-    console.log("deleteError", updateError)
-  }
-  else {
-    getFavoriteMoves();
-  }
+  try{
+    
+   const {error} = await supabase
+   .from("profile")
+   .update({ movies: updatedMovies })
+   .eq("userId", session.userId)
+
+   if(!error) {
+
+    getFavoriteMoves()
+    toast.update(toastId, {
+      render: "فیلم موردنظراز لیست حذف شد",
+      type: "success",
+      isLoading: false,
+      autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+    });
+   }
+  } catch (err) {
+    console.error("Error:", err);
+  
+   
+    toast.update(toastId, {
+      render:  "حذف انجام نشد. لطفا مجددا تلاش کنید",
+      type: "error",
+      isLoading: false,
+      autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+    });
+  
+  } 
+ 
+        
+      
+
+     
 }
+
+
+
 useEffect( () => {
 
   getFavoriteMoves();
-}, [])
+}, [session])
 
 
 const [loading, setLoading, data] = usePaginatedFetch(6, favorite);
@@ -111,13 +144,13 @@ dispatch(fetchMovie(result));
  
   return (
     <>
-     {/* {
-      isLoading && <div className=" w-full flex justify-center items-center "><LoadingPage/></div>
-     }
-   */}
-    <div className={`w-full ${list?.length > 0 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center place-self-center" : "" } mx-2 my-12  gap-x-4 md:gap-x-2 gap-y-4  `}>
      {
-      isLoading ? <div className=" w-full flex justify-center items-center "><LoadingPage/></div>  :    list?.map(item => (
+      isLoading && <div className=" w-full flex justify-center items-center mx-2 my-12"><LoadingPage/></div>
+     }
+  
+    <div className={`w-full ${ list?.length > 0 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center place-self-center" : "" } mx-2 my-12  gap-x-4 md:gap-x-2 gap-y-4  `}>
+     {
+      !isLoading &&  list?.map(item => (
      <>
         
         <div className="  flex flex-col justify-center items-center cursor-pointer space-y-2" >
@@ -143,7 +176,7 @@ dispatch(fetchMovie(result));
    
    
       </>
-  )) || <div className=" w-full flex justify-center items-center my-16 text-color-1"><span> لیست شما خالی است </span></div>
+  )) || !isLoading && <div className=" w-full flex justify-center items-center my-16 text-color-1"><span> لیست شما خالی است </span></div>
 } 
 
   
