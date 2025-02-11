@@ -56,7 +56,7 @@ const NavSearchBar =() => {
    
    <PageBackdrop setShow={setInputShow} show={inputShow} />
   
-   <div className={`md:hidden  ${inputShow ? 'w-9/12 sm:w-7/12 opacity-100' : "w-0 opacity-0"} right-12 sm:right-32 flex rounded-xl  items-center justify-center top-28 z-40  transition-all fixed ease-in-out delay-100 drop-shadow-md bg-color-4 py-1   px-3   `}> <input className=' w-full  focus:placeholder:text-color-3 text-color-1 bg-transparent transition-all outline-none  lg:placeholder:text-slate-500 input-search '  onChange={(e) => setSearchInput(e.target.value)}  onKeyUp={debouncedFetchCourses} value={searchInput}  type="text" placeholder="جست و جو کنید ..." /> <FiSearch className=' text-color-2 text-xl'/></div>
+   <div className={`md:hidden  ${inputShow ? 'w-9/12 sm:w-7/12 opacity-100' : "w-0 opacity-0"}  left-1/2 transform -translate-x-1/2 md:left-auto md:transform-none flex rounded-xl  items-center justify-center top-28 z-40  transition-all fixed ease-in-out delay-100 drop-shadow-md bg-color-4 py-1   px-3   `}> <input className=' w-full  focus:placeholder:text-color-3 text-color-1 bg-transparent transition-all outline-none  lg:placeholder:text-slate-500 input-search '  onChange={(e) => setSearchInput(e.target.value)}  onKeyUp={debouncedFetchCourses} value={searchInput}  type="text" placeholder="جست و جو کنید ..." /> <FiSearch className=' text-color-2 text-xl'/></div>
    
     {
     
