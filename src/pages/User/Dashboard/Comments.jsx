@@ -74,9 +74,10 @@ const deleteCommentHandler= async(id) => {
       getAllUserComment();
       
   
-        console.log("updatedComments", updatedComments, updatedComments.length)
+       
         if (updatedComments.length % 3 === 0 && page > 1) {
           setSearchParams({ page: page - 1 });
+          setPage(page - 1);
         }
 
 

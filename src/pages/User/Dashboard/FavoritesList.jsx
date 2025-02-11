@@ -79,7 +79,13 @@ const deleteMovieHandler= async(movieName) => {
 
    if(!error) {
 
-    getFavoriteMoves()
+    getFavoriteMoves();
+     
+    if (updatedMovies.length % 3 === 0 && page > 1) {
+      setSearchParams({ page: page - 1 });
+      setPage(page - 1);
+    }
+    
     toast.update(toastId, {
       render: "فیلم موردنظراز لیست حذف شد",
       type: "success",
