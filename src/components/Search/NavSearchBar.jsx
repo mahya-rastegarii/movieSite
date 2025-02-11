@@ -48,19 +48,20 @@ const NavSearchBar =() => {
  
   return (
     <>
-    <div className='hidden lg:flex  lg:w-full lg:drop-shadow-md lg:bg-color-4 py-1 lg:transition-all px-3 rounded-xl  justify-between items-center  '> <input className=' w-full focus:placeholder:text-color-3 text-color-1 bg-transparent transition-all outline-none  lg:placeholder:text-slate-500 input-search '  onChange={(e) => setSearchInput(e.target.value)}  onKeyUp={debouncedFetchCourses} value={searchInput}  type="text" placeholder="جست و جو کنید ..." /> <FiSearch className=' text-color-2 text-xl'/></div>
-   <div className="flex lg:hidden" onClick={() => setInputShow(true)}>
+    <div className='hidden md:flex  md:w-full md:drop-shadow-md md:bg-color-4 py-1 md:transition-all px-3 rounded-xl  justify-between items-center  '> <input className=' w-full focus:placeholder:text-color-3 text-color-1 bg-transparent transition-all outline-none  md:placeholder:text-slate-500 input-search '  onChange={(e) => setSearchInput(e.target.value)}  onKeyUp={debouncedFetchCourses} value={searchInput}  type="text" placeholder="جست و جو کنید ..." /> <FiSearch className=' text-color-2 text-xl'/></div>
+   <div className="flex  md:hidden mx-6" onClick={() => setInputShow(true)}>
 
-    <FiSearch className=' mx-6  text-color-2 text-xl'/>
+    <FiSearch className=' text-color-2 text-xl'/>
    </div>
-
-   <PageBackdrop className={``}><div className={` ${inputShow ? "flex" : "hidden"} lg:hidden absolute top-20 right-50 z-40  drop-shadow-md bg-color-4 py-1  transition-all px-3   justify-center items-center`}> <input className=' w-full focus:placeholder:text-color-3 text-color-1 bg-transparent transition-all outline-none  lg:placeholder:text-slate-500 input-search '  onChange={(e) => setSearchInput(e.target.value)}  onKeyUp={debouncedFetchCourses} value={searchInput}  type="text" placeholder="جست و جو کنید ..." /> </div></PageBackdrop>
-
-    {
    
-    searchInput.length >= 2  ? <SearchBox dataMovie={dataMovie} setSearchInput={setSearchInput}/> : null
+   <PageBackdrop setShow={setInputShow} show={inputShow} />
+  
+   <div className={`md:hidden  ${inputShow ? 'w-9/12 sm:w-7/12 opacity-100' : "w-0 opacity-0"} right-12 sm:right-32 flex rounded-xl  items-center justify-center top-28 z-40  transition-all fixed ease-in-out delay-100 drop-shadow-md bg-color-4 py-1   px-3   `}> <input className=' w-full  focus:placeholder:text-color-3 text-color-1 bg-transparent transition-all outline-none  lg:placeholder:text-slate-500 input-search '  onChange={(e) => setSearchInput(e.target.value)}  onKeyUp={debouncedFetchCourses} value={searchInput}  type="text" placeholder="جست و جو کنید ..." /> <FiSearch className=' text-color-2 text-xl'/></div>
+   
+    {
+    
+    searchInput.length >= 2  ? <SearchBox dataMovie={dataMovie} setSearchInput={setSearchInput} inputShow={inputShow}/> : null
    }
-     
     </>
   )
 }

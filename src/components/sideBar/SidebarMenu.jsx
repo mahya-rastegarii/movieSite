@@ -8,16 +8,21 @@ import { TbDeviceDesktopHeart } from 'react-icons/tb';
 import { FaHome } from 'react-icons/fa';
 import { fetchAllMovies, fetchTopMovies } from '../../core/functions';
 import { fetchMoviesList } from '../../redux/slice/MoviesSlice';
-import { useNavigate } from 'react-router-dom';
-import Button from '../Button/Button';
+
 import { IoIosCloseCircleOutline } from 'react-icons/io';
+
+import LoginMenu from '../menu/LoginMenu';
 
 
 export default function SidebarMenu() {
  
  
   const dispatch = useDispatch()
- const menu =useSelector( ( state) => state.menu.showMenu)
+  
+  const menu =useSelector( ( state) => state.menu.showMenu)
+  const session = useSelector( (state) => state.user.session);
+
+
 const fetchTop = async(type) => {
   dispatch(setShowMenu(false))
     const result = await fetchTopMovies(type);
@@ -42,13 +47,17 @@ const fetchTop = async(type) => {
 
   return (
     <>
-   <PageBackdrop />
+   <PageBackdrop setShow={setShowMenu} show={menu}/>
      <div 
      className={` lg:hidden ${menu ? 'w-5/12 opacity-100' : "w-0 opacity-0"}  h-full p-1 bg-color-3 flex justify-center items-start  right-0 top-0 z-40 shadow-2xl border-l border-color-1 pt-1 transition-all fixed ease-in-out delay-100`}
      >
                     <IoIosCloseCircleOutline className='absolute right-2 top-3 text-xl text-color-1 hover:text-color-2' onClick={() => dispatch(setShowMenu(false))}/>
                    <ul className=' w-full mt-24 flex justify-start flex-col items-center'>
-                 <div className='w-full   mb-16 mx-2 md:mx-0 flex md:justify-center md:items-center flex-col md:flex-row   md:space-y-0  space-y-3 '>
+                     <div className={`w-full  ${session ? "mb-12" : "mb-16 md:justify-center md:items-center md:flex-row "}  mx-2 md:mx-0 flex  flex-col   md:space-y-0  space-y-3 `}>
+                   {
+              session ? <LoginMenu response="sm"/>
+                : (
+                <>
                     <MenuItem borderType="border" rounded='rounded-xl' active   link="/signIn"
                      clicked={()=> dispatch(setShowMenu(false))}>
 
@@ -61,7 +70,10 @@ const fetchTop = async(type) => {
 
                       ثبت نام
                     </MenuItem>
-                 </div>
+
+                </>
+                 )}
+                 </div> 
                  <div className="w-full ">
 
                  
@@ -99,6 +111,7 @@ const fetchTop = async(type) => {
                     </MenuItem>
 
                     </div>  
+                  
                    </ul>
       </div>
     </>

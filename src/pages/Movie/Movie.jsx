@@ -275,7 +275,7 @@ export default function Movie() {
 
   useEffect(() => {
   LoadData();
-  },[])
+  },[movieData])
  
 
 
@@ -353,13 +353,13 @@ export default function Movie() {
                 <span className=' bg-color-hover shadow-md px-2 rounded-md font-bold text-white text-md'> IMDb </span>
              
               </div> */}
-<div className=" flex justify-center items-center flex-row md:flex-col space-y-4">
+<div className=" flex justify-center items-center flex-row lg:flex-col space-y-4">
 
                   <ImdbLabel score={movie?.imdbRating} />
                   <FiHeart className={`text-2xl text-red-700 cursor-pointer hover:fill-red-700 ${likeMovie ? "fill-red-700" : ""}`}  onClick={() =>fechFavoriteMovie(movie.name, movie.pic)}/>
 </div>
                 </div>
-                <div className="flex  w-full flex-col text-white justify-center items-center space-y-4 ">
+                <div className="flex  w-full flex-col text-white  justify-center lg:justify-start lg:items-start items-center space-y-4 ">
                   <div className="w-fit   gap-y-3 flex justify-around items-center flex-wrap lg:justify-center text-slate-300">
                     {movie?.genre?.map((genre, index) => (
                       <GenreLabel borderColor="border-slate-300" key={index}>
@@ -367,13 +367,13 @@ export default function Movie() {
                       </GenreLabel>
                     ))}
                   </div>
-                  <div className="w-full flex lg:flex-col lg:justify-start justify-center lg:space-y-5 items-center">
+                  <div className="w-3/5 lg:w-full flex lg:flex-col lg:justify-start justify-center lg:space-y-5 items-center">
                     <div className="w-full flex   md:justify-start justify-center items-center">
                       <MdOutlineTimer className=" inline ml-2 text-xl text-color-2 " />
                       <span className=" ">زمان : {movie?.time} دقیقه</span>
                     </div>
                   </div>
-                  <div className="w-full flex justify-start flex-col  space-y-5 items-center">
+                  <div className="w-3/5 lg:w-full flex justify-start flex-col  space-y-5 items-center">
                     {movie?.year ? (
                       <div className="w-full flex  md:justify-start justify-center items-center">
                         <MdOutlineDateRange className=" inline ml-2 text-xl text-color-2" />
@@ -400,18 +400,18 @@ export default function Movie() {
                       </div>
                     ) : movie?.tv ? (
                       <div className="w-full flex  md:justify-start justify-center  items-center">
-                        <PiTelevisionLight className=" inline ml-2 text-xl text-color-2 mr-7 lg:mr-0" />
+                        <PiTelevisionLight className=" inline ml-2 text-xl text-color-2  lg:mr-0" />
                         <span className=" "> شبکه : {movie?.tv}</span>
                       </div>
                     ) : null}
                   </div>
                   {/* <div className='w-full flex justify-start items-center'><PiFilmReelBold className=' inline ml-2 text-xl text-color-2'/><span className=' '>ژانر : </span></div> */}
-                  <div className="w-full flex  md:justify-start justify-center items-center">
+                  <div className="w-3/5 lg:w-full flex  md:justify-start justify-center items-center">
                     <BsGlobe className=" inline ml-2 text-xl text-color-2" />
                     <span className=" ">محصول کشور : {movie?.country}</span>
                   </div>
 
-                  <div className="w-full flex justify-start mt-14 md:mt-0 items-center">
+                  <div className="w-4/5 lg:w-full flex justify-start mt-14 md:mt-0 items-center">
                     <p>{movie?.summary}</p>
                   </div>
                 {
@@ -437,7 +437,7 @@ export default function Movie() {
 
             <BgRotate padding="p-1" rotate1="-rotate-1" rotate2="rotate-1">
               <DisclosureWrapper title="لینک های دانلود" isOpen={true}>
-                <div className="p-8 flex flex-col space-y-3">
+                <div className="md:p-8 flex flex-col space-y-3">
                   <div>
                     <DisclosureWrapper
                       bg="bg-color-2"

@@ -59,6 +59,7 @@ const deleteCommentHandler= async(id) => {
  
   const toastId = toast.loading("در حال حذف...")
   const updatedComments = commentList.filter(comment => comment.id !== id);
+
   try{
 
     const {error} = await supabase
@@ -71,6 +72,14 @@ const deleteCommentHandler= async(id) => {
      
      if(!error){
       getAllUserComment();
+      
+  
+        console.log("updatedComments", updatedComments, updatedComments.length)
+        if (updatedComments.length % 3 === 0 && page > 1) {
+          setSearchParams({ page: page - 1 });
+        }
+
+
       toast.update(toastId, {
         render: "کامنت موردنظر حذف شد",
         type: "success",
@@ -130,19 +139,21 @@ useEffect(() => {
   isLoading ? <div className=" w-full flex justify-center items-center "><LoadingPage/></div> :  comment?.map((data) => (
       
     <>
-     <div className='w-full flex  justify-between items-center mx-4  p-2 border border-color-4 text-color-1 mb-3 my-1'>
+     <div className='w-full flex flex-col md:flex-row space-y-3 md:space-y-0 justify-between items-center mx-2  p-1 border border-color-4 text-color-1 mb-3 my-1'>
         
-       
-        <div className='flex items-center justify-center'>
+       <div className='w-full md:w-2/5 flex justify-between md:justify-normal items-center'>
+        <div className='flex items-center flex-wrap justify-center'>
          <span className=' ml-3 text-color-1'> فیلم :</span>
         <span className=' text-color-2 cursor-pointer hover:underline' onClick={() => fetchMovieInfoHandler(data.movieName)}>  {data.movieName} </span>
         </div>
-      
-         <div className="w-3/5 flex justify-center items-center text-justify">
+
+        <MdDelete className='flex md:hidden text-red-700 text-xl cursor-pointer hover:text-red-800 hover:scale-110' onClick={() => deleteCommentHandler(data.id)}/>
+        </div>
+         <div className="w-full md:w-2/5 flex justify-startE items-center ">
          <p className=' font-semibold'>  {data.comment}</p>
          </div>
        
-         <MdDelete className='text-red-700 text-xl cursor-pointer hover:text-red-800 hover:scale-110' onClick={() => deleteCommentHandler(data.id)}/>
+         <MdDelete className='hidden md:flex text-red-700 text-xl cursor-pointer hover:text-red-800 hover:scale-110' onClick={() => deleteCommentHandler(data.id)}/>
 
       </div>
       </>

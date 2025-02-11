@@ -2,14 +2,17 @@
 import React, { useState } from 'react'
 
 
-export default function PageBackdrop() {
+export default function PageBackdrop({show, setShow}) {
 
-  const {setShowMenu, showMenu}= useState()
+  
   
  
   return (
-    <div className={` ${showMenu ? 'w-full' : "w-0"}  h-full bg-black absolute top-0 left-0 opacity-60 z-30 `} onClick={() => setShowMenu(false)}>
+    <>
+    <div className={` ${show? 'w-full' : "w-0"}  h-full bg-black absolute top-0 left-0 opacity-90 z-30 `} onClick={() => setShow(false)}>
      
     </div>
+    
+    </>
   )
 }

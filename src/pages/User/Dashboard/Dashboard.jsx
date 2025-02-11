@@ -48,11 +48,11 @@ export default function Dashboard() {
     }, [session])
 
   return (
-    <div className='  flex md:flex-row flex-col space-y-8 md:space-y-0  justify-center md:justify-center   items-center my-16 px-7 md:px-0 py-2 lg:h-screen'>
+    <div className='  flex md:flex-row flex-col space-y-12 md:space-y-0  justify-center md:justify-center   items-center my-16 px-7 md:px-0 py-2 lg:h-screen'>
 
-        <div className="md:w-3/12 lg:w-2/12 w-full flex shadow-md flex-col md:ml-12 relative justify-center items-center bg-color-3 rounded-xl  font-semibold text-md space-y-16 text-color-1 ">
+        <div className="md:w-3/12 xl:w-2/12 w-full flex shadow-md flex-col md:ml-8  lg:ml-12 relative justify-center items-center bg-color-3 rounded-xl  font-semibold text-md space-y-16 text-color-1 ">
         
-          <div className=' w-full flex flex-col justify-center items-center  '>
+          <div className=' w-full flex flex-col justify-center items-center'>
                 <img className=' rounded-full absolute ' src={ProfilePhoto} width={122} alt="ProfilePhoto" />
           </div>
 
@@ -89,7 +89,7 @@ export default function Dashboard() {
            </ul>
           </div>
         </div>
-        <div className="  w-full md:w-5/12 md:mr-12 lg:w-4/12">
+        <div className="  w-full md:w-7/12 md:mr-12 lg:w-5/12 xl:w-4/12">
         <BgRotate>
            <div className="w-full rounded-lg p-2">
            <Outlet/>

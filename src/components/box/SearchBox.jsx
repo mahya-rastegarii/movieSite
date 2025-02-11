@@ -4,13 +4,13 @@ import ShowItemNavSearch from '../Search/ShowItemNavSearch'
 
 
 
-const SearchBox = ({dataMovie, setSearchInput}) => {
+const SearchBox = ({dataMovie, setSearchInput, inputShow}) => {
 
  
 
    
   return (
-    <div className="h-2/12  bg-color-3 text-white w-3/12 min-h-fit  flex flex-col  rounded-sm justify-center mt-3 items-center border border-color-1  absolute z-40 space-y-2" >
+    <div className={`h-2/12 w-9/12 sm:7/12  bg-color-3 text-white md:w-4/12 lg:w-3/12 min-h-fit  ${inputShow ? "flex" : "hidden"} md:flex flex-col  rounded-sm justify-center mt-3 items-center border border-color-1  top-36 right-12 sm:right-20 md:right-auto md:top-auto absolute z-40 space-y-2`} >
   
    
     {

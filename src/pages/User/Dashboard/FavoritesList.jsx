@@ -148,7 +148,7 @@ dispatch(fetchMovie(result));
       isLoading && <div className=" w-full flex justify-center items-center mx-2 my-12"><LoadingPage/></div>
      }
   
-    <div className={`w-full ${ list?.length > 0 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center place-self-center" : "" } mx-2 my-12  gap-x-4 md:gap-x-2 gap-y-4  `}>
+    <div className={`w-full ${ list?.length > 0 ? "grid grid-cols-2 lg:grid-cols-3 place-items-center place-self-center" : "" } mx-2 my-12  gap-x-4 md:gap-x-2 gap-y-4  `}>
      {
       !isLoading &&  list?.map(item => (
      <>
