@@ -61,7 +61,7 @@ export default function Slider3D() {
     if (slideData.length > 0) {
       dispatch(fetchMovieSlideInfo(slideData[0])); 
     }
-  }, [slideData]);
+  }, []);
    
   return (
   <div className='w-full h-full'>
@@ -84,19 +84,26 @@ export default function Slider3D() {
         
         effect={'coverflow'}
         loop={true}
+        // loopAdditionalSlides={slideData?.length}
          grabCursor={true}
         centeredSlides={true}
         slidesPerView={3}
-       
+        centeredSlidesBounds={true}
+        loopFillGroupWithBlank={true}
+        initialSlide={1}
+        loopAdditionalSlides={1}
+        slideToClickedSlide={true}
+        watchSlidesProgress={true}
+        watchSlidesVisibility={true}
         coverflowEffect={{
           rotate: 0,
-          stretch: 50,
-          depth: 300,
-          modifier: 1,
+          stretch: 0,
+          depth: 100,
+          modifier: 4,
           // modifier: 1,
           slideShadows: false
         }}
-        spaceBetween={-70}
+        // spaceBetween={-70}
         autoplay={{
           delay: 5500,
           disableOnInteraction: false,
@@ -108,25 +115,25 @@ export default function Slider3D() {
           //    clickable: true,
           //  }}
 
-          // breakpoints={{
-          //   640: {
-          //     slidesPerView: 1,
+          breakpoints={{
+            640: {
+              slidesPerView: 3,
             
               
-          //   },
-          //   768: {
-          //     slidesPerView: 3,
+            },
+            768: {
+              slidesPerView: 3,
               
-          //   },
-          //   1024: {
-          //     slidesPerView: 3,
+            },
+            1024: {
+              slidesPerView: 3,
              
-          //   },
-          // }}
+            },
+          }}
           
           modules={[Autoplay, EffectCoverflow]}
-          
           >
+          
       {slideData?.map((movie) => (
         <SwiperSlide  className="swiper-3DSlider bg-center bg-cover w-full flex justify-center  items-center relative"  key={movie.id} >
           <img  className=" block  rounded-md " src={movie.pic} width={200} alt={movie.name}/>
