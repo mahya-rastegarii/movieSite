@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { fetchAllMovies, fetchTopMovies } from '../../core/functions';
 import { fetchMoviesList } from '../../redux/slice/MoviesSlice';
 import { useEffect, useState } from 'react';
-import { useActiveLinkContext } from '../../context/ActiveLinkContext';
+
 
 
 
@@ -20,8 +20,7 @@ export default function Footer() {
 
   
 
-  //  const {activeGenre, setActiveGenre} = useActiveLinkContext();
-  
+
 
   const fetchTop = async(e, type) => {
     const value= e.target.innerText;

@@ -35,10 +35,11 @@ export default function Comments() {
   const getAllUserComment = async() => {
     setIsLoading(true);
     const {data: commentData, error: commentError}= await supabase.from("profile").select("comments").eq("userId", session.userId);
-    if(commentError){ console.log("Eror", commentError)}
+    if(commentError){
+      toast.error("خطا در دریافت لیست کامنت ها")
+    }
       else {
         setCommentList(commentData[0]?.comments)
-        console.log("userdata", commentData[0]?.comments)
       }
    setIsLoading(false);
   }
@@ -67,10 +68,16 @@ const deleteCommentHandler= async(id) => {
     .update({ comments: updatedComments })
     .eq("userId", session.userId);
 
-    if(!error) {
+    if(error){
+      throw error;
+    }else {
      const {error} = await supabase.from("comments").delete().eq("id", id)
      
-     if(!error){
+     if(error){
+
+      throw error;
+
+     } else {
       getAllUserComment();
       
   
@@ -85,7 +92,7 @@ const deleteCommentHandler= async(id) => {
         render: "کامنت موردنظر حذف شد",
         type: "success",
         isLoading: false,
-        autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+        autoClose: 3000, 
       });
      }
   }
@@ -100,7 +107,7 @@ const deleteCommentHandler= async(id) => {
     render:  "حذف انجام نشد. لطفا مجددا تلاش کنید",
     type: "error",
     isLoading: false,
-    autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+    autoClose: 5000, 
   });
 
 } 

@@ -17,7 +17,6 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {  fetchMoviesList } from "../../redux/slice/MoviesSlice";
 import LoadingPage from "../Loading/LoadingPage";
-import { useActiveLinkContext } from "../../context/ActiveLinkContext";
 import ButtonLoading from "../Loading/ButtonLoading";
 
 
@@ -32,7 +31,6 @@ export default function GenreSideBar() {
  const [activeGenre, setActiveGenre] =useState([]);
  const [genres, setGenres]= useState([])
  
-//  const {activeGenre, setActiveGenre} = useActiveLinkContext();
 
 const [loading, setLoading]= useState({
   dataAll: false,

@@ -23,7 +23,6 @@ import { toast } from 'react-toastify'
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const favoritesMovie = useSelector( state => state.movies.favoritesMovie)
   const session = useSelector( state => state.user.session);
 
 const [favorite, setFavorite] = useState([]);
@@ -39,7 +38,7 @@ const [isLoading, setIsLoading]= useState(false);
 
 const getFavoriteMoves = async() =>{
    setIsLoading(true);
-  // setFavorite(favoritesMovie)
+ 
   const {data: profileData, error: errorData} = await supabase.from("profile"). select("movies").eq("userId", session.userId);
 
   if(profileData){
@@ -50,12 +49,12 @@ const getFavoriteMoves = async() =>{
       
   //   setFavorite(favoriteMovies);
   
-      console.log("favoritesMovie", profileData)
+   
 
   // const {data: moviesData, error: errorData} = await supabase.from('movies').select("name", "pic").eq('name', profileData[0].movies);
   // if(errorData) { console.log('Error', errorData)}
   // else {
-  //   console.log("favoritesMovie", moviesData)
+ 
   //   setFavorite(moviesData);
   // }
 } else {
@@ -67,7 +66,8 @@ setIsLoading(false);
 const deleteMovieHandler= async(movieName) => {
 
 
-  const toastId = toast.loading("در حال حذف...")
+  const toastId = toast.loading("در حال حذف...");
+
   const updatedMovies = favorite.filter(movie => movie.name !== movieName);
 
   try{
@@ -77,7 +77,10 @@ const deleteMovieHandler= async(movieName) => {
    .update({ movies: updatedMovies })
    .eq("userId", session.userId)
 
-   if(!error) {
+   if(error){
+
+    throw error;
+   }else {
 
     getFavoriteMoves();
      
@@ -90,7 +93,7 @@ const deleteMovieHandler= async(movieName) => {
       render: "فیلم موردنظراز لیست حذف شد",
       type: "success",
       isLoading: false,
-      autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+      autoClose: 3000, 
     });
    }
   } catch (err) {
@@ -101,7 +104,7 @@ const deleteMovieHandler= async(movieName) => {
       render:  "حذف انجام نشد. لطفا مجددا تلاش کنید",
       type: "error",
       isLoading: false,
-      autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+      autoClose: 5000, 
     });
   
   } 
@@ -144,9 +147,6 @@ dispatch(fetchMovie(result));
 }
 
 
-  // useEffect( () => {
-  //   setList(favoritesMovie);
-  // }, [favoritesMovie])
  
   return (
     <>

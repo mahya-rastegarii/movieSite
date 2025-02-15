@@ -6,8 +6,7 @@ export const MoviesSlice = createSlice({
     initialState: {
         movieList: [],
         movieData: [],
-       favoritesMovie:[],
-       comments:[],
+       
        
     },
     reducers: {
@@ -17,17 +16,13 @@ export const MoviesSlice = createSlice({
         fetchMovie: (state, action) =>{
             state.movieData = action.payload;
         },
-        setFavoritesMovie: (state,action) => {
-            state.favoritesMovie = [... state.favoritesMovie, action.payload];
-        },
-        setComments: (state,action) => {
-            state.comments = [...state.comments, action.payload]
-        }
+      
+        
 
     },
 })
 
 
-export const {fetchMoviesList, fetchMovie, setFavoritesMovie, setComments} = MoviesSlice.actions;
+export const {fetchMoviesList, fetchMovie, } = MoviesSlice.actions;
 
 export default MoviesSlice.reducer;

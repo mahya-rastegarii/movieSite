@@ -39,16 +39,20 @@ export default function Register() {
   try{
 
   
-  const {data: {user} } = await supabase.auth.signUp({
+  const {data: {user}, error } = await supabase.auth.signUp({
     email,
     password,
   })
-
+   if(error) {
+    throw error;
+   }
 
     const {error:profileError } = await supabase.from("profile")
     .insert({userId:user.id, userName, email, password});
 
-    if(!profileError){
+    if(profileError){
+throw error;
+    }else {
 
       navigate("/signIn")
       toast.update(toastId, {

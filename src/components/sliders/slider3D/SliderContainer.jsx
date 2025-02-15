@@ -1,6 +1,6 @@
 
 import { useDispatch, useSelector } from "react-redux";
-// import { useMovieInfoContext } from "../../../context/MovieInfoContext";
+
 import HeaderBackdrop from "../../Backdrop/HeaderBackdrop";
 import Button from "../../Button/Button";
 import GenreLabel from "../../Label/GenreLabel";
@@ -31,9 +31,10 @@ const [data, setData] = useState([]);
 
   const movieInfoHandler = async(name) => {
     
-    navigate(`/movie/${name}`);
     const result = await fetchMovieInfo(name);
      dispatch(fetchMovie(result))
+     
+    navigate(`/movie/${name}`);
   }
 
 

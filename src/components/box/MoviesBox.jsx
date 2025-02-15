@@ -29,6 +29,7 @@ const navigate  = useNavigate()
 
  const movieInfoHandler = async(name) =>{
   const result = await fetchMovieInfo(name)
+  
   dispatch(fetchMovie(result));
 
   navigate(`/movie/${name}`)

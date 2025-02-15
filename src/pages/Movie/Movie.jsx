@@ -25,7 +25,7 @@ import { supabase } from "../../core/supabaseClient";
 import { useEffect, useState } from "react";
 // import { LiaKeySolid } from "react-icons/lia";
 import { FiHeart } from "react-icons/fi";
-import {  setComments, setFavoritesMovie } from "../../redux/slice/MoviesSlice";
+
 import {  useNavigate } from "react-router-dom";
 import LoadingPage from "../../components/Loading/LoadingPage";
 import MovieLoading from "../../components/Loading/MovieLoading";
@@ -37,10 +37,9 @@ export default function Movie() {
 
 
   const movieData = useSelector( state => state.movies.movieData);
-  // const favoritesMovie = useSelector ( (state) => state.movies.favoritesMovie);
   const session = useSelector( state => state.user.session);
  
-  const comments = useSelector ( (state) => state.movies.comments);
+  
 
 
   
@@ -60,7 +59,7 @@ export default function Movie() {
 //  const [userComments, setUserComments]= useState([]);
  
  const navigate = useNavigate();
- const dispatch = useDispatch()
+ 
 //  const url = new URL(window.location.href)
 // console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
 
@@ -130,41 +129,41 @@ export default function Movie() {
       loading: true
     })
     
-    const toastId = toast.loading("در حال ثبت نظر...")
+    const toastId = toast.loading("در حال ثبت کامنت...")
     
     try{
 
-      const {data} = await supabase.from('comments').insert({ userName:session.userName,
+      const {data, error} = await supabase.from('comments').insert({ userName:session.userName,
         pic:null,
         movieName:movieData[0].name,
         comment: commentText,
         disLike:0,
         like:0
       }).select("id");
-
-      if(data) {
+      if(error){
+        throw error;
+        
+      } else {
         const commentId = data[0].id
         fetchComments();
         addUserComments(commentId)
 
         toast.update(toastId, {
-          render: "نظر شما ثبت شد",
+          render: "کامنت شما ثبت شد",
           type: "success",
           isLoading: false,
-          autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+          autoClose: 3000, 
         });
-      } else {
-        toast.error("مشکلی به وجود آمده است لطفا بعدا تلاش کنید")
-      }
+      } 
     } catch (err) {
       console.error("Error:", err);
     
      
       toast.update(toastId, {
-        render:  "نظر ثبت نشد. لطفا مجددا تلاش کنید",
+        render:  "کامنت ثبت نشد. لطفا مجددا تلاش کنید",
         type: "error",
         isLoading: false,
-        autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+        autoClose: 5000, 
       });
     } finally {
 
@@ -208,7 +207,7 @@ export default function Movie() {
           
       
         const newMovie = {name, pic};
-      //  dispatch(setFavoritesMovie({name, pic})) 
+      
     const favoriteMoves =await getFavoriteMoves();
       const toastId = toast.loading( " در حال افرودن به لیست مورد علاقه ها")
         
@@ -223,7 +222,10 @@ export default function Movie() {
     
        const {error} =await  supabase.from("profile").update({movies: updatedMovies }).eq("userId", session.userId)
              
-       if(!error) {
+       if(error){
+         throw error
+
+       } else {
 
         setLikeMovie(true)
 
@@ -231,7 +233,7 @@ export default function Movie() {
           render: "به لیست مورد علاقه هااضافه شد",
           type: "success",
           isLoading: false,
-          autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+          autoClose: 3000, 
         });
        }
       } catch (err) {
@@ -242,7 +244,7 @@ export default function Movie() {
           render: "فیلم به لیست موردعلاقه هااضافه نشد. مجددا تلاش کنید",
           type: "error",
           isLoading: false,
-          autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+          autoClose: 5000, 
         });   
       }
     } 
@@ -263,7 +265,7 @@ export default function Movie() {
   const LoadData = () => {
     setMovie({
       ...movie,
-      loading:true
+      loading:true,
     })
     if(movieData){
       setMovie({
@@ -297,7 +299,7 @@ export default function Movie() {
         .single();
   
       if (error) {
-        console.error("خطا در دریافت لیست علاقه‌مندی‌ها:", error);
+        toast.error("خطا در دریافت لیست علاقه‌مندی‌ها");
         return;
       }
   
@@ -316,17 +318,14 @@ export default function Movie() {
   return (
     <>
         <div className=" flex flex-col justify-center items-center mb-16 space-y-20 min-h-screen">
-     {
-      movie.loading && (
-        <div className=" w-full flex mt-2 justify-center items-start min-h-screen">
-         
-          <MovieLoading />
-        </div>
-      )
-     }
           {
 
-     !movie.loading && movie.data?.map((movie) => (
+     movie.loading ?
+     (
+        <div className=" w-full flex mt-2 justify-center items-start min-h-screen">
+          <MovieLoading />
+        </div>
+      ) : movie.data?.map((movie) => (
             <>
           
 
@@ -427,13 +426,14 @@ export default function Movie() {
             </div>
           </HeaderBackdrop>
           <div className=" md:w-10/12 w-full lg:w-7/12 flex flex-col p-5 space-y-20">
-            {movie?.desc && (
+           
+          {/*}  {movie?.desc && (
               <BgRotate padding=" p-4">
                 <div className="w-full text-right text-color-1">
                   {movie?.desc}
                 </div>
               </BgRotate>
-            )}
+            )} */}
 
             <BgRotate padding="p-1" rotate1="-rotate-1" rotate2="rotate-1">
               <DisclosureWrapper title="لینک های دانلود" isOpen={true}>

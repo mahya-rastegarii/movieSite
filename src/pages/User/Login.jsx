@@ -44,7 +44,7 @@ export default function Login() {
     })
   
     if(error) {
-      toast.error(error)
+      throw error;
     }
 
   console.log("user", user);
