@@ -1,18 +1,14 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-// import { AiOutlineArrowLeft } from 'react-icons/ai'
+
 
 
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import {Autoplay, FreeMode} from 'swiper/modules';
-// import 'swiper/css/pagination';
-// import 'swiper/css/navigation';
 
-// import './simpleSlider.css'
-// import Button from "./../Button/Button"
 import BgRotate from "../../BackgroundRotate/BgRotate";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchMovie } from '../../../redux/slice/MoviesSlice';
 import { useNavigate } from 'react-router-dom';
 import { fetchMovieInfo } from '../../../core/functions';
@@ -57,9 +53,7 @@ navigate(`/movie/${name}`)
        
     </div>
         </BgRotate>
-        {/* <div>
-       <Button width="w-full" btnType="link"> مشاهده همه<AiOutlineArrowLeft className=' inline mr-2'/></Button>
-        </div> */}
+      
           
  
        </div>
@@ -74,17 +68,17 @@ navigate(`/movie/${name}`)
         
         className=" w-full h-full m-8 p-20"
         
-        // slidesPerView={5}
+      
         spaceBetween={2}
         loop={true}
         freeMode={true}
-      // centeredSlides={true}
+    
      autoplay={{
           delay: delay,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
-        //  pagination={pagination}
+       
 
         breakpoints={{
           640: {
@@ -112,7 +106,7 @@ navigate(`/movie/${name}`)
           >
       {allData?.map((slide) => (
         <SwiperSlide className="  bg-center bg-cover w-full h-44 lg:h-64 flex justify-center items-center hover:scale-105 custom-transition my-4 "  key={slide.id}>
-          <div className=' w-full h-full  flex flex-col justify-center items-center' onClick={() =>movieInfoHandler(slide.name)} >
+          <div className=' w-full h-full  flex flex-col justify-center items-center hover:scale-105 custom-transition' onClick={() =>movieInfoHandler(slide.name)} >
           <img className="  w-52 h-44 lg:h-64 rounded-lg cursor-pointer  shadow-md " src={slide.pic} alt={slide.name} />
           <div className='  px-2 -mt-3   rounded-lg shadow-md text-black  bg-color-hover '>
             <span className='text-md font-bold '>{slide.imdbRating}</span>

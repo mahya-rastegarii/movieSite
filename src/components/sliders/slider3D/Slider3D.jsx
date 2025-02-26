@@ -54,7 +54,7 @@ export default function Slider3D() {
 
   useEffect(() => {
     moviesSlider3dDataFetch();
-    // dispatch(fetchMovieSlideInfo(slideData[0]))
+    
   },[])
 
   useEffect(() => {
@@ -75,8 +75,7 @@ export default function Slider3D() {
         if(CurrentImg){
           dispatch(fetchMovieSlideInfo(CurrentImg));
         }
-        //  console.log("CurrentSlider", event.realIndex, "     CurrentSliderFetch" )
-        //  console.log("CurrentSliderFetch", filterImage );
+      
          
      }}
         
@@ -84,8 +83,8 @@ export default function Slider3D() {
         
         effect={'coverflow'}
         loop={true}
-        // loopAdditionalSlides={slideData?.length}
-         grabCursor={true}
+      
+        
         centeredSlides={true}
         slidesPerView={3}
         centeredSlidesBounds={true}
@@ -100,20 +99,15 @@ export default function Slider3D() {
           stretch: 0,
           depth: 100,
           modifier: 4,
-          // modifier: 1,
+         
           slideShadows: false
         }}
-        // spaceBetween={-70}
+      
         autoplay={{
           delay: 5500,
           disableOnInteraction: false,
         }}
-        //  pagination={{ el: '.swiper-pagination', clickable: true }}
-        //  navigation={{
-          //    nextEl: '.swiper-button-next',
-          //    prevEl: '.swiper-button-prev',
-          //    clickable: true,
-          //  }}
+      
 
           breakpoints={{
             640: {

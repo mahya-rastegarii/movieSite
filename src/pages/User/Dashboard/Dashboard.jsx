@@ -53,7 +53,8 @@ export default function Dashboard() {
         <div className="md:w-3/12 xl:w-2/12 w-full flex shadow-md flex-col md:ml-8  lg:ml-12 relative justify-center items-center bg-color-3 rounded-xl  font-semibold text-md space-y-16 text-color-1 ">
         
           <div className=' w-full flex flex-col justify-center items-center'>
-                <img className=' rounded-full absolute ' src={ProfilePhoto} width={122} alt="ProfilePhoto" />
+                {/* <img className=' rounded-full absolute ' src={ProfilePhoto} width={100} alt="ProfilePhoto" /> */}
+                <span className="w-24 h-24 rounded-full border border-color-1 bg-color-hover absolute flex justify-center items-center text-color-1 font-sans text-3xl"> {session?.userName.slice(0,1).toUpperCase()} </span>
           </div>
 
                 <span className='font-bold text-xl text-color-1'>{session?.userName}</span>

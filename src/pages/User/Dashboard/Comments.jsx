@@ -20,6 +20,7 @@ export default function Comments() {
   const navigate = useNavigate();
   const session = useSelector( state => state.user.session);
 
+  
   // const comments = useSelector ( (state) => state.movies.comments);
 
     const [searchParams, setSearchParams] = useSearchParams(); 
@@ -36,10 +37,12 @@ export default function Comments() {
     setIsLoading(true);
     const {data: commentData, error: commentError}= await supabase.from("profile").select("comments").eq("userId", session.userId);
     if(commentError){
-      toast.error("خطا در دریافت لیست کامنت ها")
+    toast.error("خطا در دریافت لیست کامنت ها")
+    
     }
       else {
-        setCommentList(commentData[0]?.comments)
+
+        setCommentList(commentData[0].comments)
       }
    setIsLoading(false);
   }

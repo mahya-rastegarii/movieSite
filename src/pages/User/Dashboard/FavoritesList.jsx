@@ -41,10 +41,9 @@ const getFavoriteMoves = async() =>{
  
   const {data: profileData, error: errorData} = await supabase.from("profile"). select("movies").eq("userId", session.userId);
 
-  if(profileData){
-
-
-    setFavorite(profileData[0]?.movies);
+  if(errorData){
+    toast.error("خطا در دریافت لیست علاقمندی ها")
+  
   //   const favoriteMovies = profileData[0].movies
       
   //   setFavorite(favoriteMovies);
@@ -58,7 +57,7 @@ const getFavoriteMoves = async() =>{
   //   setFavorite(moviesData);
   // }
 } else {
-  console.log("Error", errorData)
+   setFavorite(profileData[0].movies);
 }
 setIsLoading(false);
 }

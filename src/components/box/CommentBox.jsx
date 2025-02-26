@@ -3,7 +3,6 @@ import React, {  useEffect, useState } from 'react';
 import { BsHandThumbsUp, BsHandThumbsDown} from 'react-icons/bs'
 
 
-import Button from '../../components/Button/Button'
 import { useSelector } from 'react-redux';
 import { supabase } from '../../core/supabaseClient';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +19,6 @@ export default function CommentBox({list}) {
 
   const [dislikeUser, setDislikeUser]= useState();
   const [likeUser, setLikeUser]= useState();
- const [hide, setHide]= useState(false);
  const [reaction, setReaction]= useState({
   isLiked: false,
   liked:[],
@@ -138,7 +136,7 @@ if(reaction.liked?.includes(session.userId)) {
     <div className={`  rounded-2xl w-full flex justify-between items-center py-3 px-4 ${list.userName === session?.userName ? "bg-color-2" : ' bg-color-4'}`}>
       <div className=" flex justify-start items-center">
        <div className=" flex justify-center items-center">
-       <div className="flex flex-col items-center justify-center space-y-2 mx-3">
+       <div className="flex flex-col items-start justify-center space-y-2 mx-3">
 
           <button ><BsHandThumbsDown  className={` inline text-2xl text-red-500  ${reaction.isDisLiked ? "cursor-default text-red-800" :'text-red-500 cursor-pointer' }  ${list.userName === session?.userName || reaction.isDisLiked ? " cursor-default" : "hover:scale-110 cursor-pointer"}`} onClick={dislikeHandler}/></button>
           <span className='text-sm '>{dislikeUser}</span>
@@ -149,35 +147,21 @@ if(reaction.liked?.includes(session.userId)) {
         </div>
        
        </div>
-       <div className=' w-full flex- flex-col justify-center items-center space-y-3 mr-4'>
-        {/* <div styleName=" w-full flex  items-center"> */}
-
+       <div className=' w-full flex- flex-col justify-center items-center space-y-3 mr-6'>
+       
         <div className="flex w-full justify-start  items-center ">
         
-        {/* <img className=' rounded-full  ml-4' src={pic} width={51} alt={userName} /> */}
          
         <span className=' text-sm text-color-2'> {list.userName === session?.userName ? "شما" : list.userName} </span>
         </div>
-        {/* <div className="flex w-full  justify-end  items-center  ">
-       
-        </div> */}
         
-        {/* </div> */}
-        <div className={`m-6 ${hide && "backdrop-blur-md"  }`}>
+
+        <div className={"backdrop-blur-md" }>
         <p className=" text-sm">{list.comment} </p>
         </div>
        </div>
        </div>
-       <div className=' flex min-w-fit justify-center items-center'>
-        
-        {
-          !list.userName === session?.userName ? <Button width="w-full"  bgColor='bg-color-2' onClick={() => setHide(true)}>
-          گزارش اسپویل
-        </Button> 
-        : null
-        }
       
-       </div>
       
     </div>
   )

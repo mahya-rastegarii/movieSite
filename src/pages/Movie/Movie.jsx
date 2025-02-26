@@ -22,7 +22,7 @@ import DownloadBox from "../../components/box/DownloadBox";
 // import { Comments } from "../../fetch/comments";
 import { useDispatch, useSelector } from "react-redux";
 import { supabase } from "../../core/supabaseClient";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // import { LiaKeySolid } from "react-icons/lia";
 import { FiHeart } from "react-icons/fi";
 
@@ -30,6 +30,7 @@ import {  useNavigate } from "react-router-dom";
 import LoadingPage from "../../components/Loading/LoadingPage";
 import MovieLoading from "../../components/Loading/MovieLoading";
 import { toast } from "react-toastify";
+import ButtonLoading from "../../components/Loading/ButtonLoading";
 
 
 export default function Movie() {
@@ -40,38 +41,65 @@ export default function Movie() {
   const session = useSelector( state => state.user.session);
  
   
-
+  const PAGE_SIZE = 5;
 
   
   const [likeMovie, setLikeMovie]= useState(false);
   // const [favoriteMovies, setFavoriteMovies]= useState([])
  const [movie, setMovie] =useState({
-  loading:false,
+  loading: false,
   data: [],
  })
   const [newComments, setNewComments]= useState({
     loading:false,
     comments:[],
   });
- 
- const [commentText, setCommentText]= useState("");
 
+  const [page, setPage] = useState(1);
+ const [commentText, setCommentText]= useState("");
+ const  [hasMore, setHasMore] = useState(true);
 //  const [userComments, setUserComments]= useState([]);
  
  const navigate = useNavigate();
  
+ const observer = useRef(); 
 //  const url = new URL(window.location.href)
 // console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
 
   const fetchComments = async() => {
-
-    const { data} = await supabase.from('comments').select("*").eq("movieName", movieData[0].name)
+    if (!hasMore || newComments.loading) return;
     setNewComments({
       ...newComments,
-      comments: data
+      loading:true
     })
+    const from = (page - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    const { data, error} = await supabase
+    .from('comments')
+    .select("*")
+    .eq("movieName", movieData[0].name)
+    .order("created_at", { ascending: false })
+    .range(from, to);
+   if(error){
+    toast.error(" خطا در دریافت لیست کامنت ها")
+   }else{
+    
+    setNewComments((prev) => ({
+      ...prev,
+      loading: false,
+      comments: [...prev.comments, ...data], 
+    }));
+     setHasMore(data.length === PAGE_SIZE); 
+
+   }
+
+  
     console.log("data", data)
   }
+
+
+
 
   const getUserComments = async() => {
     const { data: comment, error: fetchError } = await supabase
@@ -283,9 +311,25 @@ export default function Movie() {
 
   useEffect(() => {
     fetchComments();
-    
 
-  }, [])
+
+  }, [page])
+
+  const lastCommentRef = (node) => {
+    if (newComments.loading) return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage((prev) => prev + 1); 
+      }
+    });
+
+    if (node) observer.current.observe(node);
+  };
+
+
+
 
 
   useEffect(() => {
@@ -299,13 +343,13 @@ export default function Movie() {
         .single();
   
       if (error) {
-        toast.error("خطا در دریافت لیست علاقه‌مندی‌ها");
+        console.error("خطا در دریافت لیست علاقه‌مندی‌ها");
         return;
       }
   
       if (user?.movies) {
 
-        const isFavorite = user.movies.some((favoriteMovie) => favoriteMovie.name === movie.data[0].name);
+        const isFavorite = user.movies.some((favoriteMovie) => favoriteMovie.name === movie.data[0]?.name);
         console.log("isFavorite", isFavorite)
         console.log("users", user.movies)
         setLikeMovie(isFavorite);
@@ -505,13 +549,20 @@ export default function Movie() {
                  
                 {
 
-                  // comments.loading ? <LoadingPage/> :
-                  newComments.comments?.map((list) => (
-                     <CommentBox key={list.key}  list={list} />
+                  newComments?.comments.map((list, index) => (
+                  <div className="w-full" key={list.key}  ref={index === newComments.comments.length - 1 ? lastCommentRef : null}>
+                   <CommentBox  key={list.key} list={list} />
+                  </div>
+                    
                     
                    ))
+
                   }
-                
+
+                  {
+                  newComments.loading  && <ButtonLoading/> 
+                  }
+
                 </div>
               </DisclosureWrapper>
             </BgRotate>
