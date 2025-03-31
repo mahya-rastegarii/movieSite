@@ -12,6 +12,7 @@ import Profile from "./pages/User/Dashboard/Profile";
 import Comments from "./pages/User/Dashboard/Comments";
 import FavoritesList from "./pages/User/Dashboard/FavoritesList";
 import ForgotPassword from "./pages/User/ForgotPassword";
+import UpdatePassword from "./pages/UpdatePassword";
 
 const router = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
     {
       path:"forgotPassword",
       element: <ForgotPassword/>
+    },
+    {
+      path:"updatePassword",
+      element: <UpdatePassword/>
     },
 
     {

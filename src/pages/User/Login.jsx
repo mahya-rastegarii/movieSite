@@ -62,7 +62,7 @@ export default function Login() {
     render: `${profile.userName  || "کاربر عزیز"}  خوش آمدید !`,
     type: "success",
     isLoading: false,
-    autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+    autoClose: 3000, 
   });
               
           
@@ -85,7 +85,7 @@ export default function Login() {
         render: "ایمیل یا رمزعبور اشتباه است",
         type: "error",
         isLoading: false,
-        autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+        autoClose: 5000, 
       });
   
     } finally {
@@ -94,7 +94,7 @@ export default function Login() {
   }
   
   
-  // ✅ هنگام بارگذاری صفحه، مقدار ذخیره‌شده را دریافت کن
+
   useEffect(() => {
     const savedEmail = localStorage.getItem("email");
     const savedPassword = localStorage.getItem("password");

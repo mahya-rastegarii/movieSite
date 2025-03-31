@@ -4,25 +4,56 @@ import FormInput from "../components/input/formInput/FormInput";
 import Button from "../components/Button/Button";
 import { supabase } from "../core/supabaseClient";
 import { useNavigate, redirect } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 
 
 const UpdatePassword = () => {
 
   // const navigate = useNavigate();
+  const [loading, setLoading] =useState(false)
+
   const { register, handleSubmit, watch, formState: { errors }} = useForm();
 
 
   const submitForm = async(data) =>{
+    setLoading(true)
     console.log("data", data); 
     const {password} = data;
-    const {data : updateData, error}= await supabase.auth.updateUser({password});
 
-  if(error) {
-    console.log("Error", error)
+    const toastId = toast.loading("در حال ورود...")
+  try{
+
+    const {data : updateData, error}= await supabase.auth.updateUser({password});
+    if(error) {
+      throw error;
+  
   } else {
-    console.log("Passsword Updated Successfully!!", updateData)
+    
+  
     redirect("/signIn")
+ console.log("updateData", updateData)
+    toast.update(toastId, {
+      render: `تغییر رمزعبور با موفقیت انجام شد`,
+      type: "success",
+      isLoading: false,
+      autoClose: 3000, 
+    });
+  }
+  }catch (err) {
+    console.error("Error:", err);
+
+   
+    toast.update(toastId, {
+      render: "مشکلی یه وجود آمده، لطفا دوباره امتحان کنید",
+      type: "error",
+      isLoading: false,
+      autoClose: 5000, 
+    });
+
+  } finally {
+    setLoading(false);
   }
   }
 

@@ -122,15 +122,14 @@ useEffect( () => {
 }, [session])
 
 
-const [loading, setLoading, data] = usePaginatedFetch(6, favorite);
+const [ data] = usePaginatedFetch(6, favorite);
 
 
 useEffect( () => {
-  setLoading(true)
-  
+ 
  setList(data[page - 1]);
-  setLoading(false);
-}, [loading, page, data, setLoading])
+
+}, [ page, data])
  
  useEffect(() => {
   setSearchParams({ page });
@@ -181,7 +180,7 @@ dispatch(fetchMovie(result));
    
    
       </>
-  )) || !isLoading && <div className=" w-full flex justify-center items-center my-16 text-color-1"><span> لیست شما خالی است </span></div>
+  )) || !isLoading && !list && <div className=" w-full flex justify-center items-center my-16 text-color-1"><span> لیست شما خالی است </span></div>  
 } 
 
   

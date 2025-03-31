@@ -6,6 +6,8 @@ import { Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import SidebarMenu from '../components/sideBar/SidebarMenu';
 
+import { ToastContainer } from "react-toastify";
+
 
 
 
@@ -33,7 +35,11 @@ const MovieSiteContainer = () => {
     <div className="w-full relative bg-color-4 dark:theme-dark custom-transition min-h-screen">
  <Navbar />
  
-    
+ <ToastContainer
+        rtl={true}
+      
+        position="top-right"
+      />
  <Outlet/>
    <Footer />
 

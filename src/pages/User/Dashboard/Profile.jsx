@@ -35,7 +35,7 @@ export default function Profile() {
     
       const [date, time] = user.last_sign_in_at.split("T");
       const [dateCreate, timeCreate] = user.created_at.split("T");
-    
+
       const cleanTime = time.split(".")[0]
       const cleanTimeCreate = timeCreate.split(".")[0]
 
@@ -54,6 +54,7 @@ export default function Profile() {
   useEffect(() => {
 
     getUserInfo();
+  
 
   }, [session])
   
@@ -74,7 +75,7 @@ export default function Profile() {
               <>
     <div className="w-full flex flex-col  justify-center items-center space-y-2">
 
-                <div className="w-full flex justify-between items-center px-6">
+                <div className="w-full flex justify-between items-center  px-2 md:px-6">
                <span className=" font-bold "> نام کاربری : </span> 
               
                 <span className=""> {userInfo?.userName}  </span>
@@ -82,7 +83,7 @@ export default function Profile() {
                
                </div> 
 
-               <div className="w-full flex justify-between items-center px-6">
+               <div className="w-full flex justify-between items-center px-2 md:px-6">
                <span className=" font-bold "> ایمیل : </span> 
                
                 <span className=""> {userInfo?.email} </span>
@@ -97,25 +98,25 @@ export default function Profile() {
 
     <div className="w-full flex flex-col justify-center items-center space-y-2">
 
-    <div className="w-full flex justify-between items-center px-6">
-               <span className="ml-5 font-bold "> تاریخ عضویت : </span> 
+    <div className="w-full flex justify-between items-center px-2 md:px-6">
+               <span className=" font-bold "> تاریخ عضویت : </span> 
               
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center ">
                
-                 <span className='ml-4'> {userInfo.lastSign?.cleanTime}  <MdAccessTime className='inline text-color-1 ' /></span>
-                <span className=""> {userInfo.lastSign?.date} <MdDateRange className='inline text-color-1' />  </span>
+                 <span className='ml-4 flex justify-center items-center '> {userInfo.lastSign?.cleanTime}  <MdAccessTime className='inline text-color-1 mr-1' /></span>
+                <span className="flex justify-center items-center"> {userInfo.lastSign?.date} <MdDateRange className='inline text-color-1 mr-1' />  </span>
               </div>
               
                
                </div> 
 
-               <div className="w-full flex justify-between items-center px-6">
+               <div className="w-full flex justify-between items-center  px-2 md:px-6">
                <span className=" font-bold "> آخرین بازدید شما : </span> 
                
                <div className="flex justify-center items-center">
                
-               <span className="ml-4"> {userInfo.createAccunt?.cleanTimeCreate} <MdAccessTime className='inline text-color-1 ' /> </span>
-              <span className=""> {userInfo.createAccunt?.dateCreate} <MdDateRange className='inline text-color-1' /></span> 
+               <span className="ml-4 flex justify-center items-center "> {userInfo.createAccunt?.cleanTimeCreate} <MdAccessTime className='inline text-color-1 mr-1' /> </span>
+              <span className="flex justify-center items-center"> {userInfo.createAccunt?.dateCreate} <MdDateRange className='inline text-color-1 mr-1' /></span> 
             </div>
                
                

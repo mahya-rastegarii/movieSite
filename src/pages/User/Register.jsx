@@ -59,7 +59,7 @@ throw error;
         render: `ثبت نام با موفقیت انجام شد`,
         type: "success",
         isLoading: false,
-        autoClose: 3000, // بعد از ۳ ثانیه بسته شود
+        autoClose: 3000, 
       });
       
     }
@@ -72,7 +72,7 @@ throw error;
     render: "این ایمیل قبلاً ثبت شده است",
     type: "error",
     isLoading: false,
-    autoClose: 5000, // بعد از ۵ ثانیه بسته شود
+    autoClose: 5000, 
   });
 
 } finally {

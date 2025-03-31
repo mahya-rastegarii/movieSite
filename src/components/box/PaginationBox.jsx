@@ -96,10 +96,10 @@ const PaginationBox = ({pages, setPage, activePage}) => {
               </>
             )}
   
-            {/* صفحه فعال */}
+           
             <PaginationButton activeBtn>{activePage}</PaginationButton>
   
-            {/* صفحه آخر */}
+          
             {activePage !== pages && (
               <>
                 {activePage < pages - 1 && <span className="text-gray-500">...</span>}
@@ -111,7 +111,7 @@ const PaginationBox = ({pages, setPage, activePage}) => {
          :isMobile ?
      (
      <>
-     {/* صفحه اول و سه نقطه */}
+   
      {activePage > 2 && (
        <>
          <PaginationButton clicked={() => setPage(1)}>1</PaginationButton>
@@ -119,24 +119,24 @@ const PaginationBox = ({pages, setPage, activePage}) => {
        </>
      )}
 
-     {/* صفحه قبل از صفحه فعال */}
+    
      {activePage > 1 && (
        <PaginationButton clicked={() => setPage(activePage - 1)}>
          {activePage - 1}
        </PaginationButton>
      )}
 
-     {/* صفحه فعال */}
+   
      <PaginationButton activeBtn>{activePage}</PaginationButton>
 
-     {/* صفحه بعد از صفحه فعال */}
+    
      {activePage < pages && (
        <PaginationButton clicked={() => setPage(activePage + 1)}>
          {activePage + 1}
        </PaginationButton>
      )}
 
-     {/* سه نقطه و صفحه آخر */}
+     
      {activePage < pages - 1 && (
        <>
          {activePage < pages - 2 && <span className="text-gray-500">...</span>}
@@ -149,7 +149,7 @@ const PaginationBox = ({pages, setPage, activePage}) => {
      : (
       
         <>
-          {/* صفحه اول */}
+        
           {activePage > 3 && (
             <>
               <PaginationButton clicked={() => setPage(1)}>1</PaginationButton>
@@ -157,7 +157,7 @@ const PaginationBox = ({pages, setPage, activePage}) => {
             </>
           )}
 
-          {/* دو صفحه قبل از صفحه فعال */}
+         
           {activePage > 2 && (
             <PaginationButton clicked={() => setPage(activePage - 2)}>
               {activePage - 2}
@@ -169,10 +169,10 @@ const PaginationBox = ({pages, setPage, activePage}) => {
             </PaginationButton>
           )}
 
-          {/* صفحه فعال */}
+        
           <PaginationButton activeBtn>{activePage}</PaginationButton>
 
-          {/* دو صفحه بعد از صفحه فعال */}
+         
           {activePage < pages && (
             <PaginationButton clicked={() => setPage(activePage + 1)}>
               {activePage + 1}
@@ -184,7 +184,7 @@ const PaginationBox = ({pages, setPage, activePage}) => {
             </PaginationButton>
           )}
 
-          {/* صفحه آخر */}
+       
           {activePage < pages - 2 && (
             <>
               {activePage < pages - 3 && <span className="text-gray-500">...</span>}

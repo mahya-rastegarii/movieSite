@@ -53,3 +53,8 @@
     @apply bg-color-2 custom-transition  hover:bg-color-3
 }
 
+@media (hover: none) {
+    button:hover {
+      background-color: inherit !important;
+    }
+  }

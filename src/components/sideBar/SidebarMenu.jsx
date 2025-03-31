@@ -47,9 +47,9 @@ const fetchTop = async(type) => {
 
   return (
     <>
-   <PageBackdrop setShow={setShowMenu} show={menu}/>
+   <PageBackdrop setShow={setShowMenu} context show={menu}/>
      <div 
-     className={` lg:hidden ${menu ? 'w-5/12 opacity-100' : "w-0 opacity-0"}  h-full p-1 bg-color-3 flex justify-center items-start  right-0 top-0 z-40 shadow-2xl border-l border-color-1 pt-1 transition-all fixed ease-in-out delay-100`}
+     className={` lg:hidden ${menu ? 'w-7/12 opacity-100' : "w-0 opacity-0"}  h-full p-1 bg-color-3 flex justify-center items-start  right-0 top-0 z-40 shadow-2xl border-l border-color-1 pt-1 transition-all fixed ease-in-out delay-100`}
      >
                     <IoIosCloseCircleOutline className='absolute right-2 top-3 text-xl text-color-1 hover:text-color-2' onClick={() => dispatch(setShowMenu(false))}/>
                    <ul className=' w-full mt-24 flex justify-start flex-col items-center'>

@@ -24,9 +24,10 @@ export default function ShowList() {
   // const [showList, setShowList] = useState(movieList);
   const [searchParams, setSearchParams] = useSearchParams(); 
   
-  const [loading, setLoading, data] = usePaginatedFetch(5, movieList);
-  // const [loading, setLoading]= useState(true);
-  const { type, genre } = useParams();
+  const [loading, data] = usePaginatedFetch(5, movieList);
+
+  const { type, genre, query } = useParams();
+ 
  
   const [movies, setMovies]=useState([]);
   
@@ -37,17 +38,16 @@ export default function ShowList() {
    
 
 useEffect( () => {
-  setLoading(true)
-  
+ 
  setMovies(data[page - 1]);
-  setLoading(false);
-}, [loading, page, data, setLoading])
+}, [ page, data])
 
 
 useEffect(() => {
   setPage(1);
   console.log('data', data)
-  }, [type, genre])
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [type, genre, query])
   
 
 useEffect(() => {

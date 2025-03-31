@@ -60,7 +60,7 @@ const NavSearchBar =() => {
    
     {
     
-    searchInput.length >= 2  ? <SearchBox dataMovie={dataMovie} setSearchInput={setSearchInput} inputShow={inputShow}/> : null
+    searchInput.length >= 2  ? <SearchBox dataMovie={dataMovie} searchInput={searchInput} setSearchInput={setSearchInput} inputShow={inputShow} setInputShow={setInputShow}/> : null
    }
     </>
   )

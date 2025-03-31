@@ -49,7 +49,7 @@ export default function Comments() {
 
 
 
-  const [loading, setLoading, data] = usePaginatedFetch(3, commentList);
+  const [data] = usePaginatedFetch(3, commentList);
   
  const fetchMovieInfoHandler = async(name) => {
     const result = await fetchMovieInfo(name);
@@ -129,11 +129,11 @@ useEffect( () => {
 }, [])
 
  useEffect( () => {
-  setLoading(true)
+ 
   
   setComment(data[page - 1]);
-  setLoading(false);
-}, [loading, page, data, setLoading])
+ 
+}, [ page, data])
  
 useEffect(() => {
   setSearchParams({ page });
@@ -147,7 +147,7 @@ useEffect(() => {
      loading && <div className=" w-full flex justify-center items-center "><LoadingPage/></div>
    } */}
    {
-  isLoading ? <div className=" w-full flex justify-center items-center "><LoadingPage/></div> :  comment?.map((data) => (
+isLoading ? <div className=" w-full flex justify-center items-center "><LoadingPage/></div> :  comment?.map((data) => (
       
     <>
      <div className='w-full flex flex-col md:flex-row space-y-3 md:space-y-0 justify-between items-center mx-2  p-1 border border-color-4 text-color-1 mb-3 my-1'>
@@ -168,7 +168,7 @@ useEffect(() => {
 
       </div>
       </>
-    )) || <div className=" w-full flex justify-center items-center my-16 text-color-1"><span> لیست شما خالی است </span></div>
+    )) || !isLoading && !comment && <div className=" w-full flex justify-center items-center my-16 text-color-1"><span> لیست شما خالی است </span></div>
   }
   </div>
   {

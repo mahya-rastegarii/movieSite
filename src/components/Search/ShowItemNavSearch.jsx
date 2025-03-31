@@ -7,7 +7,7 @@ import { FaStar } from "react-icons/fa";
 
 
 
-const ShowItemNavSearch = ({ name, pic, imdbRating, genre, setSearchInput }) => {
+const ShowItemNavSearch = ({ name, pic, imdbRating, genre, setSearchInput, setInputShow }) => {
 
   
 
@@ -21,6 +21,7 @@ const dispatch = useDispatch();
     dispatch(fetchMovie(result));
       navigate(`/movie/${name}`)
       setSearchInput("")
+      setInputShow(false)
     }
  
   return (
