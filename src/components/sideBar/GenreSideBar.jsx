@@ -13,7 +13,7 @@ import Button from "../Button/Button";
 // import { GenresData } from "../../fetch/genere-data";
 import { activeTypeGenre, fetchAllMovies, fetchTopMovies, genreMovieList } from "../../core/functions";
 // import { supabase } from "../../core/supabaseClient";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {  fetchMoviesList } from "../../redux/slice/MoviesSlice";
 import LoadingPage from "../Loading/LoadingPage";
@@ -38,6 +38,8 @@ const [loading, setLoading]= useState({
   topMovieBtn: false,
   genreMovieBtn:false,
 })
+
+const location = useLocation();
 
  const typeHandler = () => {
   if(active === "movies")
@@ -77,7 +79,7 @@ const [loading, setLoading]= useState({
   })
   const result =await fetchAllMovies(typeMovies)
   const res = result.data;
-  const transformedData = res.map(item => ({
+  const transformedData = res?.map(item => ({
     ...item,
     genre: item.genre.split(",").map(genre => genre.trim()),
   }));
@@ -104,7 +106,7 @@ const [loading, setLoading]= useState({
   })
       const result =await fetchTopMovies(typeMovies)
       
-      const transformedData = result.map(item => ({
+      const transformedData =  result?.map(item => ({
         ...item,
     genre: item.genre.split(",").map(genre => genre.trim()),
   }));
@@ -133,7 +135,7 @@ const fetchSpecialGenre = async(genreMovie) => {
   })
   const result = await genreMovieList(typeMovies, genreMovie);
      
-  const transformedData = result.map(item => ({
+  const transformedData =  result?.map(item => ({
     ...item,
     genre: item.genre.split(",").map(genre => genre.trim()),
   }));
@@ -178,7 +180,18 @@ const fetchSpecialGenre = async(genreMovie) => {
    
   },[] )
   
-  
+
+  useEffect(() => {
+
+    const params = new URLSearchParams(location.search);
+    const query = params.get("query");
+    if(query) {
+      setActiveGenre([]);
+      setActive("movies");
+      localStorage.removeItem("activeLink");
+      localStorage.removeItem("activeType");
+    }
+  }, [location.search]) 
  
   return (
     <div className=" w-full  flex flex-col justify-center items-center shadow-md bg-color-3 rounded-md p-3 space-y-4 font-semibold text-sm  text-color-1 ml-2">

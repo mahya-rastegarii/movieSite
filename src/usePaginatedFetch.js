@@ -6,14 +6,14 @@ const usePaginatedFetch = (pageSize, movieData) => {
 
     
 
-    const [loading, setLoading]= useState(false);
+
     const [data, setData] =useState([]);
 
     const getData = () => {
-        setLoading(true)
+       
         const paginatedData = _.chunk(movieData, pageSize);
          console.log("paginatedData", paginatedData)
-         setLoading(false)
+        
         setData(paginatedData);
     }
 
@@ -22,7 +22,7 @@ useEffect( () => {
 }, [movieData])
 
 
-return [loading, data]
+return [data]
 };
 
 export default usePaginatedFetch;

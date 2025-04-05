@@ -97,11 +97,10 @@ export default function AdvancedSearchBox() {
       ...item,
   genre: item.genre.split(",").map(genre => genre.trim()),
 }));
+ 
 
-  localStorage.removeItem("activeLink");
-    localStorage.removeItem("activeType")
     dispatch(fetchMoviesList(transformedData))
-            navigate(`/list/${typeData}/${genreValue}?page=1`)
+            navigate(`/list/${typeData}/${genreValue}?query=search&page=1`)
   }
  
 //   if(error){

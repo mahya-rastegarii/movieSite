@@ -68,6 +68,7 @@ export default function Movie() {
 
   const fetchComments = async() => {
     if (!hasMore || newComments.loading) return;
+   
     setNewComments({
       ...newComments,
       loading:true
@@ -81,18 +82,29 @@ export default function Movie() {
     .eq("movieName", movieData[0].name)
     .order("created_at", { ascending: false })
     .range(from, to);
+
    if(error){
     toast.error(" خطا در دریافت لیست کامنت ها")
-   }else{
+
+   } else {
     
     setNewComments((prev) => ({
       ...prev,
       loading: false,
       comments: [...prev.comments, ...data], 
+      
     }));
      setHasMore(data.length === PAGE_SIZE); 
 
    }
+
+   if (page === 1) {
+
+    setNewComments({
+      loading: false,
+      comments: data
+    }); 
+  }
 
   
     console.log("data", data)
@@ -162,18 +174,26 @@ export default function Movie() {
     try{
 
       const {data, error} = await supabase.from('comments').insert({ userName:session.userName,
-        pic:null,
         movieName:movieData[0].name,
         comment: commentText,
         disLike:0,
         like:0
-      }).select("id");
+      }).select();
       if(error){
+        setNewComments({
+      ...newComments,
+      loading:false
+    })
         throw error;
-        
       } else {
-        const commentId = data[0].id
-        fetchComments();
+        
+        const commentId = data[0].id;  
+      setNewComments((prev) => ({
+      ...prev,
+      loading: false,
+      comments: [data[0],...prev.comments], 
+      
+    }));
         addUserComments(commentId)
 
         toast.update(toastId, {
@@ -196,10 +216,7 @@ export default function Movie() {
     } finally {
 
       setCommentText('')
-      setNewComments({
-       ...newComments,
-       loading:false
-     })
+     
     }
     
       
@@ -291,15 +308,18 @@ export default function Movie() {
  
 
   const LoadData = () => {
-    setMovie({
-      ...movie,
-      loading:true,
-    })
+    setMovie((prev) => ({
+      ...prev,
+      loading: true,
+    }));
+    
     if(movieData){
+      setTimeout(() => {
       setMovie({
         data: movieData,
         loading:false,
       })
+    }, 500);
     }
   }
 
@@ -307,6 +327,8 @@ export default function Movie() {
   LoadData();
   },[movieData])
  
+
+
 
 
   useEffect(() => {
@@ -366,7 +388,7 @@ export default function Movie() {
 
      movie.loading ?
      (
-        <div className=" w-full flex mt-2 justify-center items-start min-h-screen">
+        <div className=" w-full flex mt-16 justify-center items-start min-h-screen">
           <MovieLoading />
         </div>
       ) : movie.data?.map((movie) => (
@@ -458,7 +480,7 @@ export default function Movie() {
                     <p>{movie?.summary}</p>
                   </div>
                 {
-                  movie.topMovie && <div className='flex justify-start items-cente bg-color-4 py-1 rounded-lg px-2  w-fit text-lg font-thin'><span className="ml-2 text-color-1"> جزء 250 {movie?.type} برتر با رتبه </span><span className="text-color-2">{movie.topMovie}</span></div>
+                  movie.topMovie && <div className='flex justify-start items-cente bg-color-4 py-1 rounded-lg px-2  w-fit text-lg font-thin'><span className="ml-2 text-color-1"> جزء 250 {movie?.type} برتر با رتبه </span><span className="text-color-2 font-bold">{movie.topMovie}</span></div>
                 }  
                   <div className="flex flex-col  lg:flex-row justify-between items-center">
                     <span className="  bg-green-600 p-2 rounded-lg text-sm">

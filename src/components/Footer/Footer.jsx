@@ -59,7 +59,7 @@ export default function Footer() {
   
 
   return (
-    <>
+    <div className='mt-16'>
     <div className=" w-10/12 bg-color-1 right-8  -rotate-2 rounded-3xl h-12 absolute shadow-lg"></div>
     <div className=" w-10/12 bg-color-2 right-2  -rotate-1 rounded-3xl h-12 absolute shadow-lg"></div>
       <div className='w-full p-3 flex justify-center  items-center bg-color-3 rounded-tr-3xl shadow-lg relative'>
@@ -172,6 +172,6 @@ export default function Footer() {
       </div>
       </div>
       </div>
-      </>
+      </div>
   )
 }

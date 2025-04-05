@@ -18,17 +18,22 @@ const SearchBox = ({dataMovie, searchInput, setSearchInput, inputShow, setInputS
 
   const SearchMoviesData = (MoviesData)=> {
 
-   dispatch(fetchMoviesList(MoviesData));
 
    if (!searchInput.trim()) return;
 
-   const params = new URLSearchParams();
-   params.set("query", searchInput); 
-   params.set("page", "1"); 
+     const params = new URLSearchParams();
+     params.set("query", searchInput); 
+     params.set("page", "1"); 
+     navigate(`/list/movie&serial/all?${params.toString()}`); 
+   
 
-   navigate(`/list/movie&serial/all?${params.toString()}`); 
- 
+
+   
    dispatch(fetchMoviesList(MoviesData))
+
+
+ 
+
 
     setSearchInput("");
     setInputShow(false);

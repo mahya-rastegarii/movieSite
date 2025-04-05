@@ -8,15 +8,15 @@ import SideContainer from "../../components/sideBar/SideContainer";
 import PaginationBox from "../../components/box/PaginationBox";
 import usePaginatedFetch from "../../usePaginatedFetch";
 import LoadingPage from "../../components/Loading/LoadingPage";
-import { useSelector } from "react-redux";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 
 
 
 export default function ShowList() {
   
  
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
 
   const movieList = useSelector( state => state.movies.movieList); 
@@ -24,35 +24,52 @@ export default function ShowList() {
   // const [showList, setShowList] = useState(movieList);
   const [searchParams, setSearchParams] = useSearchParams(); 
   
-  const [loading, data] = usePaginatedFetch(5, movieList);
+  const [data] = usePaginatedFetch(5, movieList);
 
-  const { type, genre, query } = useParams();
- 
- 
+  const { type, genre } = useParams();
+
+ const [isLoading, setIsLoading] = useState(true);
+
   const [movies, setMovies]=useState([]);
   
   const pageFromURL = parseInt(searchParams.get("page")) || 1;
   const [page, setPage] = useState(pageFromURL);
  
- 
+
+
+  const query = searchParams.get('query');
+
    
 
-useEffect( () => {
- 
- setMovies(data[page - 1]);
-}, [ page, data])
+useEffect(() => {
+
+
+  setIsLoading(true); 
+ if (data.length > 0) {
+    setTimeout(() => {
+      setMovies(data[page - 1] || []);
+      setIsLoading(false); 
+    }, 500);
+  } else  if (data.length === 0 || !data[page - 1]) {
+    setMovies([]);
+    setIsLoading(false);
+  }
+}, [data, page]); 
 
 
 useEffect(() => {
   setPage(1);
   console.log('data', data)
   window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [type, genre, query])
+  }, [type, genre])
   
 
 useEffect(() => {
-  setSearchParams({ page });
-}, [page, setSearchParams]);
+  
+  if(query)
+  setSearchParams({ query, page });
+else setSearchParams({  page });
+}, [page, setSearchParams, query]);
 
 
 
@@ -93,18 +110,12 @@ useEffect(() => {
        </GenreProvider> */}
       <SideContainer>
         <div className="w-full px-4 min-h-screen  lg:w-10/12 flex flex-col justify-center items-center space-y-16 mb-5">
-          {loading && (
+          {isLoading ? (
             <div className=" w-full flex mt-2 justify-center items-start min-h-screen">
               <LoadingPage />
             </div>
-          )
-           }
-          
-          {
-            !loading && !movies ?  <div className=" w-full flex justify-center items-center"><p className=" font-bold text-lg  text-color-1"> داده ای یافت نشد</p></div>
-            
-            :movies?.map((data) => <MoviesBox key={data.id} data={data} />)
-
+          ) : movies?.length > 0 ? (movies.map((data) => <MoviesBox key={data.id} data={data} />))
+              :  !isLoading && movies.length === 0 && (<div className=" w-full flex justify-center items-center"><p className=" font-bold text-lg  text-color-1"> داده ای یافت نشد</p></div>)
            } 
          
           
