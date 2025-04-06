@@ -5,6 +5,7 @@ import BgRotate from "../../components/BackgroundRotate/BgRotate";
 import { supabase } from "../../core/supabaseClient";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import ButtonLoading from "../../components/Loading/ButtonLoading";
 
 
 const ForgotPassword = () => {
@@ -20,7 +21,9 @@ const ForgotPassword = () => {
 
     if(error) {
       toast.error("مشکلی یه وجود آمده، لطفا دوباره امتحان کنید")
-    } 
+    } else {
+      toast.success("لینک تغییر رمز به ایمیل شما ارسال شد");
+    }
 
     setLoading(false);
   }
@@ -61,7 +64,10 @@ const ForgotPassword = () => {
        <div className="flex justify-center items-center w-full ">
 
 <Button width="w-full mt-6" type="submit"   disable={loading} >
-بازنشانی رمزعبور
+  {
+     loading ? <ButtonLoading/> : "بازنشانی رمزعبور"
+  }
+
 </Button>
 
 </div>

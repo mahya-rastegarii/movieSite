@@ -4,13 +4,17 @@ import FormInput from "../components/input/formInput/FormInput";
 import Button from "../components/Button/Button";
 import { supabase } from "../core/supabaseClient";
 import { useNavigate, redirect } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import ButtonLoading from "../components/Loading/ButtonLoading";
 
 
 
 const UpdatePassword = () => {
 
+
+
+  
   // const navigate = useNavigate();
   const [loading, setLoading] =useState(false)
 
@@ -57,6 +61,18 @@ const UpdatePassword = () => {
   }
   }
 
+useEffect(() => {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get("access_token");
+
+    if (accessToken) {
+      supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: "",
+      });
+    }
+  }, []);
+  
   return (
    
     <div className='w-full flex justify-center items-center px-4 md:px-0 h-screen'>
@@ -112,9 +128,12 @@ const UpdatePassword = () => {
       }
        
        <div className="flex justify-center items-center w-full ">
-        <Button width="w-full mt-6" type="submit" >
+        <Button width="w-full mt-6" type="submit"  disable={loading}>
 
-         به روزرسانی رمز عبور
+{
+   loading ? <ButtonLoading/> : "به روزرسانی رمز عبور"
+}
+       
         </Button>
 
        </div>
