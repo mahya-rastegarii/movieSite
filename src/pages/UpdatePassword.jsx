@@ -83,9 +83,15 @@ useEffect(() => {
 
   useEffect(() => {
     dispatch(setSession(null));
-    localStorage.clear(); 
+    // localStorage.removeItem("sb-ouvjsgeusvqtfhyhggsl-auth-token"); 
+    
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+        localStorage.removeItem(key)
+      }
+    })
   }, []);
-  
+
   return (
    
     <div className='w-full flex justify-center items-center px-4 md:px-0 h-screen'>
