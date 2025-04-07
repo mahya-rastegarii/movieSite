@@ -21,9 +21,17 @@ const navigate = useNavigate;
 
 useEffect(() => {
   const hashParams = window.location.hash;
-
+  
+ 
   if (hashParams.includes('type=recovery')) {
     navigate('/updatePassword');
+  }
+
+  if (hashParams) {
+    const queryString = hashParams.replace("#", "?");
+    const newUrl = window.location.pathname + queryString;
+
+    window.history.replaceState(null, "", newUrl);
   }
 }, []);
 
