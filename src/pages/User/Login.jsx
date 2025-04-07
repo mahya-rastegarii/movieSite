@@ -42,17 +42,27 @@ export default function Login() {
       email,
       password
     })
-  
-    if(error) {
-      throw error;
+
+    if (error) {
+      if (error.message.includes("Email not confirmed")) {
+        throw new Error("لطفاً ایمیل خود را تایید کنید.");
+      }
+
+      if (error.message.includes("Invalid login credentials")) {
+        throw new Error("ایمیل یا رمز عبور اشتباه است.");
+      }
+
+      throw new Error("مشکلی در ورود پیش آمد. لطفاً دوباره تلاش کنید.");
     }
 
   console.log("user", user);
 
-  const {data: profile} = await supabase.from('profile').select("userName").eq("userId", user.id).single();
+  const {data: profile, error: profileError } = await supabase.from('profile').select("userName").eq("userId", user.id).single();
      
         
-
+  if (profileError) {
+    throw new Error("خطا در دریافت اطلاعات کاربر.");
+  }
           dispatch(setSession(profile))
   console.log(" User Loggerd in: ", user)
   navigate("/")
@@ -82,7 +92,7 @@ export default function Login() {
   
      
       toast.update(toastId, {
-        render: "ایمیل یا رمزعبور اشتباه است",
+        render: err.message,
         type: "error",
         isLoading: false,
         autoClose: 5000, 

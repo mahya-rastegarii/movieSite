@@ -31,32 +31,49 @@ export default function Register() {
  const submitForm = async(data) =>{
   setLoading(true);
   
-  console.log("data", data)
   const {userName, email, password}= data;
 
   const toastId = toast.loading("درحال ثبت نام ...")
 
   try{
 
+    const { data: existingUser} = await supabase
+    .from('profile')
+    .select('email')
+    .eq('email', email)
+    .single();
+  
+  if (existingUser) {
+    throw new Error("این ایمیل قبلاً ثبت شده است.");
+  }
   
   const {data: {user}, error } = await supabase.auth.signUp({
     email,
     password,
   })
-   if(error) {
-    throw error;
-   }
+
+  if (error) {
+   
+    if (error.message.includes("invalid")) {
+      throw new Error("لطفاً یک ایمیل معتبر وارد کنید.");
+    }
+
+
+    throw new Error("مشکلی در ثبت‌ نام پیش آمد. لطفاً دوباره تلاش کنید.");
+  }
+
+ 
 
     const {error:profileError } = await supabase.from("profile")
     .insert({userId:user.id, userName, email, password});
 
-    if(profileError){
-throw error;
+    if (profileError) {
+      throw new Error("خطا در ذخیره اطلاعات کاربر.");
     }else {
 
       navigate("/signIn")
       toast.update(toastId, {
-        render: `ثبت نام با موفقیت انجام شد`,
+        render: "لینک تایید ایمیل برای شما ارسال شد",
         type: "success",
         isLoading: false,
         autoClose: 3000, 
@@ -69,7 +86,7 @@ throw error;
 }   catch (err) {
   console.log("error :", err)
   toast.update(toastId, {
-    render: "این ایمیل قبلاً ثبت شده است",
+    render: err.message,
     type: "error",
     isLoading: false,
     autoClose: 5000, 

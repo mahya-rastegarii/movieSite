@@ -3,7 +3,7 @@ import BgRotate from "../components/BackgroundRotate/BgRotate";
 import FormInput from "../components/input/formInput/FormInput";
 import Button from "../components/Button/Button";
 import { supabase } from "../core/supabaseClient";
-import { useNavigate, redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ButtonLoading from "../components/Loading/ButtonLoading";
@@ -29,13 +29,19 @@ const UpdatePassword = () => {
     const toastId = toast.loading("در حال به‌روزرسانی رمز عبور...")
   try{
 
-    const {data : updateData, error}= await supabase.auth.updateUser({password});
+    const {data:{user}, error}= await supabase.auth.updateUser({password});
     if(error) throw error;
   
     
   
     navigate("/signIn")
- console.log("updateData", updateData)
+    const { error: profileError } = await supabase
+  .from("profile")
+  .update({ password }) 
+  .eq("userId", user.id); 
+
+   if(profileError) throw error
+
     toast.update(toastId, {
       render: `تغییر رمزعبور با موفقیت انجام شد`,
       type: "success",
@@ -90,7 +96,7 @@ useEffect(() => {
           required="رمز عبور الزامی است"
          
           errors={errors.password}
-            type="password" name="password" placeholder="رمز عبور"/>
+            type="password" name="password" placeholder="رمزعبور جدید"/>
         
        {errors.password && errors.password.type === "required" &&(
         <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'>{errors.password?.message} </span></div>
@@ -112,7 +118,7 @@ useEffect(() => {
          
           errors={errors.confirmPassword}
 
-           type="password" name='confirmPassword' placeholder="تکرار رمز عبور"/>
+           type="password" name='confirmPassword' placeholder="تکرار مرزعبور جدید"/>
         {errors.confirmPassword && errors.confirmPassword.type === "required" &&( 
         <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'>{errors.confirmPassword?.message} </span></div>
         )
