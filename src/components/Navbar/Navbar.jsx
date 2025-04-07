@@ -24,32 +24,12 @@ import { supabase } from "../../core/supabaseClient";
 
 export default function Navbar() {
 
-  const navigate =useNavigate()
+
   const dispatch = useDispatch()
   const session = useSelector( (state) => state.user.session);
  
   
-  const [user, setUser] = useState(null);
-  
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-  }, []);
-  
-  const isResetPasswordFlow =
-    user &&
-    user.email &&
-    user.aud === "authenticated" &&
-    !user.app_metadata?.provider;
-  
-  useEffect(() => {
-    if (isResetPasswordFlow) {
-      dispatch(setSession(null)); 
-    }
-  }, [isResetPasswordFlow, dispatch]);
+ 
   
 
 
@@ -70,7 +50,7 @@ export default function Navbar() {
           <ul className=" flex    justify-start items-center space-x-3 text-sm text-md">
            
              {
-            user || session ? ( <LoginMenu response="lg"/> )
+            session ? ( <LoginMenu response="lg"/> )
                 : <>
                 {" "}
                 <li className="w-24  lg:ml-3">

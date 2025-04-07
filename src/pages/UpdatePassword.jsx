@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ButtonLoading from "../components/Loading/ButtonLoading";
+import { setSession } from "../redux/slice/UserSlice";
+import { useDispatch } from "react-redux";
 
 
 
@@ -14,7 +16,8 @@ const UpdatePassword = () => {
 
 
 
-  
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [loading, setLoading] =useState(false)
 
@@ -75,6 +78,12 @@ useEffect(() => {
         refresh_token: "",
       });
     }
+  }, []);
+  
+
+  useEffect(() => {
+    dispatch(setSession(null));
+    localStorage.clear(); 
   }, []);
   
   return (
