@@ -2,7 +2,7 @@
 
 
 
-import {  RouterProvider } from "react-router-dom";
+import {  RouterProvider, useNavigate } from "react-router-dom";
 
 import router from './router';
 import { supabase } from "./core/supabaseClient";
@@ -17,6 +17,15 @@ import { useDispatch } from "react-redux";
 function App() {
  
 const dispatch = useDispatch();
+const navigate = useNavigate;
+
+useEffect(() => {
+  const hashParams = window.location.hash;
+
+  if (hashParams.includes('type=recovery')) {
+    navigate('/updatePassword');
+  }
+}, []);
 
 
 

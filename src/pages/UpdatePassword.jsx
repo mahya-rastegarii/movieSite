@@ -15,7 +15,7 @@ const UpdatePassword = () => {
 
 
   
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [loading, setLoading] =useState(false)
 
   const { register, handleSubmit, watch, formState: { errors }} = useForm();
@@ -26,17 +26,15 @@ const UpdatePassword = () => {
     console.log("data", data); 
     const {password} = data;
 
-    const toastId = toast.loading("در حال ورود...")
+    const toastId = toast.loading("در حال به‌روزرسانی رمز عبور...")
   try{
 
     const {data : updateData, error}= await supabase.auth.updateUser({password});
-    if(error) {
-      throw error;
+    if(error) throw error;
   
-  } else {
     
   
-    redirect("/signIn")
+    navigate("/signIn")
  console.log("updateData", updateData)
     toast.update(toastId, {
       render: `تغییر رمزعبور با موفقیت انجام شد`,
@@ -44,7 +42,7 @@ const UpdatePassword = () => {
       isLoading: false,
       autoClose: 3000, 
     });
-  }
+
   }catch (err) {
     console.error("Error:", err);
 
