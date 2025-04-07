@@ -27,12 +27,11 @@ useEffect(() => {
     const newUrl = window.location.pathname + queryString;
 
     window.history.replaceState(null, "", newUrl);
-  }
-  
-  if (hashParams.includes('type=recovery')) {
-    navigate('/updatePassword');
-  }
 
+    if (hashParams.includes('type=recovery')) {
+      navigate('/updatePassword');
+    }
+  }
  
 }, []);
 
