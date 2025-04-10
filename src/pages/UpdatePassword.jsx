@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import ButtonLoading from "../components/Loading/ButtonLoading";
 import { setSession } from "../redux/slice/UserSlice";
 import { useDispatch } from "react-redux";
+import { logOut } from "../core/functions";
+import { setShowMenu } from "../redux/slice/MenuSlice";
 
 
 
@@ -81,16 +83,9 @@ useEffect(() => {
   }, []);
   
 
-  useEffect(() => {
-    dispatch(setSession(null));
-    // localStorage.removeItem("sb-ouvjsgeusvqtfhyhggsl-auth-token"); 
-    
-    Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
-        localStorage.removeItem(key)
-      }
-    })
-  }, []);
+
+
+  
 
   return (
    

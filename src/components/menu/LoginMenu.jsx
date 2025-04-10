@@ -23,15 +23,9 @@ const LoginMenu = ({response}) => {
     
   const result = await logOut();
   if(result) {
-    // const url = new URL(window.location.href);
-    
     dispatch(setSession(null))
     dispatch(setShowMenu(false))
-    //  if(url.pathname === "/dashboard/profile" ||  url.pathname === " /dashboard/comments" || url.pathname === " /dashboard/favoriteList")
-    //   return redirect("/")
-    //   else {
-    //   return redirect(url.pathname);
-    //  }
+    
   
   
   }

@@ -67,7 +67,8 @@ export const logOut = async() => {
     return false;
   }
   else {
-      return true;
+    localStorage.removeItem('sb-ouvjsgeusvqtfhyhggsl-auth-token');
+    return true;
   }
   
  

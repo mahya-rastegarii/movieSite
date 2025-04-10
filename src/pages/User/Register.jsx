@@ -71,7 +71,7 @@ export default function Register() {
       throw new Error("خطا در ذخیره اطلاعات کاربر.");
     }else {
 
-      navigate("/signIn")
+      navigate("/signIn");
       toast.update(toastId, {
         render: "لینک تایید ایمیل برای شما ارسال شد",
         type: "success",

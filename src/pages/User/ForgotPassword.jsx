@@ -72,8 +72,8 @@ const ForgotPassword = () => {
 
 </div>
 <ul className=" mr-4 font-thin text-sm text-color-1  space-y-1">
-    <li><span className=" text-red-500">*</span> ایمیل معتبر وارد کنید</li>
-    <li><span className=" text-red-500">*</span> روی اینک ارسال شده از طریق ایمیل کلیک کنید تا وارد صفحه بروزرسانی رمزعبور شوید </li>
+    <li><span className=" text-red-500">*</span> ایمیل ثبت‌ نامی خود را وارد کنید</li>
+    <li><span className=" text-red-500">*</span> روی لینک ارسال شده از طریق ایمیل کلیک کنید تا وارد صفحه بروزرسانی رمزعبور شوید </li>
    </ul>
 </div>
      </form>
