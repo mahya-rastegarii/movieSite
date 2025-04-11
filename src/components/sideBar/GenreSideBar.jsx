@@ -206,7 +206,7 @@ const fetchSpecialGenre = async(genreMovie) => {
                 <a href="#" className=' custom- hover-btn '><span > سریال </span></a>
       </div> */}
       <div className=" w-7/12 ">
-        <PostType  active={active} setActive={setActive}/>
+        <PostType  active={active} setActive={setActive} setActiveGenre={setActiveGenre}/>
       </div>
       <span className=" font-semibold text-sm  text-color-1"> ژانر ها </span>
      {

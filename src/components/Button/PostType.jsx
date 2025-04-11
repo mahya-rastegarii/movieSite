@@ -7,7 +7,7 @@ import Button from './Button'
 
 
 
-export default function PostType({active, setActive}) {
+export default function PostType({active, setActive,  setActiveGenre}) {
 
 
   
@@ -39,10 +39,10 @@ export default function PostType({active, setActive}) {
 
 const changeTypeGenre = (e) =>{
   const value = e.target.name;
-  localStorage.removeItem("activeLink");
- setActive(value)
+  setActive(value)
   localStorage.setItem("activeType", value )
-
+  localStorage.removeItem("activeLink");
+  if(setActiveGenre) setActiveGenre([]);
  
 }
 

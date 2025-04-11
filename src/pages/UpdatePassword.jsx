@@ -83,6 +83,20 @@ useEffect(() => {
   }, []);
   
 
+  useEffect( () => {
+    const logoutUser = async() =>{
+      const result = await logOut();
+      if(result) {
+        dispatch(setSession(null))
+       dispatch(setShowMenu(false))
+        
+      }
+     
+      } 
+
+      logoutUser();
+  }, [])
+
 
 
   
