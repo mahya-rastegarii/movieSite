@@ -44,18 +44,6 @@ const getFavoriteMoves = async() =>{
   if(errorData){
     toast.error("خطا در دریافت لیست علاقمندی ها")
   
-  //   const favoriteMovies = profileData[0].movies
-      
-  //   setFavorite(favoriteMovies);
-  
-   
-
-  // const {data: moviesData, error: errorData} = await supabase.from('movies').select("name", "pic").eq('name', profileData[0].movies);
-  // if(errorData) { console.log('Error', errorData)}
-  // else {
- 
-  //   setFavorite(moviesData);
-  // }
 } else {
    setFavorite(profileData[0].movies);
 }
@@ -139,8 +127,8 @@ useEffect( () => {
 
   const fetchMovieInfoHandler = async(name) => {
     const result = await fetchMovieInfo(name);
-// console.log("resultInfo", result);
-dispatch(fetchMovie(result));
+
+  dispatch(fetchMovie(result));
   navigate(`/movie/${name}`)
 }
 

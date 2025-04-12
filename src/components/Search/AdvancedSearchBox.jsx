@@ -4,8 +4,7 @@ import RangeInput from '../input/rangeInput/RangeInput';
 
 import Button from '../Button/Button'
 import PostType from "../Button/PostType";
-// import {Countries} from "../../fetch/coutries";
-// import {GenresData} from "../../fetch/genere-data";
+
 
 
 import { activeTypeGenre, fetchCountries } from '../../core/functions';
@@ -14,6 +13,7 @@ import { fetchMoviesList } from '../../redux/slice/MoviesSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ButtonLoading from '../Loading/ButtonLoading';
+import { toast } from 'react-toastify';
 
 export default function AdvancedSearchBox() {
 
@@ -91,7 +91,7 @@ export default function AdvancedSearchBox() {
   setLoading(false)
 
   if(movieError) {
-        console.log("Error Fetching movie", movieError)
+       toast.error("لیست موردنظر یافت نشد")
   } else {
     const transformedData = movieData.map(item => ({
       ...item,
@@ -103,13 +103,8 @@ export default function AdvancedSearchBox() {
             navigate(`/list/${typeData}/${genreValue}?query=search&page=1`)
   }
  
-//   if(error){
-//     console.log("Error Fetching movie", error)
-//     return;
-//   }
-//   // setDataMovies(data);
-//   console.log("Advanced", data);
-//   // return true;
+
+
 }
 
 
@@ -196,7 +191,6 @@ export default function AdvancedSearchBox() {
 
         </div>
           </div>
-          {/* <div className=" w-full lg:w-6/12 md:justify-around justify-center items-center flex flex-col space-y-5 md:space-y-0 md:flex-row "> */}
           <div className=" w-full lg:w-6/12 md:justify-between  lg:justify-around md:px-20 lg:px-0 justify-center items-center flex flex-col space-y-5 md:space-y-0 md:flex-row ">
 
         <div className=' bg-transparent  flex justify-center items-center text-color-1 font-semibold'>
@@ -214,7 +208,7 @@ export default function AdvancedSearchBox() {
               <option value={countryValue} >---</option>
             {
               countries.data?.map((c) =>{
-                // console.log(index);
+
                 return(<option key={c.id} value={c.country}>{c.country}</option>)
               })
             }
@@ -262,7 +256,7 @@ export default function AdvancedSearchBox() {
           </div>
 
         </div>
-        {/* <button className=' bg-slate-700  w-4/12 shadow-sm p-2 font-semibold rounded-xl ml-3 text-slate-200  hover:bg-yellow-500  custom-transition '> جستجو </button> */}
+        
         <Button width='w-4/12' disable={loading} clicked={AdvancedSearchData}>
         <span className=' flex justify-center items-center'>
         { loading && <ButtonLoading margin='ml-1'/>}

@@ -1,5 +1,4 @@
-import React, {useState} from 'react'
-import { FaEye, FaEyeSlash} from 'react-icons/fa'
+import React from 'react'
 
 
 export default function FormInput({type, placeholder, name, id, width, onChange,onBlur, value, checked , errors, register, label, validate, pattern, required, dir, disable}) {

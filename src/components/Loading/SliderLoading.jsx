@@ -1,13 +1,11 @@
 
 import React from 'react'
 
-// import  BarLoader from 'react-spinners/BarLoader'
 
 import { PropagateLoader } from 'react-spinners'
 
 export const SliderLoading = () => {
   return (
-//    <div className=" w-full h-screen flex justify-center items-center bg-white ">
 
 
 <PropagateLoader
@@ -23,7 +21,7 @@ export const SliderLoading = () => {
 
 
     
-        // </div>
+        
   )
 }
 

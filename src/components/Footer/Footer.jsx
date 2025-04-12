@@ -4,11 +4,10 @@ import { BiLogoTelegram, BiLogoInstagram } from 'react-icons/bi';
 import SocialMediaButton from '../Button/SocialMediaButton';
 import Logo from '../Logo/Logo';
 import Button from '../Button/Button';
-import { Link, NavLink } from 'react-router-dom';
+import {  NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchAllMovies, fetchTopMovies } from '../../core/functions';
 import { fetchMoviesList } from '../../redux/slice/MoviesSlice';
-import { useEffect, useState } from 'react';
 
 
 
@@ -22,11 +21,10 @@ export default function Footer() {
 
 
 
-  const fetchTop = async(e, type) => {
-    const value= e.target.innerText;
-    //  const typeMovie = type === "فیلم" ? "movies" : "series"
-    // localStorage.setItem("activeType", typeMovie);
-    // localStorage.setItem("activeLink", value);
+  const fetchTop = async(type) => {
+    
+    localStorage.removeItem("activeLink");
+      localStorage.removeItem("activeType");
     const result = await fetchTopMovies(type);
     const transformedData = result.map(item => ({
       ...item,
@@ -34,13 +32,12 @@ export default function Footer() {
     }));
     dispatch(fetchMoviesList(transformedData));
   }
-  const fetchAll = async(e, type) => {
-    const value= e.target.innerText;
-  
 
-    localStorage.setItem("activeType", type === "فیلم" ? "movies" : "series");
-    localStorage.setItem("activeLink", value);
-    // console.log("setActiveGenre", value 
+
+  const fetchAll = async(type) => {
+
+    localStorage.removeItem("activeLink");
+    localStorage.removeItem("activeType");
  const result = await fetchAllMovies(type);
  const res = result.data;
   const transformedData = res.map(item => ({
@@ -51,11 +48,7 @@ export default function Footer() {
   }
 
 
-  // useEffect(() => {
-  //   setActiveGenre(localStorage.getItem("activeLink") || []);
-
-  //   }, [ activeGenre ]);
-  
+ 
   
 
   return (
@@ -75,7 +68,7 @@ export default function Footer() {
           <Button
           btnType='link'
            width='w-full'
-            clicked={ (e) =>fetchAll(e,"فیلم")}
+            clicked={ () =>fetchAll("فیلم")}
             active={isActive}
             >
           <PiFilmSlateLight className=' inline text-xl ml-1'/>
@@ -91,7 +84,7 @@ export default function Footer() {
            <Button
             btnType='link'
              width='w-full'
-              clicked={(e) => fetchTop(e,"فیلم")}
+              clicked={() => fetchTop("فیلم")}
               active={isActive}
               
               >
@@ -99,10 +92,7 @@ export default function Footer() {
           </Button>
           )}
           </NavLink>
-        {/* <button className=' hover:text-color-2 custom-transition'>
-        
-           250 فیلم برتر IMDb
-           </button> */}
+       
            </li>
 
       </ul>
@@ -113,7 +103,7 @@ export default function Footer() {
         <Button
          btnType='link'
           width='w-full'
-           clicked={(e) => fetchAll(e,"سریال")}
+           clicked={() => fetchAll("سریال")}
            active={isActive}
            >
         <PiFilmReelLight className='inline text-xl ml-1' />
@@ -121,10 +111,7 @@ export default function Footer() {
         </Button>
         )}
         </NavLink>
-      {/* <button className=' hover:text-color-2 custom-transition'>
-        <PiFilmReelLight className='inline text-xl ml-1'/>
-        همه سریال ها
-        </button> */}
+   
 
       </li>
         <li> 
@@ -133,7 +120,7 @@ export default function Footer() {
           <Button
            btnType='link'
             width='w-full'
-             clicked={(e) => fetchTop(e, "سریال")}
+             clicked={() => fetchTop("سریال")}
              active={isActive}
 
              >
@@ -141,13 +128,11 @@ export default function Footer() {
           </Button>
           )}
           </NavLink>
-        {/* <button className=' hover:text-color-2 custom-transition'>
-          250 سریال برتر IMDb
-        </button> */}
+       
         </li>
       </ul>
      <div className=" flex flex-col justify-center space-y-4 items-center">
-      {/* <h6 className='text-black  text-3xl font-semibold '> <span className=' text-color-2'>MOV</span>IES </h6> */}
+     
       <Logo size='text-4xl '/>
       <ul className=' flex justify-center items-center'>
         <li>

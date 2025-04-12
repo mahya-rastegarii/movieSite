@@ -28,7 +28,6 @@ const UpdatePassword = () => {
 
   const submitForm = async(data) =>{
     setLoading(true)
-    console.log("data", data); 
     const {password} = data;
 
     const toastId = toast.loading("در حال به‌روزرسانی رمز عبور...")
@@ -112,9 +111,7 @@ useEffect(() => {
         <div className="flex flex-col w-full lg:w-7/12  justify-center items-center mt-16 mb-6 space-y-4">
           
         <FormInput
-        //  onChange={AuthForm.handleChange}
-          // onBlur={AuthForm.handleBlur} 
-          // value={AuthForm.values.password}
+        
           label="password"
           register={register}
           required="رمز عبور الزامی است"
@@ -127,9 +124,7 @@ useEffect(() => {
        )
       }
         <FormInput
-        //  onChange={AuthForm.handleChange} 
-        //  onBlur={AuthForm.handleBlur}
-          // value={AuthForm.values.confirmPassword} 
+       
           label="confirmPassword"
           register={register}
           required="تکرار رمز عبور الزامی است"

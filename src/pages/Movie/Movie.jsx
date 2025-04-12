@@ -1,7 +1,7 @@
+
+
+
 import { BsGlobe } from "react-icons/bs";
-
-
-
 import { FaRegCommentDots } from "react-icons/fa";
 import { GrStatusUnknown } from "react-icons/gr";
 import { MdOutlineDateRange, MdOutlineTimer } from "react-icons/md";
@@ -18,16 +18,12 @@ import ImdbLabel from "../../components/Label/ImdbLabel";
 
 import CommentBox from "../../components/box/CommentBox";
 import DownloadBox from "../../components/box/DownloadBox";
-// import { Images } from "../../fetch/slider3D-data";
-// import { Comments } from "../../fetch/comments";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { supabase } from "../../core/supabaseClient";
 import { useEffect, useRef, useState } from "react";
-// import { LiaKeySolid } from "react-icons/lia";
 import { FiHeart } from "react-icons/fi";
 
 import {  useNavigate } from "react-router-dom";
-import LoadingPage from "../../components/Loading/LoadingPage";
 import MovieLoading from "../../components/Loading/MovieLoading";
 import { toast } from "react-toastify";
 import ButtonLoading from "../../components/Loading/ButtonLoading";
@@ -45,7 +41,6 @@ export default function Movie() {
 
   
   const [likeMovie, setLikeMovie]= useState(false);
-  // const [favoriteMovies, setFavoriteMovies]= useState([])
  const [movie, setMovie] =useState({
   loading: false,
   data: [],
@@ -58,13 +53,10 @@ export default function Movie() {
   const [page, setPage] = useState(1);
  const [commentText, setCommentText]= useState("");
  const  [hasMore, setHasMore] = useState(true);
-//  const [userComments, setUserComments]= useState([]);
  
  const navigate = useNavigate();
  
  const observer = useRef(); 
-//  const url = new URL(window.location.href)
-// console.log("MovieName", (url.pathname).slice(7).replace(/%20/g, " "))
 
   const fetchComments = async() => {
     if (!hasMore || newComments.loading) return;
@@ -107,7 +99,7 @@ export default function Movie() {
   }
 
   
-    console.log("data", data)
+   
   }
 
 
@@ -150,9 +142,8 @@ export default function Movie() {
             
     
        const {error } = await supabase.from("profile").update({comments: updatedComments }).eq("userId", session.userId)
-                if(!error)
-                  console.log("success  Update Data")
-                  else console.error("Error",error)
+                if(error)
+                   console.error("Error",error)
   }
 
 }
@@ -372,8 +363,6 @@ export default function Movie() {
       if (user?.movies) {
 
         const isFavorite = user.movies.some((favoriteMovie) => favoriteMovie.name === movie.data[0]?.name);
-        console.log("isFavorite", isFavorite)
-        console.log("users", user.movies)
         setLikeMovie(isFavorite);
       }
     };
@@ -410,14 +399,7 @@ export default function Movie() {
                    {movie?.type}   {movie?.name}
                   </h4>
 
-                  {/* <div className=' flex flex-col justify-center  items-center '>
-                <div className=' flex justify-center items-center'>
-                <span className='  text-white font-semibold text-sm '>10/</span>
-                <span className=' font-bold text-color-2 text-lg'>7.1</span>
-                </div>
-                <span className=' bg-color-hover shadow-md px-2 rounded-md font-bold text-white text-md'> IMDb </span>
-             
-              </div> */}
+                 
 <div className=" flex justify-center items-center flex-row lg:flex-col space-y-4">
 
                   <ImdbLabel score={movie?.imdbRating} />
@@ -470,7 +452,7 @@ export default function Movie() {
                       </div>
                     ) : null}
                   </div>
-                  {/* <div className='w-full flex justify-start items-center'><PiFilmReelBold className=' inline ml-2 text-xl text-color-2'/><span className=' '>ژانر : </span></div> */}
+
                   <div className="w-3/5 lg:w-full flex  md:justify-start justify-center items-center">
                     <BsGlobe className=" inline ml-2 text-xl text-color-2" />
                     <span className=" ">محصول کشور : {movie?.country}</span>
@@ -493,13 +475,7 @@ export default function Movie() {
           </HeaderBackdrop>
           <div className=" md:w-10/12 w-full lg:w-7/12 flex flex-col p-5 space-y-20">
            
-          {/*}  {movie?.desc && (
-              <BgRotate padding=" p-4">
-                <div className="w-full text-right text-color-1">
-                  {movie?.desc}
-                </div>
-              </BgRotate>
-            )} */}
+        
 
             <BgRotate padding="p-1" rotate1="-rotate-1" rotate2="rotate-1">
               <DisclosureWrapper title="لینک های دانلود" isOpen={true}>

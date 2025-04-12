@@ -4,21 +4,13 @@ import { BiMenu } from "react-icons/bi";
 import ChangeThemeButton from "../Button/ChangeThemeButton";
 import Logo from "../Logo/Logo";
 
-import {  Link, NavLink, redirect, useNavigate } from "react-router-dom";
-import { logOut } from "../../core/functions";
+import {  Link, NavLink } from "react-router-dom";
 import Button from "../Button/Button";
 import NavSearchBar from "../Search/NavSearchBar";
 
-import { RiArrowDownSLine } from "react-icons/ri";
-
-import MenuComponent from "../menu/MenuComponent";
-import MenuItem from "../Button/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
-import { setSession } from "../../redux/slice/UserSlice";
 import { setShowMenu } from "../../redux/slice/MenuSlice";
 import LoginMenu from "../menu/LoginMenu";
-import { supabase } from "../../core/supabaseClient";
 
 
 
@@ -42,7 +34,7 @@ export default function Navbar() {
           >
             <BiMenu className=" text-color-2 text-2xl ml-3"/>
           </button>
-          {/* <NavSearchBar /> */}
+         
           <ChangeThemeButton />
         </div>
 

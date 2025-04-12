@@ -2,7 +2,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 
 
-
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import {Autoplay, FreeMode} from 'swiper/modules';
@@ -32,7 +31,7 @@ const navigate = useNavigate()
 const movieInfoHandler = async(name) =>{
 
   const result = await fetchMovieInfo(name);
-// console.log("resultInfo", result);
+
 dispatch(fetchMovie(result));
 navigate(`/movie/${name}`)
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 
 export default function BgRotate({children, padding, width, rotate1, rotate2}) {
   return (

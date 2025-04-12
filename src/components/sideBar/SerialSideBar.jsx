@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-// import { MoviesData } from "../../fetch/movies-data";
+
 import { supabase } from "../../core/supabaseClient";
 import { fetchMovieInfo } from "../../core/functions";
 import { fetchMovie } from "../../redux/slice/MoviesSlice";

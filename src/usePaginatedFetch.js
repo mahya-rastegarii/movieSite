@@ -12,7 +12,6 @@ const usePaginatedFetch = (pageSize, movieData) => {
     const getData = () => {
        
         const paginatedData = _.chunk(movieData, pageSize);
-         console.log("paginatedData", paginatedData)
         
         setData(paginatedData);
     }

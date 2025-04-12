@@ -8,7 +8,6 @@ import FormInput from '../../components/input/formInput/FormInput';
 import { supabase } from '../../core/supabaseClient';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-// import ButtonLoading from '../../components/Loading/ButtonLoading';
 import { toast } from 'react-toastify';
 
 
@@ -23,10 +22,6 @@ export default function Register() {
 
  const [loading, setLoading]= useState(false)
 
-//  const checkEmail = async() => {
-
-//   const {}
-//  }
 
  const submitForm = async(data) =>{
   setLoading(true);
@@ -84,7 +79,6 @@ export default function Register() {
 
   
 }   catch (err) {
-  console.log("error :", err)
   toast.update(toastId, {
     render: err.message,
     type: "error",
@@ -110,9 +104,7 @@ export default function Register() {
           
            
         <FormInput
-        //  onChange={AuthForm.handleChange}
-          // onBlur={AuthForm.handleBlur}
-          //  value={AuthForm.values.userName}
+       
           label="userName"
           register={register}
           required="نام کاربری الزامی است"
@@ -125,9 +117,7 @@ export default function Register() {
        )
        }
         <FormInput
-        //  onChange={AuthForm.handleChange} 
-        //  onBlur={AuthForm.handleBlur}
-          // value={AuthForm.values.email}
+       
           label="email"
           register={register}
           required="ایمیل الزامی است"
@@ -146,9 +136,7 @@ export default function Register() {
         )
       }
         <FormInput
-        //  onChange={AuthForm.handleChange}
-          // onBlur={AuthForm.handleBlur} 
-          // value={AuthForm.values.password}
+       
           label="password"
           register={register}
           required="رمز عبور الزامی است"
@@ -161,9 +149,7 @@ export default function Register() {
        )
       }
         <FormInput
-        //  onChange={AuthForm.handleChange} 
-        //  onBlur={AuthForm.handleBlur}
-          // value={AuthForm.values.confirmPassword} 
+       
           label="confirmPassword"
           register={register}
           required="تکرار رمز عبور الزامی است"

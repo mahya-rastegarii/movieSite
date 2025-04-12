@@ -1,4 +1,3 @@
-import React from 'react'
 
 export default function Button({width, children, bgColor, btnType, margin, type, clicked, shadowNone, active, name, hover, classed, disable, notRounded}) {
   return (

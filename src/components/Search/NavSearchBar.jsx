@@ -3,7 +3,6 @@ import {  useState } from 'react'
 import {FiSearch} from 'react-icons/fi';
 import _ from "lodash";
 import {supabase} from "../../core/supabaseClient";
-import ShowItemNavSearch from './ShowItemNavSearch';
 import SearchBox from '../box/SearchBox';
 import PageBackdrop from '../Backdrop/PageBackdrop';
 
@@ -28,8 +27,8 @@ const NavSearchBar =() => {
       .from("movies")
       .select("*")
       .ilike("name", `%${lowerTitle}%`);
-      console.log("data", data)
-      
+
+
       const transformedData = data.map(item => ({
         ...item,
         genre: item.genre.split(",").map(genre => genre.trim()),

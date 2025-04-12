@@ -32,7 +32,6 @@ export default function Login() {
   const submitForm = async(data) =>{
     setLoading(true);
     
-    console.log("data", data)
     const {email, password, rememberMe}= data;
 
       const toastId = toast.loading("در حال ورود...")
@@ -55,7 +54,6 @@ export default function Login() {
       throw new Error("مشکلی در ورود پیش آمد. لطفاً دوباره تلاش کنید.");
     }
 
-  console.log("user", user);
 
   const {data: profile, error: profileError } = await supabase.from('profile').select("userName").eq("userId", user.id).single();
      
@@ -64,8 +62,9 @@ export default function Login() {
     throw new Error("خطا در دریافت اطلاعات کاربر.");
   }
           dispatch(setSession(profile))
-  console.log(" User Loggerd in: ", user)
-  navigate("/")
+  
+          navigate("/")
+
 
 
   toast.update(toastId, {
@@ -127,19 +126,7 @@ export default function Login() {
        <form  className='w-full flex justify-center items-center px-2 md:px-0' onSubmit={handleSubmit(submitForm)}>
         <div className="flex flex-col w-full lg:w-7/12  justify-center items-center mt-16 mb-6 space-y-4">
 
-      {/* <FormInput
      
-      label="userName"
-      register={register}
-      required="نام کاربری الزامی است"
-     
-      errors={errors.userName}
-       type="text"  name='userName' placeholder='نام کاربری' />
-      {
-       errors.userName && errors.userName.type === "required" &&(
-        <div className="w-full flex justify-start items-center"><span className=' text-red-500 text-sm'> {errors.userName?.message}</span></div>
-      )
-      } */}
       <FormInput
      
       label="email"

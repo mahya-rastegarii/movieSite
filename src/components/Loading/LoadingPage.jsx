@@ -1,12 +1,9 @@
-import React from 'react'
 
-// import  BarLoader from 'react-spinners/BarLoader'
 import  SyncLoader from 'react-spinners/SyncLoader'
 
 
 export const LoadingPage = () => {
   return (
-//    <div className=" w-full h-screen flex justify-center items-center bg-white ">
 
 
 <SyncLoader
@@ -22,7 +19,7 @@ export const LoadingPage = () => {
 
 
     
-        // </div>
+      
   )
 }
 

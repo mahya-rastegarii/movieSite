@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import  { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { logOut } from '../../core/functions';
 import { setSession } from '../../redux/slice/UserSlice';
@@ -38,8 +38,10 @@ const LoginMenu = ({response}) => {
 
   const goToDashboard = () => {
    
-    dispatch(setShowMenu(false))
+    setIsOpen(false);
   }
+
+  
     const handleClickOutside = (e) =>{
         if(menuRef.current && !menuRef.current.contains(e.target)) {
           setIsOpen(false);

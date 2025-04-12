@@ -1,5 +1,3 @@
-// import { BsHandThumbsDown, BsHandThumbsUp } from 'react-icons/bs'
-// import CommentList from "../../../fetch/comments";
 import PaginationBox from '../../../components/box/PaginationBox'
 import usePaginatedFetch from '../../../usePaginatedFetch';
 import { useEffect, useState } from 'react';
@@ -21,7 +19,6 @@ export default function Comments() {
   const session = useSelector( state => state.user.session);
 
   
-  // const comments = useSelector ( (state) => state.movies.comments);
 
     const [searchParams, setSearchParams] = useSearchParams(); 
   
@@ -53,7 +50,6 @@ export default function Comments() {
   
  const fetchMovieInfoHandler = async(name) => {
     const result = await fetchMovieInfo(name);
-// console.log("resultInfo", result);
 dispatch(fetchMovie(result));
   navigate(`/movie/${name}`)
 }
@@ -143,9 +139,8 @@ useEffect(() => {
   return (
     <>
     <div className={` min-h-36 flex flex-col ${comment ?"justify-start" : "justify-center" } items-center p-3`}>
-   {/* {
-     loading && <div className=" w-full flex justify-center items-center "><LoadingPage/></div>
-   } */}
+  
+  
    {
 isLoading ? <div className=" w-full flex justify-center items-center "><LoadingPage/></div> :  comment?.map((data) => (
       

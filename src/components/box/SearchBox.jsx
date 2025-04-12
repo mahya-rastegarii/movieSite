@@ -1,7 +1,6 @@
 
-import React, { useState } from 'react'
+import React from 'react'
 import ShowItemNavSearch from '../Search/ShowItemNavSearch'
-import { data } from 'autoprefixer';
 import { fetchMoviesList } from '../../redux/slice/MoviesSlice';
 import { useNavigate  } from 'react-router-dom';
 import { useDispatch } from 'react-redux';

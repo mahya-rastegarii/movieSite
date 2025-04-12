@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from 'react';
+import  {  useEffect, useState } from 'react';
 
 import { BsHandThumbsUp, BsHandThumbsDown} from 'react-icons/bs'
 
@@ -6,6 +6,7 @@ import { BsHandThumbsUp, BsHandThumbsDown} from 'react-icons/bs'
 import { useSelector } from 'react-redux';
 import { supabase } from '../../core/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 
@@ -29,44 +30,49 @@ export default function CommentBox({list}) {
 
  const likeHandler = async() => {
 
-if(list.userName === session.userName) return;
-
+   
    if(session){
-  
-    
-    if(reaction.liked?.includes(session.userId)) return;
-
-    if(reaction.disLiked?.includes(session.userId)) {
-      const disLikeComment = dislikeUser -1;
      
-      const disLikeByComment = reaction.disLiked.filter( user => user !== session.userId);
-      // console.log("disLikeComment", "disLikeByComment", disLikeComment, disLikeByComment)
-      const {error} = await supabase.from("comments").update({disLike: disLikeComment, disLikeBy: disLikeByComment}).eq("id" , list.id);
-      if(error) {
-        console.log("error", error)
-      } else {
-        setDislikeUser(disLikeComment);
-      }
-      } 
+     try {
+       
+       if(list.userName === session.userName) return;
+      if(reaction.liked?.includes(session.userId)) return;
+      if(reaction.disLiked?.includes(session.userId)) {
+        const disLikeComment = dislikeUser -1;
+       
+        const disLikeByComment = reaction.disLiked.filter( user => user !== session.userId);
+        const {error} = await supabase.from("comments").update({disLike: disLikeComment, disLikeBy: disLikeByComment}).eq("id" , list.id);
+        if(error) {
+          throw error;
+        } else {
+          setDislikeUser(disLikeComment);
+        }
+        } 
+        
+        const likeComment = likeUser +1;
+       
+        reaction.liked.push(session.userId);
       
+        
+      
+        const {error} = await supabase.from("comments").update({like: likeComment, likeBy:reaction.liked}).eq("id" , list.id);
+        
+         if(error) {
+          throw error;
+         } 
+         setLikeUser(likeComment);
+         setReaction({
+          ...reaction,
+          isDisLiked: false,
+          isLiked: true
+         })
+    } catch (err) {
+      toast.error("مشکلی پیش آمده لطفا بعدا تلاش کنید");
+      console.log(err)
+    }
     
-  const likeComment = likeUser +1;
- 
-  reaction.liked.push(session.userId);
 
-  
-
-  const {error} = await supabase.from("comments").update({like: likeComment, likeBy:reaction.liked}).eq("id" , list.id);
-  
-   if(error) {
-    console.log("error",  error)
-   } 
-   setLikeUser(likeComment);
-   setReaction({
-    ...reaction,
-    isDisLiked: false,
-    isLiked: true
-   })
+    
    
   } else navigate("/signIn")
  }
@@ -75,41 +81,44 @@ if(list.userName === session.userName) return;
 
  const dislikeHandler=  async() => {
 
-if(list.userName === session.userName) return;
-
-
-if(session){
-  // const dislikedBy = Array.isArray(dislikes) ? dislikes : [];
-
-if(reaction.disLiked?.includes(session.userId)) return;
-
-
-if(reaction.liked?.includes(session.userId)) {
-  const likeComment = likeUser -1;
- 
-   const likeByComment = reaction.liked.filter( user => user !== session.userId)
-  const {error} = await supabase.from("comments").update({like: likeComment, likeBy: likeByComment}).eq("id" , list.id);
-  if(error) {
-    console.log("error", error)
-  } else {
-    setLikeUser(likeComment)
-
-  }
-  }
-  const disLikeComment = dislikeUser +1;
-  
-  reaction.disLiked.push(session.userId);
-  const {error} = await supabase.from("comments").update({disLike: disLikeComment, disLikeBy: reaction.disLiked}).eq("id" , list.id);
-   if(error) {
-    console.log("error",  error)
-   } 
-   setDislikeUser(disLikeComment);
-   setReaction({
-    ...reaction,
-    isLiked: false,
-    isDisLiked: true
-   })
    
+
+   if(session){
+     
+     try{
+       
+    if(list.userName === session.userName) return;
+    if(reaction.disLiked?.includes(session.userId)) return;
+    if(reaction.liked?.includes(session.userId)) {
+      const likeComment = likeUser -1;
+     
+       const likeByComment = reaction.liked.filter( user => user !== session.userId)
+      const {error} = await supabase.from("comments").update({like: likeComment, likeBy: likeByComment}).eq("id" , list.id);
+      if(error) {
+        throw error;
+      } else {
+        setLikeUser(likeComment)
+    
+      }
+      }
+      const disLikeComment = dislikeUser +1;
+      
+      reaction.disLiked.push(session.userId);
+      const {error} = await supabase.from("comments").update({disLike: disLikeComment, disLikeBy: reaction.disLiked}).eq("id" , list.id);
+       if(error) {
+        throw error;
+       } 
+       setDislikeUser(disLikeComment);
+       setReaction({
+        ...reaction,
+        isLiked: false,
+        isDisLiked: true
+       })
+  } catch (err) {
+    toast.error("مشکلی پیش آمده لطفا بعدا تلاش کنید")
+    console.log(err)
+  }
+
   } else navigate("/signIn")
  
   }
@@ -125,8 +134,7 @@ if(reaction.liked?.includes(session.userId)) {
     liked: list.likeBy || [],
     disLiked: list.disLikeBy || [],
   })
-  // console.log("liked", reaction.liked)
-  // console.log("disliked", reaction.disLiked)
+ 
   
  }, [list])
 

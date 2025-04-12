@@ -9,7 +9,6 @@ import SimpleSlider from "../components/sliders/simple-slider/SimpleSlider";
 import SideContainer from "../components/sideBar/SideContainer";
 import Slider3D from "../components/sliders/slider3D/Slider3D";
 import SliderContainer from "../components/sliders/slider3D/SliderContainer";
-// import { Images } from "../fetch/slider3D-data";
 import { useEffect, useState } from "react";
 import { supabase } from "../core/supabaseClient";
 import SliderLoading from "../components/Loading/SliderLoading";
@@ -29,17 +28,7 @@ export default function Home() {
   
 
   const slider = [
-   // {
-    //   delay: 2500,
-    //   title: " جدیدترین فیلم ها",
-    //   data: Images.slice(0, 10),
-
-    // },
-    // {
-    //   delay: 2500,
-    //   title: " جدیدترین سریال ها",
-    //   data: Images.slice(0, 10),
-    // },
+   
     {
       delay: 2500,
       title: " محبوب ترین فیلم ها",

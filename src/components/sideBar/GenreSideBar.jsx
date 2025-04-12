@@ -10,10 +10,8 @@ import PostType from "../Button/PostType";
 
 import Button from "../Button/Button";
 
-// import { GenresData } from "../../fetch/genere-data";
 import { activeTypeGenre, fetchAllMovies, fetchTopMovies, genreMovieList } from "../../core/functions";
-// import { supabase } from "../../core/supabaseClient";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {  fetchMoviesList } from "../../redux/slice/MoviesSlice";
 import LoadingPage from "../Loading/LoadingPage";
@@ -89,7 +87,7 @@ const location = useLocation();
     AllMovieBtn:false,
   })
      
-      console.log("All", result);
+  
     }
     
     const fetchTopGenre= async(e) => {
@@ -117,12 +115,11 @@ const location = useLocation();
           ...loading,
           topMovieBtn:false,
         })
-        console.log("250Imdb", result);
+       
 }
 
 const fetchSpecialGenre = async(genreMovie) => {
  
-  // const value = e.target.innerText;
   navigate(`/list/${active}/${genreMovie}?page=1`);
 
   localStorage.setItem("activeLink", genreMovie)
@@ -146,8 +143,8 @@ const fetchSpecialGenre = async(genreMovie) => {
         ...loading,
         genreMovieBtn: false
       })
-      // console.log("OthersGenre", genre);
-      console.log("Others", result);
+      
+
 
 }
 
@@ -195,16 +192,7 @@ const fetchSpecialGenre = async(genreMovie) => {
  
   return (
     <div className=" w-full  flex flex-col justify-center items-center shadow-md bg-color-3 rounded-md p-3 space-y-4 font-semibold text-sm  text-color-1 ml-2">
-      {/* {
-  
-       genreError && toast.error(genreError)
-      } */}
-      {/* <div className=" flex justify-center items-center bg-color-4 rounded-xl p-2 ">
-
-                <a href="#" className=' custom-hover-btn '><span > فیلم </span></a>
-
-                <a href="#" className=' custom- hover-btn '><span > سریال </span></a>
-      </div> */}
+    
       <div className=" w-7/12 ">
         <PostType  active={active} setActive={setActive} setActiveGenre={setActiveGenre}/>
       </div>

@@ -1,5 +1,4 @@
 import GenreSideBar from './GenreSideBar';
-// import SerialSideBar from './SerialSideBar';
 import AdvancedSearchBox from '../Search/AdvancedSearchBox';
 import SerialSideBar from './SerialSideBar';
 

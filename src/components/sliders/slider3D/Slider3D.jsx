@@ -43,7 +43,7 @@ export default function Slider3D() {
       }));
     
       setSlideData(transformedData);
-      console.log('slideData', transformedData);
+      
 
     } else {
       

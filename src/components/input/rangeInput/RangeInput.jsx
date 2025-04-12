@@ -15,7 +15,7 @@ function RangeInput({min, max, sliderValue, handleSliderChange, step}) {
             range
             reverse
             value={sliderValue}
-            //  defaultValue={sliderValue}
+          
              onChange={handleSliderChange}
             
           />

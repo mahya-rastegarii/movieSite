@@ -1,5 +1,4 @@
 
-import React from 'react'
 
 const PaginationButton = ({children, activeBtn, clicked, disabled}) => {
 

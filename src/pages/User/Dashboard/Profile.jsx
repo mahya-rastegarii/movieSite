@@ -1,26 +1,17 @@
+
+
 import  { useEffect, useState } from 'react'
-// import { CiEdit } from "react-icons/ci";
-// import { MdOutlineAddAPhoto } from "react-icons/md";
-
-
-import Button from '../../../components/Button/Button'
-import { useForm } from 'react-hook-form';
-import FormInput from '../../../components/input/formInput/FormInput'
-import { useDispatch, useSelector } from 'react-redux';
-import { logOut } from '../../../core/functions';
-import { setSession } from '../../../redux/slice/UserSlice';
+import {  useSelector } from 'react-redux';
 import { supabase } from '../../../core/supabaseClient';
 import LoadingPage from '../../../components/Loading/LoadingPage';
 import { MdAccessTime, MdDateRange } from 'react-icons/md';
-import { redirect, useNavigate } from 'react-router-dom';
-// import { redirect } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 
 
 export default function Profile() {
  
-  const navigate = useNavigate();
   const [userInfo, setUserInfo] =useState({});
   const session = useSelector( ( state) => state.user.session);
   const [isLoading, setIsLoading]= useState(false);
@@ -30,7 +21,7 @@ export default function Profile() {
  setIsLoading(true)
     const {data:{user} , error:errorUser} = await supabase.auth.getUser();
     if(errorUser) {
-      console.log("ErrorUser", errorUser)
+      toast.error("خطا در دریافت اطلاعات کاربر")
     } else {
     
       const [date, time] = user.last_sign_in_at.split("T");
@@ -42,7 +33,6 @@ export default function Profile() {
 
     
       setUserInfo({
-        // lastign:user.last_sign_in_at,
         lastSign: {date, cleanTime},
         createAccunt: {dateCreate, cleanTimeCreate},
         email: user.email,

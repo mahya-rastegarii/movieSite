@@ -3,7 +3,7 @@
 import { supabase } from "./supabaseClient";
 
 
-//? Movies
+
 export  const activeTypeGenre = async() => {
 
    
@@ -19,17 +19,14 @@ export  const activeTypeGenre = async() => {
     return respopnse;
    }
 
-  // export const fetchAllMovies = async(type) => {
-  //   const {data} = await supabase.from("movies").select('*').eq("type", type);
-  //   return data;
-  // }
+  
 
   export const genreMovieList = async(type, activeGenre) => {
     
-    // const {data , error} = await supabase.from("movies").select("*").contains("genre", [activeGenre]).eq("type", type); 
+    
       
       const {data , error} = await supabase.from("movies").select("*").ilike("genre", `%${activeGenre}%`).eq("type", type); 
-      // const {data , error} = await supabase.from("movies").select("*").in("genre", `%${activeGenre}%`).eq("type", type); 
+     
     if(error) {
       console.error("respo.error", error)
     }
@@ -54,7 +51,7 @@ export  const activeTypeGenre = async() => {
   export const fetchMovieInfo = async(name) =>{
     const {data}= await supabase.from("movies").select('*').eq("name",name);
     
-    const transformedData = data.map(item => ({
+    const transformedData = data?.map(item => ({
       ...item,
       genre: item.genre.split(",").map(genre => genre.trim()),
     }));

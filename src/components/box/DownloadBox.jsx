@@ -16,4 +16,4 @@ function DownloadBox({quality}) {
   )
 }
 
-export default DownloadBox
+export default DownloadBox;

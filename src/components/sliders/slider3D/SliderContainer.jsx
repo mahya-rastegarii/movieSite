@@ -5,13 +5,12 @@ import HeaderBackdrop from "../../Backdrop/HeaderBackdrop";
 import Button from "../../Button/Button";
 import GenreLabel from "../../Label/GenreLabel";
 import ImdbLabel from "../../Label/ImdbLabel";
-// import { fetchMovieInfo } from "../../../core/functions";
 import { fetchMovie } from "../../../redux/slice/MoviesSlice";
 import { useNavigate } from "react-router-dom";
 import { fetchMovieInfo } from "../../../core/functions";
 import { useEffect, useState } from "react";
 import LoadingPage from "../../Loading/LoadingPage";
-// import { supabase } from "../../../core/supabaseClient";
+
 
 
 
@@ -62,7 +61,7 @@ const [data, setData] = useState([]);
     }
 
     {
-      !loading &&  (
+      !loading && error ? null : (
 
         
     <HeaderBackdrop bg={data?.cover}>
