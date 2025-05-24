@@ -34,16 +34,13 @@ Key Features:
 - React  
 - Tailwind CSS  
 - Redux Toolkit  
+- Redux Persist  
 - Supabase  
 - Lodash  
 - Swiper  
 - React Router DOM  
-- RC Slider  
 - React Hook Form  
-- React Spinners  
 - React Toastify  
-- Redux Persist  
-- React Icons
 
 ## ⚙️ Features | امکانات
 
