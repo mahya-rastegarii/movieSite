@@ -83,7 +83,7 @@ npm run dev
 - Implementing advanced filtering and dynamic search functionality
 - Utilizing Swiper.js to build professional and interactive sliders
 - Building user dashboards and implementing authentication and authorization
-  ---
+---
 - مدیریت استیت با Redux Toolkit و Persist
 - کار با Supabase به‌عنوان Backend کامل
 - پیاده‌سازی فیلترهای پیشرفته و جستجوی داینامیک
