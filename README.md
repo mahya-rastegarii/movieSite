@@ -36,39 +36,39 @@ Key Features:
 <img src="public/assets/README-Pic/desktop-screen-3Dslider.png" width="100%" alt="Slider3D" />
 
 ##### simple Slider  
-<img src="public/assets/README-Pic/desktop-screen-sliders.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-sliders.png" width="80%" alt="simple Slider" />
 
 #### 🔍 Search Page
 ##### Simple Search  
-<img src="public/assets/README-Pic/desktop-screen-search.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-search.png" width="80%" alt="Simple Search" />
 
 ##### Advanced Search
-<img src="public/assets/README-Pic/desktop-screen-advancedSearch.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-advancedSearch.png" width="80%" alt="Advanced Search" />
 
 #### 🎬 Movie Page
 ##### Movie Detail  
-<img src="public/assets/README-Pic/desktop-screen-movieDetails.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-movieDetails.png" width="100%" alt="Movie Detail" />
 
 ##### Movie Comments
-<img src="public/assets/README-Pic/desktop-screen-comment.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-comment.png" width="80%" alt="Movie Comments" />
 
 
 #### 👤 Auth
 ##### Login  
-<img src="public/assets/README-Pic/desktop-screen-login.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-login.png" width="80%" alt="Login" />
 
 ##### SignUp
-<img src="public/assets/README-Pic/desktop-screen-signup.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-signup.png" width="80%" alt="SignUp" />
 
 #### 🧑‍💼 User Panel
 ##### User Information  
-<img src="public/assets/README-Pic/desktop-screen-userInformation.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-userInformation.png" width="80%" alt="User Information" />
 
 ##### Favorites Page  
-<img src="public/assets/README-Pic/desktop-screen-favoriteMovies.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-favoriteMovies.png" width="80%" alt="Favorites Page" />
 
 ##### User Comments
-<img src="public/assets/README-Pic/desktop-screen-userComments.png" width="100%" alt="simple Slider" />
+<img src="public/assets/README-Pic/desktop-screen-userComments.png" width="80%" alt="User Comments" />
 
 
 ---
@@ -76,7 +76,7 @@ Key Features:
 ### 📱 Mobile Version | نسخه موبایل
 
 ##### 🏠 Homepage
-<img src="public/assets/README-Pic/mobile-screen.png" width="60%" />
+<img src="public/assets/README-Pic/mobile-screen.png" width="60%" alt="Homepage"/>
 
 
 ## 🔗 Live Demo | نسخه آنلاین  
