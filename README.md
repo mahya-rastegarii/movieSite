@@ -25,6 +25,59 @@ Key Features:
 - ❤️ **افزودن به لیست علاقه‌مندی‌ها**  
 - 👤 **ثبت‌نام و ورود کاربران**  
 - 🧑‍💼 **داشبورد اختصاصی برای هر کاربر**
+  
+## 📸 Screenshots | تصاویر پروژه
+
+### 🖥️ Desktop Version | نسخه دسکتاپ
+
+#### 🏠 Homepage
+
+### Slider3D  
+<img src="public/assets/README-Pic/desktop-screen-3Dslider.png" width="100%" alt="Slider3D" />
+
+### simple Slider  
+<img src="public/assets/README-Pic/desktop-screen-sliders.png" width="100%" alt="simple Slider" />
+
+#### 🔍 Search Page
+### Simple Search  
+<img src="public/assets/README-Pic/desktop-screen-search.png" width="100%" alt="simple Slider" />
+
+### Advanced Search
+<img src="public/assets/README-Pic/desktop-screen-advancedSearch.png" width="100%" alt="simple Slider" />
+
+#### 🎬 Movie Page
+### Movie Detail  
+<img src="public/assets/README-Pic/desktop-screen-movieDetails.png" width="100%" alt="simple Slider" />
+
+### Movie Comments
+<img src="public/assets/README-Pic/desktop-screen-comment.png" width="100%" alt="simple Slider" />
+
+
+#### 👤 Auth
+### Login  
+<img src="public/assets/README-Pic/desktop-screen-login.png" width="100%" alt="simple Slider" />
+
+### SignUp
+<img src="public/assets/README-Pic/desktop-screen-signup.png" width="100%" alt="simple Slider" />
+
+#### 🧑‍💼 User Panel
+### User Information  
+<img src="public/assets/README-Pic/desktop-screen-userInformation.png" width="100%" alt="simple Slider" />
+
+### Favorites Page  
+<img src="public/assets/README-Pic/desktop-screen-favoriteMovies.png" width="100%" alt="simple Slider" />
+
+### User Comments
+<img src="public/assets/README-Pic/desktop-screen-userComments.png" width="100%" alt="simple Slider" />
+
+
+---
+
+### 📱 Mobile Version | نسخه موبایل
+
+#### 🏠 Homepage
+<img src="public/assets/README-Pic/mobile-screen.png" width="60%" />
+
 
 ## 🔗 Live Demo | نسخه آنلاین  
 👉 [movie-site-topaz.vercel.app](https://movie-site-topaz.vercel.app/)
@@ -52,6 +105,7 @@ Key Features:
 - ✅ User registration & login  
 - ✅ User dashboard  
 - ✅ Responsive design  
+- ✅ Client-side pagination   
 
 ---
 
@@ -62,7 +116,8 @@ Key Features:
 - ✅ لیست علاقه‌مندی‌ها  
 - ✅ ثبت‌نام و ورود  
 - ✅ پنل کاربری اختصاصی  
-- ✅ طراحی ریسپانسیو
+- ✅ طراحی ریسپانسیو  
+- ✅ پیجینیشن سمت کلاینت  
 
 ## 📦 Installation | نصب و اجرا
 
@@ -80,12 +135,14 @@ npm run dev
 - Implementing advanced filtering and dynamic search functionality
 - Utilizing Swiper.js to build professional and interactive sliders
 - Building user dashboards and implementing authentication and authorization
+- Client-side pagination for movie and series lists and comments lists
 ---
 - مدیریت استیت با Redux Toolkit و Persist
 - کار با Supabase به‌عنوان Backend کامل
 - پیاده‌سازی فیلترهای پیشرفته و جستجوی داینامیک
 - استفاده از Swiper برای ساخت اسلایدرهای حرفه‌ای
 - ایجاد پنل کاربری و احراز هویت کاربران
+- پیاده‌سازی پیجینیشن سمت کلاینت برای لیست فیلم‌ها و کامنت ها
 
 
 ## 🙋‍♀️ Contact Me | ارتباط با من  
