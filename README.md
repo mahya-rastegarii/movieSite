@@ -32,42 +32,42 @@ Key Features:
 
 #### 🏠 Homepage
 
-### Slider3D  
+##### Slider3D  
 <img src="public/assets/README-Pic/desktop-screen-3Dslider.png" width="100%" alt="Slider3D" />
 
-### simple Slider  
+##### simple Slider  
 <img src="public/assets/README-Pic/desktop-screen-sliders.png" width="100%" alt="simple Slider" />
 
 #### 🔍 Search Page
-### Simple Search  
+##### Simple Search  
 <img src="public/assets/README-Pic/desktop-screen-search.png" width="100%" alt="simple Slider" />
 
-### Advanced Search
+##### Advanced Search
 <img src="public/assets/README-Pic/desktop-screen-advancedSearch.png" width="100%" alt="simple Slider" />
 
 #### 🎬 Movie Page
-### Movie Detail  
+##### Movie Detail  
 <img src="public/assets/README-Pic/desktop-screen-movieDetails.png" width="100%" alt="simple Slider" />
 
-### Movie Comments
+##### Movie Comments
 <img src="public/assets/README-Pic/desktop-screen-comment.png" width="100%" alt="simple Slider" />
 
 
 #### 👤 Auth
-### Login  
+##### Login  
 <img src="public/assets/README-Pic/desktop-screen-login.png" width="100%" alt="simple Slider" />
 
-### SignUp
+##### SignUp
 <img src="public/assets/README-Pic/desktop-screen-signup.png" width="100%" alt="simple Slider" />
 
 #### 🧑‍💼 User Panel
-### User Information  
+##### User Information  
 <img src="public/assets/README-Pic/desktop-screen-userInformation.png" width="100%" alt="simple Slider" />
 
-### Favorites Page  
+##### Favorites Page  
 <img src="public/assets/README-Pic/desktop-screen-favoriteMovies.png" width="100%" alt="simple Slider" />
 
-### User Comments
+##### User Comments
 <img src="public/assets/README-Pic/desktop-screen-userComments.png" width="100%" alt="simple Slider" />
 
 
@@ -75,7 +75,7 @@ Key Features:
 
 ### 📱 Mobile Version | نسخه موبایل
 
-#### 🏠 Homepage
+##### 🏠 Homepage
 <img src="public/assets/README-Pic/mobile-screen.png" width="60%" />
 
 
